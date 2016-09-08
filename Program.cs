@@ -27,7 +27,6 @@ namespace hastlayer_timing_tester
         public delegate string dataTypeFromSize(int size);
 
         public List<vhdlOp> operators;
-        public List<string> operatorNames;
         public List<string> vhdlTemplates;
         public List<int> sizes;
         public string part;
@@ -46,9 +45,9 @@ namespace hastlayer_timing_tester
                 new vhdlOp("+",     "add",  vhdlOp.sizeNoChange),
                 new vhdlOp("-",     "sub",  vhdlOp.sizeNoChange),
                 new vhdlOp("/",     "div",  vhdlOp.sizeNoChange),
-                new vhdlOp("*",     "mul",  vhdlOp.sizeNoChange),
+                new vhdlOp("*",     "mul",  vhdlOpSizeMul),
                 new vhdlOp("mod",   "mod",  vhdlOp.sizeNoChange),
-                new vhdlOp(">",     "gz",   vhdlOp.sizeNoChange),
+                new vhdlOp(">",     "gt",   vhdlOp.sizeNoChange),
                 new vhdlOp("<",     "lt",   vhdlOp.sizeNoChange),
                 new vhdlOp(">=",    "ge",   vhdlOp.sizeNoChange),
                 new vhdlOp("<=",    "le",   vhdlOp.sizeNoChange),
@@ -61,6 +60,8 @@ namespace hastlayer_timing_tester
             vhdlTemplates = new List<string> { "sync", "async" };
             vivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat";
         }
+
+        int vhdlOpSizeMul(int input_size) { return 2*input_size; } //multiplication needs 2 times wider output than input
     }
 
     class TimingTester
@@ -74,9 +75,9 @@ library ieee;
 
     entity tf_sample is
 port(
-    a1      : in %TYPE%;
-    a2      : in %TYPE%;
-    aout    : out %TYPE%
+    a1      : in %INTYPE%;
+    a2      : in %INTYPE%;
+    aout    : out %OUTTYPE%
 );
 end tf_sample;
 
@@ -132,9 +133,13 @@ quit
                     foreach (int size in test.sizes)
                         foreach (TimingTestConfigBase.dataTypeFromSize dataTypeFun in test.dataTypes)
                         {
-                            var dataType = dataTypeFun(size);
-                            Console.WriteLine("Now generating: {0}, {1}, {2}", op.friendlyName, size, dataType);
-                            string vhdl = vhdlTemplate.Replace("%TYPE%", dataType).Replace("%OPERATOR%", op.vhdlString);
+                            string dataTypeInputSize = dataTypeFun(size);
+                            string dataTypeOutputSize = dataTypeFun(op.outputSizeFunction(size));
+                            Console.WriteLine("Now generating: {0}, {1}, {2} to {3}", op.friendlyName, size, dataTypeInputSize, dataTypeOutputSize);
+                            string vhdl = vhdlTemplate
+                                .Replace("%INTYPE%", dataTypeInputSize)
+                                .Replace("%OUTTYPE%", dataTypeOutputSize)
+                                .Replace("%OPERATOR%", op.vhdlString);
                             File.WriteAllText("VivadoFiles\\UUT.vhd", vhdl);
                             //Console.WriteLine("Now testing:\r\n==========================\r\n"+vhdl+"\r\n==========================");
                             Console.WriteLine("Running Vivado...");
