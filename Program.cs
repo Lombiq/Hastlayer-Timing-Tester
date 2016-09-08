@@ -11,10 +11,22 @@ using System.Threading.Tasks;
 
 namespace hastlayer_timing_tester
 {
+    class vhdlOp
+    {
+        public static int sizeNoChange(int size) { return size; }
+        public delegate int outputSizeFromInputSize(int size);
+        public string vhdlString;
+        public string friendlyName;
+        public outputSizeFromInputSize outputSizeFunction;
+        public vhdlOp(string vhdlString, string friendlyName, outputSizeFromInputSize outputSizeFunction)
+            { this.vhdlString = vhdlString; this.friendlyName = friendlyName; this.outputSizeFunction = outputSizeFunction; }
+    }
+
     abstract class TimingTestConfigBase
     {
         public delegate string dataTypeFromSize(int size);
-        public List<string> operators;
+
+        public List<vhdlOp> operators;
         public List<string> operatorNames;
         public List<string> vhdlTemplates;
         public List<int> sizes;
@@ -29,8 +41,20 @@ namespace hastlayer_timing_tester
     {
         public override void Populate()
         {
-            operators = new List<string>     { "+",   "-",   "/",   "*",   "mod", ">",  "<",  ">=",  "<=",  "=",  "/="  };
-            operatorNames = new List<string> { "add", "sub", "div", "mul", "mod", "gt", "lt", "ge",  "le",  "eq", "neq" };
+            operators = new List<vhdlOp>
+            {
+                new vhdlOp("+",     "add",  vhdlOp.sizeNoChange),
+                new vhdlOp("-",     "sub",  vhdlOp.sizeNoChange),
+                new vhdlOp("/",     "div",  vhdlOp.sizeNoChange),
+                new vhdlOp("*",     "mul",  vhdlOp.sizeNoChange),
+                new vhdlOp("mod",   "mod",  vhdlOp.sizeNoChange),
+                new vhdlOp(">",     "gz",   vhdlOp.sizeNoChange),
+                new vhdlOp("<",     "lt",   vhdlOp.sizeNoChange),
+                new vhdlOp(">=",    "ge",   vhdlOp.sizeNoChange),
+                new vhdlOp("<=",    "le",   vhdlOp.sizeNoChange),
+                new vhdlOp("=",     "eq",   vhdlOp.sizeNoChange),
+                new vhdlOp("/=",    "neq",  vhdlOp.sizeNoChange)
+            };
             sizes = new List<int> { 32 };
             dataTypes = new List<dataTypeFromSize> { (x) => { return String.Format("unsigned({0} downto 0)", x-1); } };
             part = "xc7a100tcsg324-1";
@@ -104,13 +128,13 @@ quit
         void runTests()
         {
             foreach (string vhdlTemplateName in test.vhdlTemplates)
-                foreach (string theOperator in test.operators)
+                foreach (vhdlOp op in test.operators)
                     foreach (int size in test.sizes)
                         foreach (TimingTestConfigBase.dataTypeFromSize dataTypeFun in test.dataTypes)
                         {
                             var dataType = dataTypeFun(size);
-                            Console.WriteLine("Now generating: {0}, {1}, {2}", theOperator, size, dataType);
-                            string vhdl = vhdlTemplate.Replace("%TYPE%", dataType).Replace("%OPERATOR%", theOperator);
+                            Console.WriteLine("Now generating: {0}, {1}, {2}", op.friendlyName, size, dataType);
+                            string vhdl = vhdlTemplate.Replace("%TYPE%", dataType).Replace("%OPERATOR%", op.vhdlString);
                             File.WriteAllText("VivadoFiles\\UUT.vhd", vhdl);
                             //Console.WriteLine("Now testing:\r\n==========================\r\n"+vhdl+"\r\n==========================");
                             Console.WriteLine("Running Vivado...");
