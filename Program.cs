@@ -13,22 +13,28 @@ namespace hastlayer_timing_tester
 {
     class vhdlOp
     {
-        public static int sizeNoChange(int size) { return size; }
-        public delegate int outputSizeFromInputSize(int size);
+        public delegate string outputDataType(int inputSize, TimingTestConfig.dataTypeFromSize inputDataTypeFunction, bool getFriendlyName);
+        public static string sameOutputDataType(int inputSize, TimingTestConfig.dataTypeFromSize inputDataTypeFunction, bool getFriendlyName)
+            { return inputDataTypeFunction(inputSize, getFriendlyName); }
+        public static string comparisonWithBoolOutput(int inputSize, TimingTestConfig.dataTypeFromSize inputDataTypeFunction, bool getFriendlyName)
+            { return "boolean"; }
+        public static string doubleSizedOutput(int inputSize, TimingTestConfig.dataTypeFromSize inputDataTypeFunction, bool getFriendlyName)
+            { return inputDataTypeFunction(inputSize * 2, getFriendlyName); }
+
         public string vhdlString;
         public string friendlyName;
-        public outputSizeFromInputSize outputSizeFunction;
-        public vhdlOp(string vhdlString, string friendlyName, outputSizeFromInputSize outputSizeFunction)
-            { this.vhdlString = vhdlString; this.friendlyName = friendlyName; this.outputSizeFunction = outputSizeFunction; }
+        public outputDataType outputDataTypeFunction;
+        public vhdlOp(string vhdlString, string friendlyName, outputDataType outputDataTypeFunction)
+            { this.vhdlString = vhdlString; this.friendlyName = friendlyName; this.outputDataTypeFunction = outputDataTypeFunction; }
     }
 
     abstract class TimingTestConfigBase
     {
-        public delegate string dataTypeFromSize(int size);
-
+        public delegate string dataTypeFromSize(int size, bool getFriendlyName);
+        public string name; //this will be used for the directory name
         public List<vhdlOp> operators;
         public List<string> vhdlTemplates;
-        public List<int> sizes;
+        public List<int> inputSizes;
         public string part;
         public List<dataTypeFromSize> dataTypes;
         public string vivadoPath;
@@ -42,23 +48,27 @@ namespace hastlayer_timing_tester
         {
             operators = new List<vhdlOp>
             {
-                new vhdlOp("+",     "add",  vhdlOp.sizeNoChange),
-                new vhdlOp("-",     "sub",  vhdlOp.sizeNoChange),
-                new vhdlOp("/",     "div",  vhdlOp.sizeNoChange),
-                new vhdlOp("*",     "mul",  vhdlOpSizeMul),
-                new vhdlOp("mod",   "mod",  vhdlOp.sizeNoChange),
-                new vhdlOp(">",     "gt",   vhdlOp.sizeNoChange),
-                new vhdlOp("<",     "lt",   vhdlOp.sizeNoChange),
-                new vhdlOp(">=",    "ge",   vhdlOp.sizeNoChange),
-                new vhdlOp("<=",    "le",   vhdlOp.sizeNoChange),
-                new vhdlOp("=",     "eq",   vhdlOp.sizeNoChange),
-                new vhdlOp("/=",    "neq",  vhdlOp.sizeNoChange)
+                new vhdlOp(">",     "gt",   vhdlOp.comparisonWithBoolOutput),
+                new vhdlOp("<",     "lt",   vhdlOp.comparisonWithBoolOutput),
+                new vhdlOp(">=",    "ge",   vhdlOp.comparisonWithBoolOutput),
+                new vhdlOp("<=",    "le",   vhdlOp.comparisonWithBoolOutput),
+                new vhdlOp("=",     "eq",   vhdlOp.comparisonWithBoolOutput),
+                new vhdlOp("/=",    "neq",  vhdlOp.comparisonWithBoolOutput),
+                new vhdlOp("+",     "add",  vhdlOp.sameOutputDataType),
+                new vhdlOp("-",     "sub",  vhdlOp.sameOutputDataType),
+                new vhdlOp("/",     "div",  vhdlOp.sameOutputDataType),
+                new vhdlOp("*",     "mul",  vhdlOp.doubleSizedOutput),
+                new vhdlOp("mod",   "mod",  vhdlOp.sameOutputDataType),
             };
-            sizes = new List<int> { 32 };
-            dataTypes = new List<dataTypeFromSize> { (x) => { return String.Format("unsigned({0} downto 0)", x-1); } };
+            inputSizes = new List<int> { 32 };
+            dataTypes = new List<dataTypeFromSize> {
+                (x, y) => { return (y) ? "unsigned" : String.Format("unsigned({0} downto 0)", x-1); },
+                (x, y) => { return (y) ? "signed" : String.Format("signed({0} downto 0)", x-1); }
+            };
             part = "xc7a100tcsg324-1";
             vhdlTemplates = new List<string> { "sync", "async" };
             vivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat";
+            name = "default";
         }
 
         int vhdlOpSizeMul(int input_size) { return 2*input_size; } //multiplication needs 2 times wider output than input
@@ -68,12 +78,12 @@ namespace hastlayer_timing_tester
     {
         TimingTestConfigBase test;
 
-        const string vhdlTemplate = @"
-library ieee;
-    use ieee.std_logic_1164.all;
-    use ieee.numeric_std.all;
+        const string vhdlTemplate =
+@"library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
 
-    entity tf_sample is
+entity tf_sample is
 port(
     a1      : in %INTYPE%;
     a2      : in %INTYPE%;
@@ -81,7 +91,7 @@ port(
 );
 end tf_sample;
 
-    architecture imp of tf_sample is begin
+architecture imp of tf_sample is begin
     aout <= a1 %OPERATOR% a2;
 end imp;";
 
@@ -97,17 +107,20 @@ quit
 #place_design
 #route_design";
 
-        public void Run(TimingTestConfigBase _test)
+        string currentTestDirectory;
+
+        public void initializeTest(TimingTestConfigBase _test)
         {
             test = _test;
-            //getVivadoPath((x)=>{
-            //    Console.WriteLine("Vivado detected at "+(vivadoPath=x));
-            //Console.WriteLine(fs.existsSync("VivadoFiles"));
-            if (!Directory.Exists("VivadoFiles")) Directory.CreateDirectory("VivadoFiles");
+            if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true); //Clean the VivadoFiles directory (delete it recursively and mkdir)
+            Directory.CreateDirectory("VivadoFiles");
             File.WriteAllText("VivadoFiles\\Generate.tcl", tclTemplate.Replace("%PART%", test.part));
-            runTests();
-            //});
-
+            if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
+            string currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__hh-mm-ss")+"__"+test.name;
+            currentTestDirectory = "TestResults\\"+currentTestDirectoryName;
+            if(Directory.Exists(currentTestDirectory)) { Console.WriteLine("The test directory already exists: ", currentTestDirectory); return; }
+            Directory.CreateDirectory(currentTestDirectory);
+            runTest();
         }
 
         string runVivado(string vivadoPath, string tclFile)
@@ -116,7 +129,7 @@ quit
             cp.StartInfo.FileName = vivadoPath;
             cp.StartInfo.Arguments = " -source " + tclFile;
             cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\VivadoFiles";
-            Console.WriteLine("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
+            //Console.WriteLine("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
             cp.StartInfo.UseShellExecute = true;
             cp.StartInfo.CreateNoWindow = false;
             //cp.StartInfo.RedirectStandardOutput = true;
@@ -126,26 +139,34 @@ quit
             return "";
         }
 
-        void runTests()
+        void runTest()
         {
             foreach (string vhdlTemplateName in test.vhdlTemplates)
                 foreach (vhdlOp op in test.operators)
-                    foreach (int size in test.sizes)
-                        foreach (TimingTestConfigBase.dataTypeFromSize dataTypeFun in test.dataTypes)
+                    foreach (int inputSize in test.inputSizes)
+                        foreach (TimingTestConfigBase.dataTypeFromSize inputDataTypeFunction in test.dataTypes)
                         {
-                            string dataTypeInputSize = dataTypeFun(size);
-                            string dataTypeOutputSize = dataTypeFun(op.outputSizeFunction(size));
-                            Console.WriteLine("Now generating: {0}, {1}, {2} to {3}", op.friendlyName, size, dataTypeInputSize, dataTypeOutputSize);
+                            Console.WriteLine("========================== starting test ==========================");
+                            string inputDataType = inputDataTypeFunction(inputSize, false);
+                            string outputDataType = op.outputDataTypeFunction(inputSize, inputDataTypeFunction, false);
+                            string uutPath = "VivadoFiles\\UUT.vhd";
+                            string timingOutputPath = "VivadoFiles\\timing.txt";
+                            Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.friendlyName, op.vhdlString, inputSize, inputDataType, outputDataType);
+                            string testFriendlyName = String.Format("{0}_{1}_{2}to{3}", op.friendlyName, inputDataTypeFunction(0, true), inputSize, op.outputDataTypeFunction(inputSize, inputDataTypeFunction, false));
+                            string testOutputPath = currentTestDirectory + "\\" + testFriendlyName;
+                            Directory.CreateDirectory(testOutputPath);
+                            Console.WriteLine("\tDir name: {0}", testFriendlyName);
                             string vhdl = vhdlTemplate
-                                .Replace("%INTYPE%", dataTypeInputSize)
-                                .Replace("%OUTTYPE%", dataTypeOutputSize)
+                                .Replace("%INTYPE%", inputDataType)
+                                .Replace("%OUTTYPE%", outputDataType)
                                 .Replace("%OPERATOR%", op.vhdlString);
-                            File.WriteAllText("VivadoFiles\\UUT.vhd", vhdl);
-                            //Console.WriteLine("Now testing:\r\n==========================\r\n"+vhdl+"\r\n==========================");
-                            Console.WriteLine("Running Vivado...");
+                            File.WriteAllText(uutPath, vhdl);
+                            File.Copy(uutPath, testOutputPath+"\\UUT.vhd");
+                            Console.Write("Running Vivado... ");
                             runVivado(test.vivadoPath, "Generate.tcl");
-                            Console.WriteLine("done.");
-                            string timingData = File.ReadAllText("VivadoFiles\\timing.txt");
+                            Console.WriteLine("Done.");
+                            File.Copy(timingOutputPath, testOutputPath+"\\timing.txt");
+                            string timingData = File.ReadAllText(timingOutputPath);
                             string dataPathDelayLine = "";
                             Regex.Split(timingData, "\r\n").ToList().ForEach((x) => { if (x.Contains("Data Path Delay")) dataPathDelayLine = x; });
                             string tempLinePart = Regex.Split(dataPathDelayLine, "\\(logic")[0];
@@ -153,13 +174,11 @@ quit
                             tempLinePart = Regex.Split(tempLinePart, "ns")[0];
                             tempLinePart = tempLinePart.Trim();
                             float dataPathDelay = float.Parse(tempLinePart, CultureInfo.InvariantCulture);
-                            Console.WriteLine("data path delay = {0} ns;  max clock frequency = {1} MHz", dataPathDelay, Math.Floor((1 / (dataPathDelay * 1e-9)) / 1000) / 1000);
+                            Console.WriteLine("Data path delay = {0} ns;  Max clock frequency = {1} MHz", dataPathDelay, Math.Floor((1 / (dataPathDelay * 1e-9)) / 1000) / 1000);
                             //return;
                         }
         }
    }
-
-
 
     class Program
     {
@@ -167,7 +186,7 @@ quit
         {
             TimingTester myTimingTester = new TimingTester();
             TimingTestConfigBase test = new TimingTestConfig();
-            myTimingTester.Run(test);
+            myTimingTester.initializeTest(test);
         }
     }
 }
@@ -175,5 +194,5 @@ quit
 
 //function cleanFiles() //TODO
 //{
-//    fs.readdirSync(".").forEach((x) => { if (x.endsWith(".backup.jou") && x.startsWith("vivado")) fs.unlinkSync("./" + x); });
+//
 //}
