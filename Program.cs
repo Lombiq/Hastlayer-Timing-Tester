@@ -185,7 +185,7 @@ quit
                             }
                             catch(Exception myException)
                             {
-                                if (test.debugMode) throw myException;
+                                if (test.debugMode) throw;
                                 else Console.WriteLine("Exception happened during test: {0}", myException.Message);
                             }
                         }
