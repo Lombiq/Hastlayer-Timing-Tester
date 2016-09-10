@@ -62,8 +62,8 @@ namespace hastlayer_timing_tester
             };
             inputSizes = new List<int> { 32 };
             dataTypes = new List<dataTypeFromSize> {
-                (x, y) => { return (y) ? "unsigned" : String.Format("unsigned({0} downto 0)", x-1); },
-                (x, y) => { return (y) ? "signed" : String.Format("signed({0} downto 0)", x-1); }
+                (size, getFriendlyName) => { return (getFriendlyName) ? String.Format("unsigned{0}", size) : String.Format("unsigned({0} downto 0)", size-1); },
+                (size, getFriendlyName) => { return (getFriendlyName) ? String.Format("signed{0}", size) : String.Format("signed({0} downto 0)", size-1); }
             };
             part = "xc7a100tcsg324-1";
             vhdlTemplates = new List<string> { "sync", "async" };
@@ -152,7 +152,7 @@ quit
                             string uutPath = "VivadoFiles\\UUT.vhd";
                             string timingOutputPath = "VivadoFiles\\timing.txt";
                             Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.friendlyName, op.vhdlString, inputSize, inputDataType, outputDataType);
-                            string testFriendlyName = String.Format("{0}_{1}_{2}to{3}", op.friendlyName, inputDataTypeFunction(0, true), inputSize, op.outputDataTypeFunction(inputSize, inputDataTypeFunction, false));
+                            string testFriendlyName = String.Format("{0}_{1}_to_{2}", op.friendlyName, inputDataTypeFunction(inputSize, true), op.outputDataTypeFunction(inputSize, inputDataTypeFunction, true));
                             string testOutputPath = currentTestDirectory + "\\" + testFriendlyName;
                             Directory.CreateDirectory(testOutputPath);
                             Console.WriteLine("\tDir name: {0}", testFriendlyName);
