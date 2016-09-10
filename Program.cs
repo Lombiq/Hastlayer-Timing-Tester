@@ -120,7 +120,9 @@ quit
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
             string currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__hh-mm-ss")+"__"+test.name;
             currentTestOutputBaseDirectory = "TestResults\\"+currentTestDirectoryName;
-            if(Directory.Exists(currentTestOutputBaseDirectory)) { Console.WriteLine("The test directory already exists: ", currentTestOutputBaseDirectory); return; }
+            if(Directory.Exists(currentTestOutputBaseDirectory))
+            { Console.WriteLine("Fatal error: the test directory already exists ({0}), which is very unlikely" +
+                "because we used the date and time to generate the directory name.", currentTestOutputBaseDirectory); return; }
             Directory.CreateDirectory(currentTestOutputBaseDirectory);
             runTest();
         }
