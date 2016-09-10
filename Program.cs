@@ -21,6 +21,8 @@ namespace hastlayer_timing_tester
     {
         protected string _template;
         public string template { get{ return _template; } }
+        protected string _xdc;
+        public string xdc { get{ return _xdc; } }
         abstract public void processResults(vivadoResult result);
     }
 
@@ -95,6 +97,7 @@ namespace hastlayer_timing_tester
 
         const string tclTemplate = @"
 read_vhdl UUT.vhd
+read_xdc Constraints.xdc
 synth_design -part %PART% -top tf_sample
 config_timing_analysis -disable_flight_delays true
 report_timing -file Timing.txt
@@ -158,20 +161,27 @@ quit
                                 Console.WriteLine("========================== starting test ==========================");
                                 string inputDataType = inputDataTypeFunction(inputSize, false);
                                 string outputDataType = op.outputDataTypeFunction(inputSize, inputDataTypeFunction, false);
+
                                 string uutPath = "VivadoFiles\\UUT.vhd";
+                                string xdcPath = "VivadoFiles\\Constraints.xdc";
                                 string timingReportOutputPath = "VivadoFiles\\Timing.txt";
                                 string timingSummaryOutputPath = "VivadoFiles\\TimingSummary.txt";
+
                                 Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.friendlyName, op.vhdlString, inputSize, inputDataType, outputDataType);
                                 string testFriendlyName = String.Format("{0}_{1}_to_{2}", op.friendlyName, inputDataTypeFunction(inputSize, true), op.outputDataTypeFunction(inputSize, inputDataTypeFunction, true));
                                 currentTestOutputDirectory = currentTestOutputBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(currentTestOutputDirectory);
                                 Console.WriteLine("\tDir name: {0}", testFriendlyName);
+
                                 string vhdl = myVhdlTemplate.template
                                     .Replace("%INTYPE%", inputDataType)
                                     .Replace("%OUTTYPE%", outputDataType)
                                     .Replace("%OPERATOR%", op.vhdlString);
                                 File.WriteAllText(uutPath, vhdl);
                                 copyFileToOutputDir(uutPath);
+                                File.WriteAllText(xdcPath, myVhdlTemplate.xdc);
+                                copyFileToOutputDir(xdcPath);
+
                                 Console.Write("Running Vivado... ");
                                 runVivado(test.vivadoPath, "Generate.tcl");
                                 Console.WriteLine("Done.");

@@ -39,6 +39,7 @@ begin
     end process;
     aout <= aout_reg;
 end imp;";
+            _xdc = "create_clock -period 10.000 -name clk [get_ports {clk}]";
         }
 
         override public void processResults(vivadoResult result)

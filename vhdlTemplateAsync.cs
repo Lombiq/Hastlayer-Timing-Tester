@@ -26,6 +26,7 @@ end tf_sample;
 architecture imp of tf_sample is begin
     aout <= a1 %OPERATOR% a2;
 end imp;";
+            _xdc = "";
         }
 
         override public void processResults(vivadoResult result)
