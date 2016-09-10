@@ -11,6 +11,19 @@ using System.Threading.Tasks;
 
 namespace hastlayer_timing_tester
 {
+    struct vivadoResult
+    {
+        public string timingReport;
+        public string timingSummary;
+    }
+
+    abstract class vhdlTemplateBase
+    {
+        protected string _template;
+        public string template { get{ return _template; } }
+        abstract public void processResults(vivadoResult result);
+    }
+
     class vhdlOp
     {
         public delegate string outputDataType(int inputSize, TimingTestConfig.dataTypeFromSize inputDataTypeFunction, bool getFriendlyName);
@@ -33,11 +46,12 @@ namespace hastlayer_timing_tester
         public delegate string dataTypeFromSize(int size, bool getFriendlyName);
         public string name; //this will be used for the directory name
         public List<vhdlOp> operators;
-        public List<string> vhdlTemplates;
+        public List<vhdlTemplateBase> vhdlTemplates;
         public List<int> inputSizes;
         public string part;
         public List<dataTypeFromSize> dataTypes;
         public string vivadoPath;
+        public bool debugMode;
         public abstract void Populate();
         public TimingTestConfigBase() { Populate(); }
     }
@@ -66,9 +80,10 @@ namespace hastlayer_timing_tester
                 (size, getFriendlyName) => { return (getFriendlyName) ? String.Format("signed{0}", size) : String.Format("signed({0} downto 0)", size-1); }
             };
             part = "xc7a100tcsg324-1";
-            vhdlTemplates = new List<string> { "sync", "async" };
+            vhdlTemplates = new List<vhdlTemplateBase> { new vhdlTemplateAsync() };
             vivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat";
             name = "default";
+            debugMode = true;
         }
 
         int vhdlOpSizeMul(int input_size) { return 2*input_size; } //multiplication needs 2 times wider output than input
@@ -77,23 +92,6 @@ namespace hastlayer_timing_tester
     class TimingTester
     {
         TimingTestConfigBase test;
-
-        const string vhdlTemplate =
-@"library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
-entity tf_sample is
-port(
-    a1      : in %INTYPE%;
-    a2      : in %INTYPE%;
-    aout    : out %OUTTYPE%
-);
-end tf_sample;
-
-architecture imp of tf_sample is begin
-    aout <= a1 %OPERATOR% a2;
-end imp;";
 
         const string tclTemplate = @"
 read_vhdl UUT.vhd
@@ -150,46 +148,49 @@ quit
 
         void runTest()
         {
-            foreach (string vhdlTemplateName in test.vhdlTemplates)
+            foreach (vhdlTemplateBase myVhdlTemplate in test.vhdlTemplates)
                 foreach (vhdlOp op in test.operators)
                     foreach (int inputSize in test.inputSizes)
                         foreach (TimingTestConfigBase.dataTypeFromSize inputDataTypeFunction in test.dataTypes)
                         {
-                            Console.WriteLine("========================== starting test ==========================");
-                            string inputDataType = inputDataTypeFunction(inputSize, false);
-                            string outputDataType = op.outputDataTypeFunction(inputSize, inputDataTypeFunction, false);
-                            string uutPath = "VivadoFiles\\UUT.vhd";
-                            string timingReportOutputPath = "VivadoFiles\\Timing.txt";
-                            string timingSummaryOutputPath = "VivadoFiles\\TimingSummary.txt";
-                            Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.friendlyName, op.vhdlString, inputSize, inputDataType, outputDataType);
-                            string testFriendlyName = String.Format("{0}_{1}_to_{2}", op.friendlyName, inputDataTypeFunction(inputSize, true), op.outputDataTypeFunction(inputSize, inputDataTypeFunction, true));
-                            currentTestOutputDirectory = currentTestOutputBaseDirectory + "\\" + testFriendlyName;
-                            Directory.CreateDirectory(currentTestOutputDirectory);
-                            Console.WriteLine("\tDir name: {0}", testFriendlyName);
-                            string vhdl = vhdlTemplate
-                                .Replace("%INTYPE%", inputDataType)
-                                .Replace("%OUTTYPE%", outputDataType)
-                                .Replace("%OPERATOR%", op.vhdlString);
-                            File.WriteAllText(uutPath, vhdl);
-                            copyFileToOutputDir(uutPath);
-                            Console.Write("Running Vivado... ");
-                            runVivado(test.vivadoPath, "Generate.tcl");
-                            Console.WriteLine("Done.");
-                            copyFileToOutputDir(timingReportOutputPath);
-                            copyFileToOutputDir(timingSummaryOutputPath);
-                            string timingData = File.ReadAllText(timingReportOutputPath);
-                            string dataPathDelayLine = "";
-                            Regex.Split(timingData, "\r\n").ToList().ForEach((x) => { if (x.Contains("Data Path Delay")) dataPathDelayLine = x; });
-                            string tempLinePart = Regex.Split(dataPathDelayLine, "\\(logic")[0];
-                            tempLinePart = Regex.Split(tempLinePart, "Data Path Delay:")[1];
-                            tempLinePart = Regex.Split(tempLinePart, "ns")[0];
-                            tempLinePart = tempLinePart.Trim();
-                            float dataPathDelay = float.Parse(tempLinePart, CultureInfo.InvariantCulture);
-                            Console.WriteLine("Data path delay = {0} ns;  Max clock frequency = {1} MHz", dataPathDelay, Math.Floor((1 / (dataPathDelay * 1e-9)) / 1000) / 1000);
-                            //return;
+                            try
+                            {
+                                Console.WriteLine("========================== starting test ==========================");
+                                string inputDataType = inputDataTypeFunction(inputSize, false);
+                                string outputDataType = op.outputDataTypeFunction(inputSize, inputDataTypeFunction, false);
+                                string uutPath = "VivadoFiles\\UUT.vhd";
+                                string timingReportOutputPath = "VivadoFiles\\Timing.txt";
+                                string timingSummaryOutputPath = "VivadoFiles\\TimingSummary.txt";
+                                Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.friendlyName, op.vhdlString, inputSize, inputDataType, outputDataType);
+                                string testFriendlyName = String.Format("{0}_{1}_to_{2}", op.friendlyName, inputDataTypeFunction(inputSize, true), op.outputDataTypeFunction(inputSize, inputDataTypeFunction, true));
+                                currentTestOutputDirectory = currentTestOutputBaseDirectory + "\\" + testFriendlyName;
+                                Directory.CreateDirectory(currentTestOutputDirectory);
+                                Console.WriteLine("\tDir name: {0}", testFriendlyName);
+                                string vhdl = myVhdlTemplate.template
+                                    .Replace("%INTYPE%", inputDataType)
+                                    .Replace("%OUTTYPE%", outputDataType)
+                                    .Replace("%OPERATOR%", op.vhdlString);
+                                File.WriteAllText(uutPath, vhdl);
+                                copyFileToOutputDir(uutPath);
+                                Console.Write("Running Vivado... ");
+                                runVivado(test.vivadoPath, "Generate.tcl");
+                                Console.WriteLine("Done.");
+                                copyFileToOutputDir(timingReportOutputPath);
+                                copyFileToOutputDir(timingSummaryOutputPath);
+                                vivadoResult myVivadoResult = new vivadoResult();
+                                myVivadoResult.timingReport = File.ReadAllText(timingReportOutputPath);
+                                myVivadoResult.timingSummary = File.ReadAllText(timingSummaryOutputPath);
+                                myVhdlTemplate.processResults(myVivadoResult);
+                                //return;
+                            }
+                            catch(Exception myException)
+                            {
+                                if (test.debugMode) throw myException;
+                                else Console.WriteLine("Exception happened during test: {0}", myException.Message);
+                            }
                         }
         }
-   }
+    }
 
     class Program
     {
@@ -201,9 +202,3 @@ quit
         }
     }
 }
-
-
-//function cleanFiles() //TODO
-//{
-//
-//}
