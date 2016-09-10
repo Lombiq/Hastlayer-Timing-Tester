@@ -80,7 +80,7 @@ namespace hastlayer_timing_tester
                 (size, getFriendlyName) => { return (getFriendlyName) ? String.Format("signed{0}", size) : String.Format("signed({0} downto 0)", size-1); }
             };
             part = "xc7a100tcsg324-1";
-            vhdlTemplates = new List<vhdlTemplateBase> { new vhdlTemplateAsync() };
+            vhdlTemplates = new List<vhdlTemplateBase> { new vhdlTemplateSync(), new vhdlTemplateAsync() };
             vivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat";
             name = "default";
             debugMode = true;
