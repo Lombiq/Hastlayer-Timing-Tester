@@ -100,6 +100,7 @@ read_vhdl UUT.vhd
 synth_design -part %PART% -top tf_sample
 config_timing_analysis -disable_flight_delays true
 report_timing -file Timing.txt
+report_timing_summary -check_timing_verbose -file TimingSummary.txt
 quit
 #
 #report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
@@ -107,7 +108,8 @@ quit
 #place_design
 #route_design";
 
-        string currentTestDirectory;
+        string currentTestOutputBaseDirectory;
+        string currentTestOutputDirectory;
 
         public void initializeTest(TimingTestConfigBase _test)
         {
@@ -117,9 +119,9 @@ quit
             File.WriteAllText("VivadoFiles\\Generate.tcl", tclTemplate.Replace("%PART%", test.part));
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
             string currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__hh-mm-ss")+"__"+test.name;
-            currentTestDirectory = "TestResults\\"+currentTestDirectoryName;
-            if(Directory.Exists(currentTestDirectory)) { Console.WriteLine("The test directory already exists: ", currentTestDirectory); return; }
-            Directory.CreateDirectory(currentTestDirectory);
+            currentTestOutputBaseDirectory = "TestResults\\"+currentTestDirectoryName;
+            if(Directory.Exists(currentTestOutputBaseDirectory)) { Console.WriteLine("The test directory already exists: ", currentTestOutputBaseDirectory); return; }
+            Directory.CreateDirectory(currentTestOutputBaseDirectory);
             runTest();
         }
 
@@ -139,6 +141,11 @@ quit
             return "";
         }
 
+        void copyFileToOutputDir(string inputPath)
+        {
+            File.Copy(inputPath, currentTestOutputDirectory+"\\"+Path.GetFileName(inputPath));
+        }
+
         void runTest()
         {
             foreach (string vhdlTemplateName in test.vhdlTemplates)
@@ -150,23 +157,25 @@ quit
                             string inputDataType = inputDataTypeFunction(inputSize, false);
                             string outputDataType = op.outputDataTypeFunction(inputSize, inputDataTypeFunction, false);
                             string uutPath = "VivadoFiles\\UUT.vhd";
-                            string timingOutputPath = "VivadoFiles\\timing.txt";
+                            string timingReportOutputPath = "VivadoFiles\\Timing.txt";
+                            string timingSummaryOutputPath = "VivadoFiles\\TimingSummary.txt";
                             Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.friendlyName, op.vhdlString, inputSize, inputDataType, outputDataType);
                             string testFriendlyName = String.Format("{0}_{1}_to_{2}", op.friendlyName, inputDataTypeFunction(inputSize, true), op.outputDataTypeFunction(inputSize, inputDataTypeFunction, true));
-                            string testOutputPath = currentTestDirectory + "\\" + testFriendlyName;
-                            Directory.CreateDirectory(testOutputPath);
+                            currentTestOutputDirectory = currentTestOutputBaseDirectory + "\\" + testFriendlyName;
+                            Directory.CreateDirectory(currentTestOutputDirectory);
                             Console.WriteLine("\tDir name: {0}", testFriendlyName);
                             string vhdl = vhdlTemplate
                                 .Replace("%INTYPE%", inputDataType)
                                 .Replace("%OUTTYPE%", outputDataType)
                                 .Replace("%OPERATOR%", op.vhdlString);
                             File.WriteAllText(uutPath, vhdl);
-                            File.Copy(uutPath, testOutputPath+"\\UUT.vhd");
+                            copyFileToOutputDir(uutPath);
                             Console.Write("Running Vivado... ");
                             runVivado(test.vivadoPath, "Generate.tcl");
                             Console.WriteLine("Done.");
-                            File.Copy(timingOutputPath, testOutputPath+"\\timing.txt");
-                            string timingData = File.ReadAllText(timingOutputPath);
+                            copyFileToOutputDir(timingReportOutputPath);
+                            copyFileToOutputDir(timingSummaryOutputPath);
+                            string timingData = File.ReadAllText(timingReportOutputPath);
                             string dataPathDelayLine = "";
                             Regex.Split(timingData, "\r\n").ToList().ForEach((x) => { if (x.Contains("Data Path Delay")) dataPathDelayLine = x; });
                             string tempLinePart = Regex.Split(dataPathDelayLine, "\\(logic")[0];
