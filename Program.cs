@@ -24,6 +24,7 @@ namespace hastlayer_timing_tester
         protected string _xdc;
         public string xdc { get{ return _xdc; } }
         abstract public void processResults(vivadoResult result);
+        abstract public string name { get; }
     }
 
     class vhdlOp
@@ -151,10 +152,10 @@ quit
 
         void runTest()
         {
-            foreach (vhdlTemplateBase myVhdlTemplate in test.vhdlTemplates)
-                foreach (vhdlOp op in test.operators)
-                    foreach (int inputSize in test.inputSizes)
-                        foreach (TimingTestConfigBase.dataTypeFromSize inputDataTypeFunction in test.dataTypes)
+            foreach (vhdlOp op in test.operators)
+                foreach (int inputSize in test.inputSizes)
+                    foreach (TimingTestConfigBase.dataTypeFromSize inputDataTypeFunction in test.dataTypes)
+                        foreach (vhdlTemplateBase myVhdlTemplate in test.vhdlTemplates)
                         {
                             try
                             {
@@ -168,7 +169,12 @@ quit
                                 string timingSummaryOutputPath = "VivadoFiles\\TimingSummary.txt";
 
                                 Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.friendlyName, op.vhdlString, inputSize, inputDataType, outputDataType);
-                                string testFriendlyName = String.Format("{0}_{1}_to_{2}", op.friendlyName, inputDataTypeFunction(inputSize, true), op.outputDataTypeFunction(inputSize, inputDataTypeFunction, true));
+                                string testFriendlyName = String.Format("{0}_{1}_to_{2}_{3}",
+                                    op.friendlyName,
+                                    inputDataTypeFunction(inputSize, true),
+                                    op.outputDataTypeFunction(inputSize, inputDataTypeFunction, true),
+                                    myVhdlTemplate.name);
+                                    //friendly name should contain something from each "foreach" iterator
                                 currentTestOutputDirectory = currentTestOutputBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(currentTestOutputDirectory);
                                 Console.WriteLine("\tDir name: {0}", testFriendlyName);

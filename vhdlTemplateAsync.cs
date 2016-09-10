@@ -39,5 +39,7 @@ end imp;";
             float dataPathDelay = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
             Console.WriteLine("Data path delay = {0} ns;  Max clock frequency = {1} MHz", dataPathDelay, Math.Floor((1 / (dataPathDelay * 1e-9)) / 1000) / 1000);
         }
+
+        override public string name { get { return "async"; } }
     }
 }
