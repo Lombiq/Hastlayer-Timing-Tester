@@ -119,9 +119,10 @@ quit
             string currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__hh-mm-ss")+"__"+Test.Name;
             CurrentTestOutputBaseDirectory = "TestResults\\"+currentTestDirectoryName;
             if(Directory.Exists(CurrentTestOutputBaseDirectory))
-            { Console.WriteLine("Fatal error: the test directory already exists ({0}), which is very unlikely" +
+            { Logger.Log("Fatal error: the test directory already exists ({0}), which is very unlikely" +
                 "because we used the date and time to generate the directory name.", CurrentTestOutputBaseDirectory); return; }
             Directory.CreateDirectory(CurrentTestOutputBaseDirectory);
+            Logger.Init(CurrentTestOutputBaseDirectory+"\\Log.txt");
             RunTest();
         }
 
@@ -131,7 +132,7 @@ quit
             cp.StartInfo.FileName = vivadoPath;
             cp.StartInfo.Arguments = " -source " + tclFile;
             cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\VivadoFiles";
-            //Console.WriteLine("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
+            //Logger.Log("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
             cp.StartInfo.UseShellExecute = true;
             cp.StartInfo.CreateNoWindow = false;
             //cp.StartInfo.RedirectStandardOutput = true;
@@ -155,7 +156,7 @@ quit
                         {
                             try
                             {
-                                Console.WriteLine("========================== starting test ==========================");
+                                Logger.Log("========================== starting test ==========================");
                                 string inputDataType = inputDataTypeFunction(inputSize, false);
                                 string outputDataType = op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, false);
 
@@ -165,7 +166,7 @@ quit
                                 string timingSummaryOutputPath = "VivadoFiles\\TimingSummary.txt";
                                 string schematicOutputPath = "VivadoFiles\\Schematic.pdf";
 
-                                Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString, inputSize, inputDataType, outputDataType);
+                                Logger.Log("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString, inputSize, inputDataType, outputDataType);
                                 string testFriendlyName = String.Format("{0}_{1}_to_{2}_{3}",
                                     op.FriendlyName,
                                     inputDataTypeFunction(inputSize, true),
@@ -174,7 +175,7 @@ quit
                                     //friendly name should contain something from each "foreach" iterator
                                 CurrentTestOutputDirectory = CurrentTestOutputBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(CurrentTestOutputDirectory);
-                                Console.WriteLine("\tDir name: {0}", testFriendlyName);
+                                Logger.Log("\tDir name: {0}", testFriendlyName);
 
                                 string vhdl = myVhdlTemplate.Template
                                     .Replace("%INTYPE%", inputDataType)
@@ -185,9 +186,9 @@ quit
                                 File.WriteAllText(xdcPath, myVhdlTemplate.Xdc);
                                 CopyFileToOutputDir(xdcPath);
 
-                                Console.Write("Running Vivado... ");
+                                Logger.LogInline("Running Vivado... ");
                                 RunVivado(Test.VivadoPath, "Generate.tcl");
-                                Console.WriteLine("Done.");
+                                Logger.Log("Done.");
                                 CopyFileToOutputDir(timingReportOutputPath);
                                 CopyFileToOutputDir(timingSummaryOutputPath);
                                 CopyFileToOutputDir(schematicOutputPath);
@@ -202,7 +203,7 @@ quit
                             catch(Exception myException)
                             {
                                 if (Test.DebugMode) throw;
-                                else Console.WriteLine("Exception happened during test: {0}", myException.Message);
+                                else Logger.Log("Exception happened during test: {0}", myException.Message);
                             }
                         }
         }
@@ -215,6 +216,31 @@ quit
             TimingTester myTimingTester = new TimingTester();
             TimingTestConfigBase test = new TimingTestConfig();
             myTimingTester.InitializeTest(test);
+        }
+    }
+
+    static class Logger
+    {
+        private static StreamWriter LogStreamWriter;
+        private static bool Initialized;
+
+        static public void Init(string path)
+        {
+            LogStreamWriter = new StreamWriter(File.Create(path));
+            LogStreamWriter.AutoFlush = true;
+            Initialized = true;
+        }
+
+        static public void Log(string Format, params object[] Objs)
+        {
+            if(Initialized) LogStreamWriter.WriteLine(Format, Objs);
+            Console.WriteLine(Format, Objs);
+        }
+
+        static public void LogInline(string Format, params object[] Objs)
+        {
+            if(Initialized) LogStreamWriter.WriteLine(Format, Objs);
+            Console.WriteLine(Format, Objs);
         }
     }
 }

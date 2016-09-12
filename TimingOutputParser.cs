@@ -57,11 +57,11 @@ namespace HastlayerTimingTester
         }
         public void PrintParsedTimingReport()
         {
-            if(DataPathDelayAvailable) Console.WriteLine("Data path delay = {0} ns;  Max clock frequency = {1} MHz", DataPathDelay, Math.Floor((1 / (DataPathDelay * 1e-9)) / 1000) / 1000);
+            if(DataPathDelayAvailable) Logger.Log("Data path delay = {0} ns;  Max clock frequency = {1} MHz", DataPathDelay, Math.Floor((1 / (DataPathDelay * 1e-9)) / 1000) / 1000);
         }
         public void PrintParsedTimingSummary()
         {
-            if(TimingSummaryAvailable) Console.WriteLine(
+            if(TimingSummaryAvailable) Logger.Log(
                 "Timing Summary:\r\n" +
                 "\tDesign {0} meeting timing requirements\r\n" +
                 "\tWorst Negative Slack = {1} ns\r\n" +
@@ -76,7 +76,7 @@ namespace HastlayerTimingTester
                 WorstHoldSlack, TotalHoldSlack,
                 WorstPulseWidthSlack, TotalPulseWidthSlack
             );
-            else Console.WriteLine("Timing summary did not contain slack values (or could not be parsed).\r\n\tThis is okay for an async UUT without a clock.");
+            else Logger.Log("Timing summary did not contain slack values (or could not be parsed).\r\n\tThis is okay for an async UUT without a clock.");
         }
 
     }
