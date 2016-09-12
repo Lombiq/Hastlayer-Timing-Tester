@@ -23,7 +23,6 @@ namespace hastlayer_timing_tester
         public string template { get{ return _template; } }
         protected string _xdc;
         public string xdc { get{ return _xdc; } }
-        abstract public void processResults(vivadoResult result);
         abstract public string name { get; }
     }
 
@@ -94,6 +93,7 @@ namespace hastlayer_timing_tester
 
     class TimingTester
     {
+        TimingOutputParser parser = new TimingOutputParser();
         TimingTestConfigBase test;
 
         const string tclTemplate = @"
@@ -101,7 +101,7 @@ read_vhdl UUT.vhd
 read_xdc Constraints.xdc
 synth_design -part %PART% -top tf_sample
 config_timing_analysis -disable_flight_delays true
-report_timing -file Timing.txt
+report_timing -file TimingReport.txt
 report_timing_summary -check_timing_verbose -file TimingSummary.txt
 quit
 #
@@ -165,7 +165,7 @@ quit
 
                                 string uutPath = "VivadoFiles\\UUT.vhd";
                                 string xdcPath = "VivadoFiles\\Constraints.xdc";
-                                string timingReportOutputPath = "VivadoFiles\\Timing.txt";
+                                string timingReportOutputPath = "VivadoFiles\\TimingReport.txt";
                                 string timingSummaryOutputPath = "VivadoFiles\\TimingSummary.txt";
 
                                 Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.friendlyName, op.vhdlString, inputSize, inputDataType, outputDataType);
@@ -196,7 +196,8 @@ quit
                                 vivadoResult myVivadoResult = new vivadoResult();
                                 myVivadoResult.timingReport = File.ReadAllText(timingReportOutputPath);
                                 myVivadoResult.timingSummary = File.ReadAllText(timingSummaryOutputPath);
-                                myVhdlTemplate.processResults(myVivadoResult);
+                                parser.Parse(myVivadoResult);
+                                parser.PrintParsedTimingReport();
                                 //return;
                             }
                             catch(Exception myException)

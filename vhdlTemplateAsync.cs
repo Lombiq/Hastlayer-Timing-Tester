@@ -29,17 +29,6 @@ end imp;";
             _xdc = "";
         }
 
-        override public void processResults(vivadoResult result)
-        {
-            string dataPathDelayLine = "";
-            Regex.Split(result.timingReport, "\r\n").ToList().ForEach((x) => { if (x.Contains("Data Path Delay")) dataPathDelayLine = x; });
-            if(dataPathDelayLine.Length == 0) { Console.WriteLine("Could not find \"Data Path Delay\" in timing report."); return; }
-            Match myMatch = Regex.Match(result.timingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
-            if(!myMatch.Success) { Console.WriteLine("Could not match regexp in timing report to find data path delay."); return; }
-            float dataPathDelay = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
-            Console.WriteLine("Data path delay = {0} ns;  Max clock frequency = {1} MHz", dataPathDelay, Math.Floor((1 / (dataPathDelay * 1e-9)) / 1000) / 1000);
-        }
-
         override public string name { get { return "async"; } }
     }
 }
