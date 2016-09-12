@@ -12,13 +12,13 @@ namespace HastlayerTimingTester
         public string timingSummary;
     }
 
-    abstract class vhdlTemplateBase
+    abstract class VhdlTemplateBase
     {
-        protected string _template;
-        public string template { get{ return _template; } }
-        protected string _xdc;
-        public string xdc { get{ return _xdc; } }
-        abstract public string name { get; }
+        protected string _Template;
+        public string Template { get{ return _Template; } }
+        protected string _Xdc;
+        public string Xdc { get{ return _Xdc; } }
+        abstract public string Name { get; }
     }
 
     class vhdlOp
@@ -43,7 +43,7 @@ namespace HastlayerTimingTester
         public delegate string dataTypeFromSize(int size, bool getFriendlyName);
         public string name; //this will be used for the directory name
         public List<vhdlOp> operators;
-        public List<vhdlTemplateBase> vhdlTemplates;
+        public List<VhdlTemplateBase> vhdlTemplates;
         public List<int> inputSizes;
         public string part;
         public List<dataTypeFromSize> dataTypes;
@@ -77,7 +77,7 @@ namespace HastlayerTimingTester
                 (size, getFriendlyName) => { return (getFriendlyName) ? String.Format("signed{0}", size) : String.Format("signed({0} downto 0)", size-1); }
             };
             part = "xc7a100tcsg324-1";
-            vhdlTemplates = new List<vhdlTemplateBase> { new vhdlTemplateSync(), new vhdlTemplateAsync() };
+            vhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync(), new VhdlTemplateAsync() };
             vivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat";
             name = "default";
             debugMode = true;
@@ -150,7 +150,7 @@ quit
             foreach (vhdlOp op in test.operators)
                 foreach (int inputSize in test.inputSizes)
                     foreach (TimingTestConfigBase.dataTypeFromSize inputDataTypeFunction in test.dataTypes)
-                        foreach (vhdlTemplateBase myVhdlTemplate in test.vhdlTemplates)
+                        foreach (VhdlTemplateBase myVhdlTemplate in test.vhdlTemplates)
                         {
                             try
                             {
@@ -168,19 +168,19 @@ quit
                                     op.friendlyName,
                                     inputDataTypeFunction(inputSize, true),
                                     op.outputDataTypeFunction(inputSize, inputDataTypeFunction, true),
-                                    myVhdlTemplate.name);
+                                    myVhdlTemplate.Name);
                                     //friendly name should contain something from each "foreach" iterator
                                 currentTestOutputDirectory = currentTestOutputBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(currentTestOutputDirectory);
                                 Console.WriteLine("\tDir name: {0}", testFriendlyName);
 
-                                string vhdl = myVhdlTemplate.template
+                                string vhdl = myVhdlTemplate.Template
                                     .Replace("%INTYPE%", inputDataType)
                                     .Replace("%OUTTYPE%", outputDataType)
                                     .Replace("%OPERATOR%", op.vhdlString);
                                 File.WriteAllText(uutPath, vhdl);
                                 copyFileToOutputDir(uutPath);
-                                File.WriteAllText(xdcPath, myVhdlTemplate.xdc);
+                                File.WriteAllText(xdcPath, myVhdlTemplate.Xdc);
                                 copyFileToOutputDir(xdcPath);
 
                                 Console.Write("Running Vivado... ");

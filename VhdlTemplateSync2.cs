@@ -5,12 +5,12 @@ using System.Text.RegularExpressions;
 
 namespace HastlayerTimingTester
 {
-    class vhdlTemplateSync : vhdlTemplateBase
+    class VhdlTemplateSync : VhdlTemplateBase
     {
 
-        public vhdlTemplateSync()
+        public VhdlTemplateSync()
         {
-            _template =
+            _Template =
 @"library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -39,9 +39,9 @@ begin
     end process;
     aout <= aout_reg;
 end imp;";
-            _xdc = "create_clock -period 10.000 -name clk [get_ports {clk}]";
+            _Xdc = "create_clock -period 10.000 -name clk [get_ports {clk}]";
         }
 
-        override public string name { get { return "sync"; } }
+        override public string Name { get { return "sync"; } }
     }
 }
