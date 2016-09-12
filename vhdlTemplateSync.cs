@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace hastlayer_timing_tester
+namespace HastlayerTimingTester
 {
     class vhdlTemplateSync : vhdlTemplateBase
     {

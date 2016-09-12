@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace hastlayer_timing_tester
+namespace HastlayerTimingTester
 {
 
     class TimingOutputParser
