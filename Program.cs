@@ -6,10 +6,10 @@ using System.Reflection;
 
 namespace HastlayerTimingTester
 {
-    struct vivadoResult
+    struct VivadoResult
     {
-        public string timingReport;
-        public string timingSummary;
+        public string TimingReport;
+        public string TimingSummary;
     }
 
     abstract class VhdlTemplateBase
@@ -188,9 +188,9 @@ quit
                                 Console.WriteLine("Done.");
                                 copyFileToOutputDir(timingReportOutputPath);
                                 copyFileToOutputDir(timingSummaryOutputPath);
-                                vivadoResult myVivadoResult = new vivadoResult();
-                                myVivadoResult.timingReport = File.ReadAllText(timingReportOutputPath);
-                                myVivadoResult.timingSummary = File.ReadAllText(timingSummaryOutputPath);
+                                VivadoResult myVivadoResult = new VivadoResult();
+                                myVivadoResult.TimingReport = File.ReadAllText(timingReportOutputPath);
+                                myVivadoResult.TimingSummary = File.ReadAllText(timingSummaryOutputPath);
                                 parser.Parse(myVivadoResult);
                                 parser.PrintParsedTimingReport();
                                 //return;
