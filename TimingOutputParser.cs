@@ -14,9 +14,9 @@ namespace HastlayerTimingTester
         public float DataPathDelay { get { if(!_DataPathDelayAvailable) throw new Exception("data path delay is not available"); return _DataPathDelay; }}
         public bool DataPathDelayAvailable { get { return _DataPathDelayAvailable; }}
 
-        public void Parse(vivadoResult result)
+        public void Parse(VivadoResult result)
         {
-            Match myMatch = Regex.Match(result.timingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
+            Match myMatch = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
             if(myMatch.Success)
             {
                 _DataPathDelay = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
