@@ -98,9 +98,10 @@ synth_design -part %PART% -top tf_sample
 config_timing_analysis -disable_flight_delays true
 report_timing -file TimingReport.txt
 report_timing_summary -check_timing_verbose -file TimingSummary.txt
+show_schematic [get_nets]
+write_schematic -force -format pdf -orientation landscape Schematic.pdf
 quit
 #
-#report_timing_summary -delay_type min_max -report_unconstrained -check_timing_verbose -max_paths 10 -input_pins -name timing_1
 #opt_design
 #place_design
 #route_design";
@@ -162,6 +163,7 @@ quit
                                 string xdcPath = "VivadoFiles\\Constraints.xdc";
                                 string timingReportOutputPath = "VivadoFiles\\TimingReport.txt";
                                 string timingSummaryOutputPath = "VivadoFiles\\TimingSummary.txt";
+                                string schematicOutputPath = "VivadoFiles\\Schematic.pdf";
 
                                 Console.WriteLine("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString, inputSize, inputDataType, outputDataType);
                                 string testFriendlyName = String.Format("{0}_{1}_to_{2}_{3}",
@@ -188,11 +190,13 @@ quit
                                 Console.WriteLine("Done.");
                                 CopyFileToOutputDir(timingReportOutputPath);
                                 CopyFileToOutputDir(timingSummaryOutputPath);
+                                CopyFileToOutputDir(schematicOutputPath);
                                 VivadoResult myVivadoResult = new VivadoResult();
                                 myVivadoResult.TimingReport = File.ReadAllText(timingReportOutputPath);
                                 myVivadoResult.TimingSummary = File.ReadAllText(timingSummaryOutputPath);
                                 Parser.Parse(myVivadoResult);
                                 Parser.PrintParsedTimingReport();
+                                Parser.PrintParsedTimingSummary();
                                 //return;
                             }
                             catch(Exception myException)
