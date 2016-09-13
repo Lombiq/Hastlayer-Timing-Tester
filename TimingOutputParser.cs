@@ -19,6 +19,15 @@ namespace HastlayerTimingTester
         public float WorstPulseWidthSlack { get; private set; }
         public float TotalPulseWidthSlack { get; private set; }
         public bool DesignMetTimingRequirements { get { return TimingSummaryAvailable && TotalNegativeSlack == 0 && TotalHoldSlack == 0 && TotalPulseWidthSlack == 0; } }
+        public float RequiredTimeWithDelays { get; private set; }
+        public float RequiredTime { get; private set; }
+        public float SourceClockDelay { get; private set; }
+        private int ExtendedSyncParametersCount;
+        private bool ExtendedSyncParametersAvailable  { get { return ExtendedSyncParametersCount == 3; }  }
+
+        public float Time { get; private set; }
+
+
 
         public void Parse(VivadoResult result)
         {
@@ -28,6 +37,32 @@ namespace HastlayerTimingTester
             {
                 DataPathDelay = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
                 DataPathDelayAvailable = true;
+            }
+
+            //Let's see a sync design
+            ExtendedSyncParametersCount = 0;
+            RequiredTime = 0;
+            myMatch = Regex.Match(result.TimingReport, @"(\s*)Requirement:(\s*)([0-9\.]*)ns");
+            if(myMatch.Success)
+            {
+                RequiredTime = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
+                ExtendedSyncParametersCount++;
+            }
+
+            RequiredTimeWithDelays = 0;
+            myMatch = Regex.Match(result.TimingReport, @"(\s*)required time(\s*)([0-9\.]*)(\s*)");
+            if(myMatch.Success)
+            {
+                RequiredTime = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
+                ExtendedSyncParametersCount++;
+            }
+
+            SourceClockDelay = 0;
+            myMatch = Regex.Match(result.TimingReport, @"(\s*)Source Clock Delay(\s*)\(SCD\):(\s*)([0-9\.]*)ns");
+            if(myMatch.Success)
+            {
+                SourceClockDelay = float.Parse(myMatch.Groups[4].Value, CultureInfo.InvariantCulture);
+                ExtendedSyncParametersCount++;
             }
 
             //Timing Summary
