@@ -50,7 +50,7 @@ namespace HastlayerTimingTester
             }
 
             RequiredTimeWithDelays = 0;
-            myMatch = Regex.Match(result.TimingReport, @"(\s*)required time(\s*)([0-9\.]*)(\s*)");
+            myMatch = Regex.Match(result.TimingReport, @"\n(\s*)required time(\s*)([0-9\.]*)(\s*)");
             if(myMatch.Success)
             {
                 RequiredTime = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
