@@ -10,7 +10,7 @@ namespace HastlayerTimingTester
 
         public VhdlTemplateSync()
         {
-            _Template =
+            VhdlTemplate =
 @"library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -39,7 +39,7 @@ begin
     end process;
     aout <= aout_reg;
 end imp;";
-            _Xdc = "create_clock -period 10.000 -name clk [get_ports {clk}]";
+            XdcTemplate = "create_clock -period %CLKPERIOD% -name clk [get_ports {clk}]";
         }
 
         override public string Name { get { return "sync"; } }

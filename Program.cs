@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Reflection;
 
@@ -8,16 +9,17 @@ namespace HastlayerTimingTester
 {
     struct VivadoResult
     {
+        //This is for passing the data output by Vivado into TimingOutputParser.
         public string TimingReport;
         public string TimingSummary;
     }
 
     abstract class VhdlTemplateBase
     {
-        protected string _Template;
-        public string Template { get{ return _Template; } }
-        protected string _Xdc;
-        public string Xdc { get{ return _Xdc; } }
+        //VHDL templates contain the hardware project to be compiled. They consist of a VHDL and an XDC
+        //(constraints file) template, both of which will be used by Vivado.
+        public string VhdlTemplate { get; protected set; }
+        public string XdcTemplate { get; protected set; }
         abstract public string Name { get; }
     }
 
@@ -49,42 +51,9 @@ namespace HastlayerTimingTester
         public List<DataTypeFromSizeDelegate> DataTypes;
         public string VivadoPath;
         public bool DebugMode;
-        public abstract void Populate();
-        public TimingTestConfigBase() { Populate(); }
+        public float Frequency;
     }
 
-    class TimingTestConfig : TimingTestConfigBase
-    {
-        public override void Populate()
-        {
-            Operators = new List<VhdlOp>
-            {
-                new VhdlOp(">",     "gt",   VhdlOp.ComparisonWithBoolOutput),
-                new VhdlOp("<",     "lt",   VhdlOp.ComparisonWithBoolOutput),
-                new VhdlOp(">=",    "ge",   VhdlOp.ComparisonWithBoolOutput),
-                new VhdlOp("<=",    "le",   VhdlOp.ComparisonWithBoolOutput),
-                new VhdlOp("=",     "eq",   VhdlOp.ComparisonWithBoolOutput),
-                new VhdlOp("/=",    "neq",  VhdlOp.ComparisonWithBoolOutput),
-                new VhdlOp("+",     "add",  VhdlOp.SameOutputDataType),
-                new VhdlOp("-",     "sub",  VhdlOp.SameOutputDataType),
-                new VhdlOp("/",     "div",  VhdlOp.SameOutputDataType),
-                new VhdlOp("*",     "mul",  VhdlOp.DoubleSizedOutput),
-                new VhdlOp("mod",   "mod",  VhdlOp.SameOutputDataType),
-            };
-            InputSizes = new List<int> { 32 };
-            DataTypes = new List<DataTypeFromSizeDelegate> {
-                (size, getFriendlyName) => { return (getFriendlyName) ? String.Format("unsigned{0}", size) : String.Format("unsigned({0} downto 0)", size-1); },
-                (size, getFriendlyName) => { return (getFriendlyName) ? String.Format("signed{0}", size) : String.Format("signed({0} downto 0)", size-1); }
-            };
-            Part = "xc7a100tcsg324-1";
-            VhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync(), new VhdlTemplateAsync() };
-            VivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat";
-            Name = "default";
-            DebugMode = true;
-        }
-
-        int VhdlOpSizeMul(int inputSize) { return 2 * inputSize; } //multiplication needs 2 times wider output than input
-    }
 
     class TimingTester
     {
@@ -177,13 +146,13 @@ quit
                                 Directory.CreateDirectory(CurrentTestOutputDirectory);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
-                                string vhdl = myVhdlTemplate.Template
+                                string vhdl = myVhdlTemplate.VhdlTemplate
                                     .Replace("%INTYPE%", inputDataType)
                                     .Replace("%OUTTYPE%", outputDataType)
                                     .Replace("%OPERATOR%", op.VhdlString);
                                 File.WriteAllText(uutPath, vhdl);
                                 CopyFileToOutputDir(uutPath);
-                                File.WriteAllText(xdcPath, myVhdlTemplate.Xdc);
+                                File.WriteAllText(xdcPath, myVhdlTemplate.XdcTemplate.Replace("%CLKPERIOD%", ((1.0 / Test.Frequency) * 1e9F).ToString(CultureInfo.InvariantCulture)));
                                 CopyFileToOutputDir(xdcPath);
 
                                 Logger.LogInline("Running Vivado... ");
@@ -206,6 +175,8 @@ quit
                                 else Logger.Log("Exception happened during test: {0}", myException.Message);
                             }
                         }
+
+            Logger.Log("Finished, exiting.");
         }
     }
 

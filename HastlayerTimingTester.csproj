@@ -46,6 +46,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimingOutputParser.cs" />
+    <Compile Include="TimingTestConfig.cs" />
     <Compile Include="VhdlTemplateAsync.cs" />
     <Compile Include="VhdlTemplateSync.cs" />
   </ItemGroup>

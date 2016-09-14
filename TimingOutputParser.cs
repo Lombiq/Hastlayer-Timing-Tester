@@ -23,7 +23,9 @@ namespace HastlayerTimingTester
         public float RequiredTime { get; private set; }
         public float SourceClockDelay { get; private set; }
         private int ExtendedSyncParametersCount;
-        private bool ExtendedSyncParametersAvailable  { get { return ExtendedSyncParametersCount == 3; }  }
+        private bool ExtendedSyncParametersAvailable  { get { return ExtendedSyncParametersCount == 3; } }
+        public float TimingWindowAvailable { get { return RequiredTimeWithDelays - SourceClockDelay; } }
+        public float TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - RequiredTime; } }
 
         public float Time { get; private set; }
 
@@ -53,7 +55,7 @@ namespace HastlayerTimingTester
             myMatch = Regex.Match(result.TimingReport, @"\n(\s*)required time(\s*)([0-9\.]*)(\s*)");
             if(myMatch.Success)
             {
-                RequiredTime = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
+                RequiredTimeWithDelays = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
                 ExtendedSyncParametersCount++;
             }
 
@@ -76,13 +78,16 @@ namespace HastlayerTimingTester
                     List<string> timingSummaryLineParts = totalTimingSummaryLine.Replace("  ", " ").Split(" ".ToCharArray()).ToList();
                     try
                     {
-                        WorstNegativeSlack = float.Parse(timingSummaryLineParts[1], CultureInfo.InvariantCulture);
-                        TotalNegativeSlack = float.Parse(timingSummaryLineParts[2], CultureInfo.InvariantCulture);
-                        WorstHoldSlack = float.Parse(timingSummaryLineParts[5], CultureInfo.InvariantCulture);
-                        TotalHoldSlack = float.Parse(timingSummaryLineParts[6], CultureInfo.InvariantCulture);
-                        WorstPulseWidthSlack = float.Parse(timingSummaryLineParts[9], CultureInfo.InvariantCulture);
-                        TotalPulseWidthSlack = float.Parse(timingSummaryLineParts[10], CultureInfo.InvariantCulture);
-                        TimingSummaryAvailable = true;
+                        if(timingSummaryLineParts[1]!="NA")
+                        {
+                            WorstNegativeSlack = float.Parse(timingSummaryLineParts[1], CultureInfo.InvariantCulture);
+                            TotalNegativeSlack = float.Parse(timingSummaryLineParts[2], CultureInfo.InvariantCulture);
+                            WorstHoldSlack = float.Parse(timingSummaryLineParts[5], CultureInfo.InvariantCulture);
+                            TotalHoldSlack = float.Parse(timingSummaryLineParts[6], CultureInfo.InvariantCulture);
+                            WorstPulseWidthSlack = float.Parse(timingSummaryLineParts[9], CultureInfo.InvariantCulture);
+                            TotalPulseWidthSlack = float.Parse(timingSummaryLineParts[10], CultureInfo.InvariantCulture);
+                            TimingSummaryAvailable = true;
+                        }
                     }
                     catch (FormatException) { } //pass, at least TimingSummaryAvailable will stay false
                     break;
@@ -92,7 +97,19 @@ namespace HastlayerTimingTester
         }
         public void PrintParsedTimingReport()
         {
-            if(DataPathDelayAvailable) Logger.Log("Data path delay = {0} ns;  Max clock frequency = {1} MHz", DataPathDelay, Math.Floor((1 / (DataPathDelay * 1e-9)) / 1000) / 1000);
+            Logger.Log("Timing Report:");
+            if(DataPathDelayAvailable) Logger.Log("\tData path delay = {0} ns\r\n\tMax clock frequency = {1} MHz", DataPathDelay, Math.Floor((1 / (DataPathDelay * 1e-9)) / 1000) / 1000);
+            if(ExtendedSyncParametersAvailable)
+            {
+                Logger.Log("Extended Sync Parameters:\r\n" +
+                    "\tRequired Time With Delays = {0} ns\r\n" +
+                    "\tRequired Time  = {1} ns\r\n" +
+                    "\tSource Clock Delay = {2} ns\r\n" +
+                    "\tTiming Window Available = {3} ns\r\n" +
+                    "\tTiming Window Diff From Requirement = {4} ns",
+                    RequiredTimeWithDelays, RequiredTime, SourceClockDelay, TimingWindowAvailable, TimingWindowDiffFromRequirement
+                    );
+            }
         }
         public void PrintParsedTimingSummary()
         {

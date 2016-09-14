@@ -10,7 +10,7 @@ namespace HastlayerTimingTester
 
         public VhdlTemplateAsync()
         {
-            _Template =
+            VhdlTemplate =
 @"library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -26,7 +26,7 @@ end tf_sample;
 architecture imp of tf_sample is begin
     aout <= a1 %OPERATOR% a2;
 end imp;";
-            _Xdc = "";
+            XdcTemplate = "";
         }
 
         override public string Name { get { return "async"; } }
