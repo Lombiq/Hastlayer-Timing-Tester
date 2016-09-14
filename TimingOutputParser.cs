@@ -113,21 +113,27 @@ namespace HastlayerTimingTester
         }
         public void PrintParsedTimingSummary()
         {
-            if(TimingSummaryAvailable) Logger.Log(
-                "Timing Summary:\r\n" +
-                "\tDesign {0} meeting timing requirements\r\n" +
-                "\tWorst Negative Slack = {1} ns\r\n" +
-                "\tTotal Negative Slack = {2} ns\r\n" +
-                "\tWorst Hold Slack = {3} ns\r\n" +
-                "\tTotal Hold Slack = {4} ns\r\n" +
-                "\tWorst Pulse Width Slack = {5} ns\r\n" +
-                "\tTotal Pulse Width Slack = {6} ns\r\n" +
-                "\t(Worst slack is okay if positive, total slack is okay if zero.)\r\n",
-                (DesignMetTimingRequirements) ? "PASSED" : "FAILED",
-                WorstNegativeSlack, TotalNegativeSlack,
-                WorstHoldSlack, TotalHoldSlack,
-                WorstPulseWidthSlack, TotalPulseWidthSlack
-            );
+            if(TimingSummaryAvailable)
+            {
+                Logger.Log(
+                    "Timing Summary:\r\n" +
+                    "\tDesign {0} meeting timing requirements\r\n" +
+                    "\tWorst Negative Slack = {1} ns\r\n" +
+                    "\tTotal Negative Slack = {2} ns\r\n" +
+                    "\tWorst Hold Slack = {3} ns\r\n" +
+                    "\tTotal Hold Slack = {4} ns\r\n" +
+                    "\tWorst Pulse Width Slack = {5} ns\r\n" +
+                    "\tTotal Pulse Width Slack = {6} ns\r\n" +
+                    "\t(Any worst slack is okay if positive, any total slack is okay if zero.)\r\n",
+                    (DesignMetTimingRequirements) ? "PASSED" : "FAILED",
+                    WorstNegativeSlack, TotalNegativeSlack,
+                    WorstHoldSlack, TotalHoldSlack,
+                    WorstPulseWidthSlack, TotalPulseWidthSlack
+                );
+                if(TotalNegativeSlack>0) Logger.Log("WARNING: setup time violation!");
+                if(TotalHoldSlack>0) Logger.Log("WARNING: hold time violation!");
+                if(TotalPulseWidthSlack>0) Logger.Log("WARNING: minimum pulse width violation!");
+            }
             else Logger.Log("Timing summary did not contain slack values (or could not be parsed).\r\n\tThis is okay for an async UUT without a clock.");
         }
 
