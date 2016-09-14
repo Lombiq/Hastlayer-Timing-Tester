@@ -32,7 +32,7 @@ namespace HastlayerTimingTester
                     new VhdlOp("*",     "mul",  VhdlOp.DoubleSizedOutput),
                     new VhdlOp("mod",   "mod",  VhdlOp.SameOutputDataType),
                 };
-            InputSizes = new List<int> { 128, 64, 32, 16, 8 }; //The list of input sizes for the data type that we want to test
+            InputSizes = new List<int> { 32, 128, 64, 16, 8 }; //The list of input sizes for the data type that we want to test
             DataTypes = new List<DataTypeFromSizeDelegate> {
                 //A list of functions that can generate the input data types that we test.
                 //For example, for an input size of 32, we should get unsigned(31 downto 0) to be pasted into the VHDL template.
@@ -47,6 +47,7 @@ namespace HastlayerTimingTester
             VivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat"; //The path where vivado.bat is located
             DebugMode = true; //If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
                               //If it is false, the exceptions is logged and the program continues with the next test.
+            VivadoBatchMode = true;
         }
     }
 }

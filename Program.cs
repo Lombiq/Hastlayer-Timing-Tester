@@ -52,6 +52,7 @@ namespace HastlayerTimingTester
         public string VivadoPath;
         public bool DebugMode;
         public float Frequency;
+        public bool VivadoBatchMode;
     }
 
 
@@ -93,19 +94,20 @@ quit
                 "because we used the date and time to generate the directory name.", CurrentTestOutputBaseDirectory); return; }
             Directory.CreateDirectory(CurrentTestOutputBaseDirectory);
             Logger.Init(CurrentTestOutputBaseDirectory+"\\Log.txt");
+            if(Test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
             RunTest();
         }
 
-        string RunVivado(string vivadoPath, string tclFile)
+        string RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
         {
             Process cp = new Process();
             cp.StartInfo.FileName = vivadoPath;
-            cp.StartInfo.Arguments = " -source " + tclFile;
+            cp.StartInfo.Arguments = ((batchMode)?" -mode batch":"") + " -source " + tclFile;
             cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\VivadoFiles";
             //Logger.Log("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
-            cp.StartInfo.UseShellExecute = true;
+            cp.StartInfo.UseShellExecute = !batchMode;
             cp.StartInfo.CreateNoWindow = false;
-            //cp.StartInfo.RedirectStandardOutput = true;
+            cp.StartInfo.RedirectStandardOutput = false;
             cp.Start();
             cp.WaitForExit();
             //return cp.StandardOutput.ReadToEnd();
@@ -157,11 +159,11 @@ quit
                                 CopyFileToOutputDir(xdcPath);
 
                                 Logger.LogInline("Running Vivado... ");
-                                RunVivado(Test.VivadoPath, "Generate.tcl");
+                                RunVivado(Test.VivadoPath, "Generate.tcl", Test.VivadoBatchMode);
                                 Logger.Log("Done.");
                                 CopyFileToOutputDir(timingReportOutputPath);
                                 CopyFileToOutputDir(timingSummaryOutputPath);
-                                CopyFileToOutputDir(schematicOutputPath);
+                                if(!Test.VivadoBatchMode) CopyFileToOutputDir(schematicOutputPath);
                                 VivadoResult myVivadoResult = new VivadoResult();
                                 myVivadoResult.TimingReport = File.ReadAllText(timingReportOutputPath);
                                 myVivadoResult.TimingSummary = File.ReadAllText(timingSummaryOutputPath);
