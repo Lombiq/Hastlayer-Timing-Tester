@@ -41,7 +41,7 @@ namespace HastlayerTimingTester
                     (size, getFriendlyName) => { return (getFriendlyName) ? String.Format("signed{0}", size) : String.Format("signed({0} downto 0)", size-1); }
                 };
             Part = "xc7a100tcsg324-1"; //The FPGA part number
-            VhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync(), new VhdlTemplateAsync() }; //The VHDL templates that will be used for analysis
+            VhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync(), new VhdlTemplateComb() }; //The VHDL templates that will be used for analysis
             Frequency = 100e6F; //System clock frequency in MHz
             Name = "default"; //Name of the configuration, will be used in the name of the output directory
             VivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat"; //The path where vivado.bat is located

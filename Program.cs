@@ -57,7 +57,7 @@ namespace HastlayerTimingTester
 
     class TimingTester
     {
-        private TimingOutputParser Parser = new TimingOutputParser();
+        private TimingOutputParser Parser;
         private TimingTestConfigBase Test;
 
         const string TclTemplate = @"
@@ -81,6 +81,7 @@ quit
         public void InitializeTest(TimingTestConfigBase test)
         {
             Test = test;
+            Parser = new TimingOutputParser(test.Frequency);
             if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true); //Clean the VivadoFiles directory (delete it recursively and mkdir)
             Directory.CreateDirectory("VivadoFiles");
             File.WriteAllText("VivadoFiles\\Generate.tcl", TclTemplate.Replace("%PART%", Test.Part));
@@ -202,16 +203,25 @@ quit
             Initialized = true;
         }
 
-        static public void Log(string Format, params object[] Objs)
+        static public void Log(string Format, params object[] Objs) { LogInternal(Format, false , Objs); }
+        static public void LogInline(string Format, params object[] Objs) { LogInternal(Format, true, Objs); }
+        static private void LogInternal(string Format, bool Inline, params object[] Objs)
         {
-            if(Initialized) LogStreamWriter.WriteLine(Format, Objs);
-            Console.WriteLine(Format, Objs);
+            for(int i = 0; i < Objs.Length; i++ ) if(Objs[i].GetType() == typeof(float)) Objs[i] = ((float)Objs[i]).ToString(CultureInfo.InvariantCulture);
+            if(Initialized)
+            {
+                if (Inline)
+                {
+                    LogStreamWriter.Write(Format, Objs);
+                    Console.Write(Format, Objs);
+                }
+                else
+                {
+                    LogStreamWriter.WriteLine(Format, Objs);
+                    Console.WriteLine(Format, Objs);
+                }
+            }
         }
 
-        static public void LogInline(string Format, params object[] Objs)
-        {
-            if(Initialized) LogStreamWriter.WriteLine(Format, Objs);
-            Console.WriteLine(Format, Objs);
-        }
     }
 }

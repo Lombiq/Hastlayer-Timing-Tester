@@ -9,6 +9,8 @@ namespace HastlayerTimingTester
 
     class TimingOutputParser
     {
+        public float ClockFrequency;
+        public TimingOutputParser(float clockFrequency) { ClockFrequency = clockFrequency; }
         public float DataPathDelay { get; private set; }
         public bool DataPathDelayAvailable { get; private set; }
         public bool TimingSummaryAvailable { get; private set; }
@@ -19,17 +21,16 @@ namespace HastlayerTimingTester
         public float WorstPulseWidthSlack { get; private set; }
         public float TotalPulseWidthSlack { get; private set; }
         public bool DesignMetTimingRequirements { get { return TimingSummaryAvailable && TotalNegativeSlack == 0 && TotalHoldSlack == 0 && TotalPulseWidthSlack == 0; } }
-        public float RequiredTimeWithDelays { get; private set; }
-        public float RequiredTime { get; private set; }
+        public float RequirementPlusDelays { get; private set; }
+        public float Requirement { get; private set; }
         public float SourceClockDelay { get; private set; }
         private int ExtendedSyncParametersCount;
         private bool ExtendedSyncParametersAvailable  { get { return ExtendedSyncParametersCount == 3; } }
-        public float TimingWindowAvailable { get { return RequiredTimeWithDelays - SourceClockDelay; } }
-        public float TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - RequiredTime; } }
-
-        public float Time { get; private set; }
-
-
+        public float TimingWindowAvailable { get { return RequirementPlusDelays - SourceClockDelay; } }
+        public float TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - Requirement; } }
+        public float MaxClockFrequency { get { return 1.0F/((DataPathDelay-TimingWindowDiffFromRequirement)*1.0e-9F); } }
+        public float NanosecondToClockPeriod(float ns) { return (ns * 1.0e-9F)/(1.0F / ClockFrequency); }
+        public float InMHz(float fHz) { return fHz/1e6F; } //Hz to MHz
 
         public void Parse(VivadoResult result)
         {
@@ -43,19 +44,19 @@ namespace HastlayerTimingTester
 
             //Let's see a sync design
             ExtendedSyncParametersCount = 0;
-            RequiredTime = 0;
+            Requirement = 0;
             myMatch = Regex.Match(result.TimingReport, @"(\s*)Requirement:(\s*)([0-9\.]*)ns");
             if(myMatch.Success)
             {
-                RequiredTime = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
+                Requirement = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
                 ExtendedSyncParametersCount++;
             }
 
-            RequiredTimeWithDelays = 0;
+            RequirementPlusDelays = 0;
             myMatch = Regex.Match(result.TimingReport, @"\n(\s*)required time(\s*)([0-9\.]*)(\s*)");
             if(myMatch.Success)
             {
-                RequiredTimeWithDelays = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
+                RequirementPlusDelays = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
                 ExtendedSyncParametersCount++;
             }
 
@@ -98,16 +99,24 @@ namespace HastlayerTimingTester
         public void PrintParsedTimingReport()
         {
             Logger.Log("Timing Report:");
-            if(DataPathDelayAvailable) Logger.Log("\tData path delay = {0} ns\r\n\tMax clock frequency = {1} MHz", DataPathDelay, Math.Floor((1 / (DataPathDelay * 1e-9)) / 1000) / 1000);
+            if(DataPathDelayAvailable)
+                Logger.Log("\t>> Data path delay = {0} ns\r\n({1} cycle at {2} MHz clock)", DataPathDelay, NanosecondToClockPeriod(DataPathDelay), InMHz(ClockFrequency));
             if(ExtendedSyncParametersAvailable)
             {
-                Logger.Log("Extended Sync Parameters:\r\n" +
-                    "\tRequired Time With Delays = {0} ns\r\n" +
-                    "\tRequired Time  = {1} ns\r\n" +
-                    "\tSource Clock Delay = {2} ns\r\n" +
-                    "\tTiming Window Available = {3} ns\r\n" +
-                    "\tTiming Window Diff From Requirement = {4} ns",
-                    RequiredTimeWithDelays, RequiredTime, SourceClockDelay, TimingWindowAvailable, TimingWindowDiffFromRequirement
+                Logger.Log(
+                    "\tSource clock delay = {0} ns\r\n" +
+                    "\tRequirement for arrival = {1} ns\r\n" +
+                    "\tRequirement plus delays = {2} ns\r\n" +
+                    "\tTiming window available = {3} ns\r\n" +
+                    "\t>> Timing window diff from requirement = {4} ns\r\n" +
+                    "\t\t({5} cycle at {6} MHz clock)\r\n" +
+                    "\tMax clock frequency = {7} MHz ",
+                    SourceClockDelay,
+                    Requirement,
+                    RequirementPlusDelays,
+                    TimingWindowAvailable,
+                    TimingWindowDiffFromRequirement, NanosecondToClockPeriod(TimingWindowDiffFromRequirement), InMHz(ClockFrequency),
+                    InMHz(MaxClockFrequency)
                     );
             }
         }
@@ -124,7 +133,7 @@ namespace HastlayerTimingTester
                     "\tTotal Hold Slack = {4} ns\r\n" +
                     "\tWorst Pulse Width Slack = {5} ns\r\n" +
                     "\tTotal Pulse Width Slack = {6} ns\r\n" +
-                    "\t(Any worst slack is okay if positive, any total slack is okay if zero.)\r\n",
+                    "\t(Any \"worst slack\" is okay if positive, any \"total slack\" is okay if zero.)\r\n",
                     (DesignMetTimingRequirements) ? "PASSED" : "FAILED",
                     WorstNegativeSlack, TotalNegativeSlack,
                     WorstHoldSlack, TotalHoldSlack,
@@ -134,7 +143,7 @@ namespace HastlayerTimingTester
                 if(TotalHoldSlack>0) Logger.Log("WARNING: hold time violation!");
                 if(TotalPulseWidthSlack>0) Logger.Log("WARNING: minimum pulse width violation!");
             }
-            else Logger.Log("Timing summary did not contain slack values (or could not be parsed).\r\n\tThis is okay for an async UUT without a clock.");
+            else Logger.Log("Timing summary did not contain slack values (or could not be parsed).");
         }
 
     }

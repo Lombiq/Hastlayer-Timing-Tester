@@ -3,6 +3,8 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+//This is a VHDL template using the operator in a sequential, synchronous logic design. 
+
 namespace HastlayerTimingTester
 {
     class VhdlTemplateSync : VhdlTemplateBase
