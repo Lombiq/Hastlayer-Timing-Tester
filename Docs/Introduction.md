@@ -79,7 +79,8 @@ That's the **FF Setup Time** on the image below.
 
 Another factor to be taken into consideration is the **Clock Uncertainty**, which means that the clock may not be on time, it may arrive a bit sooner or later. For example, the crystal oscillator on the circuit board has a given accuracy.
 
-**Common Clock Pessimism Removal** is detailed in [this Xilinx AR](http://www.xilinx.com/support/answers/50450.html). The concept behind it is that we do not know the exact delay that those elements introduce that the clock signal and the data goes through. We know however a minimum and a maximum delay that each can introduce. To do the check for the worst scenario:
+**Common Clock Pessimism Removal** is detailed in [this Xilinx AR](http://www.xilinx.com/support/answers/50450.html). The concept behind it is that we do not know the exact delay that those elements introduce that the clock signal and the data goes through. We know however a minimum and a maximum delay that each can introduce. We want to do the check for the worst scenario:
+
 * when calculating the *Source Clock Delay* and the *Data Path Delay*, we use the *maximum delays* that these elements can introduce,
 * when calculating the *Destination Clock Delay*, we use the *minimum delays* that these elements can introduce.
 
