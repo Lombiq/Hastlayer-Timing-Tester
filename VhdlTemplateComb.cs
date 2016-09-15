@@ -3,13 +3,13 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-//This is a VHDL template using the operator in an combinatorial logic design.
-//This means that there is no clock signal or flip-flops in the design, and the output is never fed back to the input.
 
 namespace HastlayerTimingTester
 {
     class VhdlTemplateComb : VhdlTemplateBase
     {
+        ///<summary>This is a VHDL template using the operator in an combinatorial logic design.
+        ///This means that there is no clock signal or flip-flops in the design, and the output is never fed back to the input.</summary>
 
         public VhdlTemplateComb()
         {

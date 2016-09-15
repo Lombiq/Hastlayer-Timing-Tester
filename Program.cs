@@ -9,15 +9,15 @@ namespace HastlayerTimingTester
 {
     struct VivadoResult
     {
-        //This is for passing the data output by Vivado into TimingOutputParser.
+        ///<summary>This is for passing the data output by Vivado into TimingOutputParser.</summary>
         public string TimingReport;
         public string TimingSummary;
     }
 
     abstract class VhdlTemplateBase
     {
-        //VHDL templates contain the hardware project to be compiled. They consist of a VHDL and an XDC
-        //(constraints file) template, both of which will be used by Vivado.
+        ///<summary>VHDL templates contain the hardware project to be compiled. They consist of a VHDL and an XDC
+        ///(constraints file) template, both of which will be used by Vivado.</summary>
         public string VhdlTemplate { get; protected set; }
         public string XdcTemplate { get; protected set; }
         abstract public string Name { get; }
@@ -25,25 +25,30 @@ namespace HastlayerTimingTester
 
     class VhdlOp
     {
-        public delegate string OutputDataTypeDelegate(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName);
-        public static string SameOutputDataType(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName)
-            { return inputDataTypeFunction(inputSize, getFriendlyName); }
-        public static string ComparisonWithBoolOutput(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName)
-            { return "boolean"; }
-        public static string DoubleSizedOutput(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName)
-            { return inputDataTypeFunction(inputSize * 2, getFriendlyName); }
-
-        public string VhdlString;
-        public string FriendlyName;
-        public OutputDataTypeDelegate OutputDataTypeFunction;
+        ///<summary>VhdlOp provides data to fill a VHDL template with (see <see cref="VhdlString" /> and <see cref="OutputDataTypeFunction" />).</summary>
+        public string VhdlString; ///<summary>VhdlString contains the actual operator (like "+", "-", "mod", etc.) that will be subsituted into the VHDL template.</summary>
+        public string FriendlyName; ///<summary>FriendlyName will be used in directory names, where you cannot use special characters. E.g. for "+" a good FriendlyName is "add".</summary>
+        public OutputDataTypeDelegate OutputDataTypeFunction;  ///<summary>OutputDataTypeFunction can generate the output data type from the input data type and size. It allows us to handle VHDL operators that have different input and output data types.</summary>
         public VhdlOp(string vhdlString, string friendlyName, OutputDataTypeDelegate outputDataTypeFunction)
             { this.VhdlString = vhdlString; this.FriendlyName = friendlyName; this.OutputDataTypeFunction = outputDataTypeFunction; }
+
+        public delegate string OutputDataTypeDelegate(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName);
+        ///<summary>SameOutputDataType is used if the output data type is the same as the input data type.</summary>
+        public static string SameOutputDataType(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName)
+            { return inputDataTypeFunction(inputSize, getFriendlyName); }
+        ///<summary>ComparisonWithBoolOutput is used for operators that strictly have boolean as their output data type (like all comparison operators).</summary>
+        public static string ComparisonWithBoolOutput(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName)
+            { return "boolean"; }
+        ///<summary>DoubleSizedOutput is used for operators whose output is the same type as their input, but with double data size (e.g. multiplication).</summary>
+        public static string DoubleSizedOutput(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName)
+            { return inputDataTypeFunction(inputSize * 2, getFriendlyName); }
     }
 
     abstract class TimingTestConfigBase
     {
-        public delegate string DataTypeFromSizeDelegate(int size, bool getFriendlyName);
-        public string Name; //this will be used for the directory name
+        ///<summary>This is the base class for configuration. For more information, check the <see cref="TimingTestConfig" /> subclass.</summary>
+        public delegate string DataTypeFromSizeDelegate(int size, bool getFriendlyName); ///<summary>This is used for <see cref="DataTypes" />.</summary>
+        public string Name;
         public List<VhdlOp> Operators;
         public List<VhdlTemplateBase> VhdlTemplates;
         public List<int> InputSizes;
@@ -61,6 +66,8 @@ namespace HastlayerTimingTester
         private TimingOutputParser Parser;
         private TimingTestConfigBase Test;
 
+        ///<summary>This template is filled with data during the test, and then opened and ran by Vivado.
+        ///It synthesizes the project, generates reports and a schematic diagram.</summary>
         const string TclTemplate = @"
 read_vhdl UUT.vhd
 read_xdc Constraints.xdc
@@ -76,11 +83,13 @@ quit
 #place_design
 #route_design";
 
-        string CurrentTestOutputBaseDirectory;
-        string CurrentTestOutputDirectory;
+        string CurrentTestOutputBaseDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
+        string CurrentTestOutputDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
 
         public void InitializeTest(TimingTestConfigBase test)
         {
+            ///<summary>This functio gets things ready before the test, then runs the test.
+            ///It creates the necessary directory structure, cleans up VivadoFiles and generates a Tcl script for Vivado.</summary>
             Test = test;
             Parser = new TimingOutputParser(test.Frequency);
             if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true); //Clean the VivadoFiles directory (delete it recursively and mkdir)
@@ -100,6 +109,7 @@ quit
 
         string RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
         {
+            ///<summary>It runs Vivado.</summary>
             Process cp = new Process();
             cp.StartInfo.FileName = vivadoPath;
             cp.StartInfo.Arguments = ((batchMode)?" -mode batch":"") + " -source " + tclFile;
@@ -116,11 +126,13 @@ quit
 
         void CopyFileToOutputDir(string inputPath)
         {
+            ///<summary>It copies the given file from VivadoFiles to the output directory of the current test.</summary>
             File.Copy(inputPath, CurrentTestOutputDirectory+"\\"+Path.GetFileName(inputPath));
         }
 
         void RunTest()
         {
+            ///<summary>It runs tests for all combinations of operators, input data types, data sizes and VHDL templates.</summary>
             foreach (VhdlOp op in Test.Operators)
                 foreach (int inputSize in Test.InputSizes)
                     foreach (TimingTestConfigBase.DataTypeFromSizeDelegate inputDataTypeFunction in Test.DataTypes)
@@ -195,18 +207,25 @@ quit
 
     static class Logger
     {
+        ///<summary>Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the console.</summary>
         private static StreamWriter LogStreamWriter;
         private static bool Initialized;
 
-        static public void Init(string path)
+        static public void Init(string LogFilePath)
         {
-            LogStreamWriter = new StreamWriter(File.Create(path));
+            ///<summary>This function initializes the Logger, to open the file given in LogFilePath.
+            ///(Logger already works before initialization, but it only writes to the console.)</summary>
+            LogStreamWriter = new StreamWriter(File.Create(LogFilePath));
             LogStreamWriter.AutoFlush = true;
             Initialized = true;
         }
 
-        static public void Log(string Format, params object[] Objs) { LogInternal(Format, false , Objs); }
+        ///<summary>Log writes a formatted string to both a log file (if already initialized) and the console, ending with a line break.</summary>
+        static public void Log(string Format, params object[] Objs) { LogInternal(Format, false , Objs); } //Log writes
+        ///<summary>LogInline writes a formatted string to both a log file (if already initialized) and the console. It does not end with a line break.</summary>
         static public void LogInline(string Format, params object[] Objs) { LogInternal(Format, true, Objs); }
+        ///<summary>LogInternal implements the functionality described for <see cref="Logger.Log"/> and <see cref="Logger.LogInline"/>.</summary>
+        ///<param name="Inline">It ends the line with a line break based on the Inline parameter.</param>
         static private void LogInternal(string Format, bool Inline, params object[] Objs)
         {
             for(int i = 0; i < Objs.Length; i++ ) if(Objs[i].GetType() == typeof(float)) Objs[i] = ((float)Objs[i]).ToString(CultureInfo.InvariantCulture);

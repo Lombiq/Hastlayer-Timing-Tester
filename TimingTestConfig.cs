@@ -6,6 +6,7 @@ namespace HastlayerTimingTester
 {
     class TimingTestConfig : TimingTestConfigBase
     {
+        ///<summary>Provides configuration for Hastlayer Timing Tester.</summary>
         public TimingTestConfig()
         {
             Operators = new List<VhdlOp>

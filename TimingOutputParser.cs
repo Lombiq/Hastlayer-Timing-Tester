@@ -9,6 +9,10 @@ namespace HastlayerTimingTester
 
     class TimingOutputParser
     {
+        ///<summary>It parses the timing report and timing summary output of Vivado. It makes some calculations based on these.
+        ///It can also print the most important values.
+        ///Look at the documentation (Docs/Introduction.md and Docs/Usage.md) for the meaning of the properties of this class.</summary>
+
         public float ClockFrequency;
         public TimingOutputParser(float clockFrequency) { ClockFrequency = clockFrequency; }
         public float DataPathDelay { get; private set; }

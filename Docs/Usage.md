@@ -168,4 +168,4 @@ For **Data path delay** and **Source clock delay** check [the introduction](Intr
 
 * I have observed that there is no difference in timing if we compile a design in project mode or non-project mode in Vivado. This is important becaue it means that Vivado does not apply hidden settings while creating a project with the GUI.
 * *Timing window diff from requirement* does not change if the same design is compiled using a different clock frequency. (A small difference is introduced by the precision of floating point operations.)
-* While Setup_fdre_C_D is expected to be negative, Vivado sometimes says that `Setup_fdre_C_D` is positive [(more here)](https://forums.xilinx.com/t5/Timing-Analysis/I-was-fogged-by-the-data-required-time-in-Vivado/td-p/424596). Anyway, we use the end result (*Requirement plus delays*), so it does not screw up anything.
+* While `Setup_fdre_C_D` is expected to be negative, Vivado sometimes says that it is positive [(more here)](https://forums.xilinx.com/t5/Timing-Analysis/I-was-fogged-by-the-data-required-time-in-Vivado/td-p/424596). Anyway, we use the end result (*Requirement plus delays*), so it does not screw up anything.
