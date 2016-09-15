@@ -21,13 +21,16 @@ Hastlayer Timing Tester is a console application that does not need any command 
 # Operation
 
 While running, Hastlayer Timing Tester will go through:
+
 * each operator,
 * each input size,
 * each input data type,
 * each VHDL template,
-and performs tests.
+
+...and performs tests for all combinations of them.
 
 For every test, Hastlayer Timing Tester will:
+
 * synthesize the design,
 * generate a timing summary and a timing report,
 * parse the timing summary and the timing report, and display the most important values.
@@ -83,12 +86,14 @@ The important values that the Transformer can make use of are prefixed with `>>`
 Some of these values are explained in the [introduction](Introduction.md), make sure to read it first.
 
 **Data path delay** is the sum of:
+
 * the delay caused by the actual operator,
 * the launching flip-flop (which is the input to the operator) clock-to-Q time (the time from the clock rising edge to a valid output on Q).
 
 It is important, because this is how much time it takes to get a stable output from the logic that implements the operator.
 
 However, we have to take it into consideration that:
+
 * the clock signal goes on different paths to the launching and the capturing flip-flop,
 * the delay of these paths is between given minimum and maximum values (see "Clock Pessimism" in [the introduction](Introduction.md)),
 * the capturing flip-flop has a setup time.
@@ -110,6 +115,7 @@ This means that we could either increase the clock frequency without having a se
 This also answers the question **how can the Transformer make use of these results**.
 
 However, it raises even more questions:
+
 * **Q:** If we chain operations after each other, which *Timing Window diff from requirement* to choose? TODO
 * **A:** This has not been analyzed yet. Right now I think that we should choose the maximum out of them. However, it is an advanced question and it is hard to say how the compiler's behaviour in a situation like this will change this value. (Also see the other limitations at the bottom of the page.) This is why it is important to emphasize that Hastlayer Timing Tester is giving approximations. If we end up using timing margin similar to Vivado HLS, that might simplify this problem.
 * **Q:** Is it valid to add up Data Path Delays this way? A Data Path Delays for each operation correspond to their critical paths. Nothing ensures that using multiple operations after each other will connect the critical paths together.
@@ -146,6 +152,7 @@ For **Data path delay** and **Source clock delay** check [the introduction](Intr
 ![](Images/WhatDoesItMean4.png)
 
 ## Other questions
+
 * Q: What is the difference between `VhdlTemplateSync` and `VhdlTemplateComb`?
 * A: `VhdlTemplateComb` is a pure design without a clock. Only the operator is there. In the synthesized design, the inputs are connected to IBUFs and the outputs are conencted to OBUFs, which add a lot of time to the *Data Path Delay*. `VhdlTemplateSync` was added because I decided that calculating the operator once for every clock cycle, feeding its inputs and capturing its output with flip-flops is more realistic, as this is what happens in Hastlayer. Also Vivado can output more timing information for a design like that. I recommend using this template.
 
