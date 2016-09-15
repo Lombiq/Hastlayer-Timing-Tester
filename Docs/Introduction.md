@@ -2,7 +2,7 @@
 
 ## What does Hastlayer Timing Tester do?
 
-Hastlayer Timing Tester is for automatically determining how certain VHDL operators will behave with regards to timing.
+Hastlayer Timing Tester is for automatically determining how certain VHDL operators will behave with regards to timing.  
 It will estimate that if we download the compiled design to an FPGA, how much time it takes an operation to complete on the real hardware.  
 It uses the Static Timing Analysis (STA) engine in Vivado to get the timing information.  
 It helps us to avoid setup time violations in the generated Hastlayer hardware design.
@@ -13,13 +13,14 @@ To understand the basic concepts, read [this guide](https://embeddedmicro.com/tu
 
 In very short, the compiler maps the VHDL/Verilog code to hardware resources in the FPGA. These resources (including CLBs, BRAMs, DSP slices, etc.) consist of transistors at the very low level.
 
-**Transistors need some time to switch on/off** because the parasitic capacitances in the electronic circuit on silicon need to charge or discharge. This has always been a limiting factor in the maximum computing speed that can be achieved with digital electronic circuits.  
+**Transistors need some time to switch on/off** because the parasitic capacitances in the electronic circuit on silicon need to charge or discharge. This has always been one of the limiting factors of the maximum computing speed.  
 
 ## Why is timing important?
 
 **If there are timing problems in the design, it might not work as expected**, even though the simulation verifies that it is correct. While timing problems can produce different kinds of errors, I will show an example that is relevant to Hastlayer.
 
 Hastlayer can be viewed as a sequential, synchronous logic circuit.
+
 * **Sequential logic** means that the logic circuit has some outputs feedback to its input.  
 (See the image [at this page](http://www.c-jump.com/CIS77/CPU/Sequential/lecture.html).)
 
