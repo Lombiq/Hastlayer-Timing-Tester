@@ -47,7 +47,7 @@ namespace HastlayerTimingTester
             VivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat"; //The path where vivado.bat is located
             DebugMode = true; //If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
                               //If it is false, the exceptions is logged and the program continues with the next test.
-            VivadoBatchMode = false; //If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
+            VivadoBatchMode = true; //If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
                                      //It does not open the GUI for every single test. However, it cannot generate schematic drawings (Schematic.pdf).
         }
     }
