@@ -21,7 +21,7 @@ In very short, the compiler maps the VHDL/Verilog code to hardware resources in 
 
 Hastlayer can be viewed as a sequential, synchronous logic circuit.
 
-* **Sequential logic** means that the logic circuit has some outputs feedback to its input.  
+* **Sequential logic** means that the logic circuit has some outputs fed back to some of its inputs.  
 (See the image [at this page](http://www.c-jump.com/CIS77/CPU/Sequential/lecture.html).)
 
 * A **synchronous circuit** means that the circuit gets into a different state for every single clock cycle. The state of the system is stored in flip-flops, the output of which is feedback to its input.  
@@ -60,13 +60,14 @@ Propagation of the signals through the *add* operation and the nets around it al
 
 ![](Images/HastlayerAdd3.png#3)
 
-The output of the adder is sampled at the next clock rising edge. However, again have to take into consideration that the clock signal going to register `c` is delayed through its path. This is called *Destination Clock Delay*, and is usually not the same as the *Source Clock Delay*, as the signal goes a different path.
+The output of the adder is sampled at the next clock rising edge. However, we again have to take into consideration that the clock signal going to register `c` is delayed through its path. This is called *Destination Clock Delay*, and is usually not the same as the *Source Clock Delay*, as the signal goes a different path.
 
 ![](Images/HastlayerAdd4.png#)
 
 A flip-flop has a so-called setup-hold window:
-* the D input signal should not change for some time before the clock rising edge,
-* the D input signal should not change for some time after the clock rising edge.
+
+* the D input signal should not change for some time **before** the clock rising edge,
+* and the D input signal should not change for some time **after** the clock rising edge.
 
 That's the **FF Setup Time** on the image below.
 
