@@ -108,7 +108,7 @@ This means that we could either increase the clock frequency without having a se
 
 ![](Images/WhatDoesItMean2.png)
 
-...or we could introduce more operations that depend on the output value of the original one in the same clock cycle:
+...or we could introduce more operations that depend on the output value of the original one, all into the same clock cycle:
 
 ![](Images/WhatDoesItMean3.png)
 
@@ -116,20 +116,24 @@ This also answers the question **how can the Transformer make use of these resul
 
 However, it raises even more questions:
 
-* **Q:** If we chain operations after each other, which *Timing Window diff from requirement* to choose? TODO
+* **Q:** If we chain operations after each other, which *Timing Window diff from requirement* to choose?
 * **A:** This has not been analyzed yet. Right now I think that we should choose the maximum out of them. However, it is an advanced question and it is hard to say how the compiler's behaviour in a situation like this will change this value. (Also see the other limitations at the bottom of the page.) This is why it is important to emphasize that Hastlayer Timing Tester is giving approximations. If we end up using timing margin similar to Vivado HLS, that might simplify this problem.
 * **Q:** Is it valid to add up Data Path Delays this way? A Data Path Delays for each operation correspond to their critical paths. Nothing ensures that using multiple operations after each other will connect the critical paths together.
-* **A:** Yes, but it is not likely that multiple operations after each other will have a longer critical path than the sum of the lengths of their critical paths if only a single operation is present.
+* **A:** Yes, but it is not likely that multiple operations after each other will have a longer critical path than the sum of the lengths of their separate critical paths.
 
 ## Limitations of the analysis
 
-This tool performs STA after synthesis. At this point we know how many hardware resources will be used (e.g. LUT, FDRE, DSP48E, etc.) and how they will be connected together. However, mapping these resources to real hardware has not been done yet. It means that accurate timing information can only be acquired after the implementation stage. At synthesis, we can only have approximations. As an example of this, let's see the differences of timing summaries between only synthesized and already implemented versions of Hastlayer:
+This tool performs STA after synthesis. At this point we know how many hardware resources will be used (e.g. LUT, FDRE, DSP48E, etc.) and how they will be connected together. However, mapping these resources to real hardware has not been done yet.
+
+Accurate timing information can only be acquired after the implementation stage. At synthesis, we can only have approximations.
+
+As an example of this, let's see the differences of timing summaries between only synthesized and already implemented versions of Hastlayer:
 
 ![](Images/DiffTimingSummaryImplVsSynth.png)
 
 In this case, the negative setup slack is ~20ns worse in the implemented design.
 
-Sometimes the critical path also changes after implementation, because it turns out that a path happens to be worse after place and route.
+Sometimes the critical path also changes after implementation, because it turns out that a different path happens to be worse after place and route.
 
 ----
 
