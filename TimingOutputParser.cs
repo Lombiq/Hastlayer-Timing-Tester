@@ -133,7 +133,7 @@ namespace HastlayerTimingTester
                     "\tTotal Hold Slack = {4} ns\r\n" +
                     "\tWorst Pulse Width Slack = {5} ns\r\n" +
                     "\tTotal Pulse Width Slack = {6} ns\r\n" +
-                    "\t(Any \"worst slack\" is okay if positive, any \"total slack\" is okay if zero.)\r\n",
+                    "\t(Any \"worst slack\" is okay if positive,\r\n\t\tany \"total slack\" is okay if zero.)\r\n",
                     (DesignMetTimingRequirements) ? "PASSED" : "FAILED",
                     WorstNegativeSlack, TotalNegativeSlack,
                     WorstHoldSlack, TotalHoldSlack,
