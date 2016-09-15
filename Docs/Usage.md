@@ -102,7 +102,7 @@ These are summed up in the **Timing window diff from requirement** parameter (ab
 
 Let's see this for the test result above:
 
-![700](Images/WhatDoesItMean.png)
+![700](Images/WhatDoesItMean.png =700)
 
 This means that we could either increase the clock frequency without having a setup time violation:
 
