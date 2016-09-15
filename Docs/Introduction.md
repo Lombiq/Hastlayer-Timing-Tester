@@ -2,9 +2,9 @@
 
 ## What does Hastlayer Timing Tester do?
 
-The Hastlayer Timing Tester is for automatically calculating the timing properties for different operations.  
-It will estimate that if we upload the compiled design to an FPGA, how much time it takes an operation to complete on real hardware.  
-It uses the Static Timing Analysis (STA) engine in Vivado to calculate these values.  
+Hastlayer Timing Tester is for automatically determining how certain VHDL operators will behave with regards to timing.
+It will estimate that if we download the compiled design to an FPGA, how much time it takes an operation to complete on the real hardware.  
+It uses the Static Timing Analysis (STA) engine in Vivado to get the timing information.  
 It helps us to avoid setup time violations in the generated Hastlayer hardware design.
 
 ## What problem does it solve?
