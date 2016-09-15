@@ -66,8 +66,8 @@ The output of the adder is sampled at the next clock rising edge. However, we ag
 
 A flip-flop has a so-called setup-hold window:
 
-* the D input signal should not change for some time **before** the clock rising edge,
-* and the D input signal should not change for some time **after** the clock rising edge.
+* **Setup time**: the D input signal should not change for some time **before** the clock rising edge.
+* **Hold time:** the D input signal should not change for some time **after** the clock rising edge.
 
 That's the **FF Setup Time** on the image below.
 
