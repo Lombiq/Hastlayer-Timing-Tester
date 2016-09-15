@@ -90,6 +90,8 @@ Okay, so we see that the signal arrives on time to the D input of the second fli
 
 ![](Images/HastlayerAdd7.png#1)
 
+----
+
 Now let's see what happens if we subsitute the `+` operation with `mod`?
 
     c <= a mod b; -- all operands are unsigned(31 downto 0)
@@ -129,6 +131,7 @@ Only for illustration, you can imagine something like this:
 ## What can we do with it?
 
 We can:
+
 * run the whole system from a lower clock frequency, but that would decrease the processing speed,
 * wait multiple cycles for the operation to complete (multi cycle path),
 * use pipelining to make the paths shorter,
