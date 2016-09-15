@@ -2,9 +2,9 @@
 
 ## What does Hastlayer Timing Tester do?
 
-The Hastlayer Timing Tester is for automatically calculating the timing properties for different operations.<br />
-It will estimate that if we upload the compiled design to an FPGA, how much time it takes an operation to complete on real hardware.<br />
-It uses the Static Timing Analysis (STA) engine in Vivado to calculate these values.<br />
+The Hastlayer Timing Tester is for automatically calculating the timing properties for different operations.  
+It will estimate that if we upload the compiled design to an FPGA, how much time it takes an operation to complete on real hardware.  
+It uses the Static Timing Analysis (STA) engine in Vivado to calculate these values.  
 It helps us to avoid setup time violations in the generated Hastlayer hardware design.
 
 ## What problem does it solve?
@@ -20,9 +20,11 @@ In very short, the compiler maps the VHDL/Verilog code to hardware resources in 
 **If there are timing problems in the design, it might not work as expected**, even though the simulation verifies that it is correct. While timing problems can produce different kinds of errors, I will show an example that is relevant to Hastlayer.
 
 Hastlayer can be viewed as a sequential, synchronous logic circuit.
-* A **sequential logic** means that the logic circuit has some outputs feedback to its input.<br/>(See the image [at this page](http://www.c-jump.com/CIS77/CPU/Sequential/lecture.html).)
+* **Sequential logic** means that the logic circuit has some outputs feedback to its input.  
+(See the image [at this page](http://www.c-jump.com/CIS77/CPU/Sequential/lecture.html).)
 
-* A **synchronous circuit** means that the circuit gets into a different state for every single clock cycle. The state of the system is stored in flip-flops, the output of which is feedback to its input. <br/>(See the image [at this page](http://www.ee.surrey.ac.uk/Projects/CAL/seq-switching/synchronous_and_asynchronous_cir.htm).)
+* A **synchronous circuit** means that the circuit gets into a different state for every single clock cycle. The state of the system is stored in flip-flops, the output of which is feedback to its input.  
+(See the image [at this page](http://www.ee.surrey.ac.uk/Projects/CAL/seq-switching/synchronous_and_asynchronous_cir.htm).)
 
 Indeed, a CPU is also a sequential, synchronous logic circuit (the state consists of e.g. the last opcode fetched, the content of the registers, and many other things).
 
@@ -38,7 +40,7 @@ This would have been generated from the following add operation:
 
 It takes around 7 ns to propagate through all the paths of the design.
 
-How does this propagation happen exactly?<br/>
+How does this propagation happen exactly?  
 Let's start out with this system:
 
 ![](Images/HastlayerAdd0.png)
@@ -78,7 +80,8 @@ Other factors to be taken into consideration are the **Clock Uncertainty**, whic
 **Common Clock Pessimism Removal** is detailed in [this Xilinx AR](http://www.xilinx.com/support/answers/50450.html). The concept behind it is that we do not know the exact delay that those elements introduce that the clock signal and the data goes through. We know however a minimum and a maximum delay that each can introduce. To do the check for the worst scenario:
 * when calculating the *Source Clock Delay* and the *Data Path Delay*, we use the *maximum delays* that these elements can introduce,
 * when calculating the *Destination Clock Delay*, we use the *minimum delays* that these elements can introduce.
-However, the clock for the launching and capturing flip-flop is usually the same signal. *Common Clock Pessimism Removal* is there to compensate for this.
+
+However, the clock for the launching and capturing flip-flop is usually coming from the same source. This means that part of the path is common. *Common Clock Pessimism Removal* is there to compensate for the fact that we cannot use both minimum and maximum delays for this part of the path.
 
 Okay, so we see that the signal arrives on time to the D input of the second flip-flop:
 
