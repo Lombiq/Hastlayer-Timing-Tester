@@ -117,9 +117,17 @@ However, it raises even more questions:
 
 ## Limitations of the analysis
 
-This tool performs STA after synthesis. At this point we know how many hardware resources will be used (e.g. LUT, FDRE, DSP48E, etc.) and how they will be connected together. However, mapping these resources to real hardware has not been done yet. It means that accurate timing information can only be acquired after the implementation stage. At synthesis, we can only have approximations.
+This tool performs STA after synthesis. At this point we know how many hardware resources will be used (e.g. LUT, FDRE, DSP48E, etc.) and how they will be connected together. However, mapping these resources to real hardware has not been done yet. It means that accurate timing information can only be acquired after the implementation stage. At synthesis, we can only have approximations. As an example of this, let's see the differences of timing summaries between only synthesized and already implemented versions of Hastlayer:
 
-This tool does not help with hold time and minimum pulse width violations (although these are reported).
+![](Images/DiffTimingSummaryImplVsSynth.png)
+
+In this case, the negative setup slack is ~20ns worse in the implemented design.
+
+Sometimes the critical path also changes after implementation, because it turns out that a path happens to be worse after place and route.
+
+----
+
+Another limitation of this tool is not doing any further analysis on hold time and minimum pulse width violations (although these are reported). However, we have not had problems related to these in Hastlayer yet.
 
 ## The meaning of other parameters
 
