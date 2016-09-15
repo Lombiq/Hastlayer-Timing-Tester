@@ -102,15 +102,15 @@ These are summed up in the **Timing window diff from requirement** parameter (ab
 
 Let's see this for the test result above:
 
-![700](Images/WhatDoesItMean.png =700)
+![](Images/WhatDoesItMean.png)
 
 This means that we could either increase the clock frequency without having a setup time violation:
 
-![700](Images/WhatDoesItMean2.png)
+![](Images/WhatDoesItMean2.png)
 
 ...or we could introduce more operations that depend on the output value of the original one, all into the same clock cycle:
 
-![700](Images/WhatDoesItMean3.png)
+![](Images/WhatDoesItMean3.png)
 
 This also answers the question **how can the Transformer make use of these results**.
 
@@ -157,7 +157,7 @@ For **Data path delay** and **Source clock delay** check [the introduction](Intr
 
 **Max clock frequency** is the estimated maximum clock frequency at which the test design (that contains only one operator) could be used. It works like this:
 
-![700](Images/WhatDoesItMean4.png)
+![](Images/WhatDoesItMean4.png)
 
 ## Other questions
 
