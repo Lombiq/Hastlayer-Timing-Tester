@@ -58,6 +58,7 @@ namespace HastlayerTimingTester
         public bool DebugMode;
         public float Frequency;
         public bool VivadoBatchMode;
+        public bool ImplementDesign;
     }
 
 
@@ -73,15 +74,18 @@ read_vhdl UUT.vhd
 read_xdc Constraints.xdc
 synth_design -part %PART% -top tf_sample
 config_timing_analysis -disable_flight_delays true
-report_timing -file TimingReport.txt
-report_timing_summary -check_timing_verbose -file TimingSummary.txt
+report_timing -file SynthTimingReport.txt
+report_timing_summary -check_timing_verbose -file SynthTimingSummary.txt
 show_schematic [get_nets]
 write_schematic -force -format pdf -orientation landscape Schematic.pdf
+if {%IMPLEMENT% == 0} { quit }
+opt_design -quiet
+place_design -quiet
+route_design -quiet
+report_timing -file ImplTimingReport.txt
+report_timing_summary -check_timing_verbose -file ImplTimingSummary.txt
 quit
-#
-#opt_design
-#place_design
-#route_design";
+";
 
         string CurrentTestOutputBaseDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
         string CurrentTestOutputDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
@@ -94,7 +98,7 @@ quit
             Parser = new TimingOutputParser(test.Frequency);
             if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true); //Clean the VivadoFiles directory (delete it recursively and mkdir)
             Directory.CreateDirectory("VivadoFiles");
-            File.WriteAllText("VivadoFiles\\Generate.tcl", TclTemplate.Replace("%PART%", Test.Part));
+            File.WriteAllText("VivadoFiles\\Generate.tcl", TclTemplate.Replace("%PART%", Test.Part).Replace("%IMPLEMENT%", (Convert.ToInt32(Test.ImplementDesign)).ToString()));
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
             string currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__hh-mm-ss")+"__"+Test.Name;
             CurrentTestOutputBaseDirectory = "TestResults\\"+currentTestDirectoryName;
@@ -146,8 +150,10 @@ quit
 
                                 string uutPath = "VivadoFiles\\UUT.vhd";
                                 string xdcPath = "VivadoFiles\\Constraints.xdc";
-                                string timingReportOutputPath = "VivadoFiles\\TimingReport.txt";
-                                string timingSummaryOutputPath = "VivadoFiles\\TimingSummary.txt";
+                                string synthTimingReportOutputPath = "VivadoFiles\\SynthTimingReport.txt";
+                                string synthTimingSummaryOutputPath = "VivadoFiles\\SynthTimingSummary.txt";
+                                string implTimingReportOutputPath = "VivadoFiles\\ImplTimingReport.txt";
+                                string implTimingSummaryOutputPath = "VivadoFiles\\ImplTimingSummary.txt";
                                 string schematicOutputPath = "VivadoFiles\\Schematic.pdf";
 
                                 Logger.Log("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString, inputSize, inputDataType, outputDataType);
@@ -173,15 +179,36 @@ quit
                                 Logger.LogInline("Running Vivado... ");
                                 RunVivado(Test.VivadoPath, "Generate.tcl", Test.VivadoBatchMode);
                                 Logger.Log("Done.");
-                                CopyFileToOutputDir(timingReportOutputPath);
-                                CopyFileToOutputDir(timingSummaryOutputPath);
+                                CopyFileToOutputDir(synthTimingReportOutputPath);
+                                CopyFileToOutputDir(synthTimingSummaryOutputPath);
+                                bool ImplementationSuccessful = true;
+                                if(File.Exists(implTimingReportOutputPath)) CopyFileToOutputDir(implTimingSummaryOutputPath);
+                                else ImplementationSuccessful = false;
+                                if(File.Exists(implTimingReportOutputPath)) CopyFileToOutputDir(implTimingReportOutputPath);
                                 if(!Test.VivadoBatchMode) CopyFileToOutputDir(schematicOutputPath);
-                                VivadoResult myVivadoResult = new VivadoResult();
-                                myVivadoResult.TimingReport = File.ReadAllText(timingReportOutputPath);
-                                myVivadoResult.TimingSummary = File.ReadAllText(timingSummaryOutputPath);
-                                Parser.Parse(myVivadoResult);
+
+                                VivadoResult synthVivadoResult = new VivadoResult();
+                                synthVivadoResult.TimingReport = File.ReadAllText(synthTimingReportOutputPath);
+                                synthVivadoResult.TimingSummary = File.ReadAllText(synthTimingSummaryOutputPath);
+                                Parser.Parse(synthVivadoResult);
+                                Logger.Log("Synthesis:\r\n----------");
                                 Parser.PrintParsedTimingReport();
                                 Parser.PrintParsedTimingSummary();
+
+                                if(Test.ImplementDesign)
+                                {
+                                    if(!ImplementationSuccessful) Logger.Log("Implementation (or STA) failed!");
+                                    else
+                                    {
+                                        VivadoResult implVivadoResult = new VivadoResult();
+                                        implVivadoResult.TimingReport = File.ReadAllText(implTimingReportOutputPath);
+                                        implVivadoResult.TimingSummary = File.ReadAllText(implTimingSummaryOutputPath);
+                                        Parser.Parse(implVivadoResult);
+                                        Logger.Log("Implementation:\r\n---------------");
+                                        Parser.PrintParsedTimingReport();
+                                        Parser.PrintParsedTimingSummary();
+                                    }
+                                }
                                 //return;
                             }
                             catch(Exception myException)
