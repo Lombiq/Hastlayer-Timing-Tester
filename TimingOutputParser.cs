@@ -104,7 +104,7 @@ namespace HastlayerTimingTester
         {
             Logger.Log("Timing Report:");
             if(DataPathDelayAvailable)
-                Logger.Log("\t>> Data path delay = {0} ns\r\n({1} cycle at {2} MHz clock)", DataPathDelay, NanosecondToClockPeriod(DataPathDelay), InMHz(ClockFrequency));
+                Logger.Log("\t>> Data path delay = {0} ns  ({1} cycle at {2} MHz clock)", DataPathDelay, NanosecondToClockPeriod(DataPathDelay), InMHz(ClockFrequency));
             if(ExtendedSyncParametersAvailable)
             {
                 Logger.Log(
@@ -112,8 +112,7 @@ namespace HastlayerTimingTester
                     "\tRequirement for arrival = {1} ns\r\n" +
                     "\tRequirement plus delays = {2} ns\r\n" +
                     "\tTiming window available = {3} ns\r\n" +
-                    "\t>> Timing window diff from requirement = {4} ns\r\n" +
-                    "\t\t({5} cycle at {6} MHz clock)\r\n" +
+                    "\t>> Timing window diff from requirement = {4} ns  ({5} cycle at {6} MHz clock)\r\n" +
                     "\tMax clock frequency = {7} MHz ",
                     SourceClockDelay,
                     Requirement,
