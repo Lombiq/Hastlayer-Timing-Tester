@@ -114,6 +114,10 @@ This means that we could either increase the clock frequency without having a se
 
 This also answers the question **how can the Transformer make use of these results**.
 
+If we increased the clock frequency too much, or had too much operations after each other in the same cycle, that would result in a **setup time violation** that we want to avoid:
+
+![](Images/WhatDoesItMean5.png)
+
 However, it raises even more questions:
 
 * **Q:** If we chain operations after each other, which *Timing Window diff from requirement* to choose?
@@ -158,6 +162,11 @@ For **Data path delay** and **Source clock delay** check [the introduction](Intr
 **Max clock frequency** is the estimated maximum clock frequency at which the test design (that contains only one operator) could be used. It works like this:
 
 ![](Images/WhatDoesItMean4.png)
+
+This figure will hopefully make it clear where do some of these parameters come from:
+
+![](Images/WhereDoValuesComeFrom.png)
+
 
 ## Other questions
 
