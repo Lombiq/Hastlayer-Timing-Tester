@@ -100,11 +100,11 @@ namespace HastlayerTimingTester
             }
 
         }
-        public void PrintParsedTimingReport()
+        public void PrintParsedTimingReport(string Marker = "")
         {
             Logger.Log("Timing Report:");
             if(DataPathDelayAvailable)
-                Logger.Log("\t>> Data path delay = {0} ns\r\n({1} cycle at {2} MHz clock)", DataPathDelay, NanosecondToClockPeriod(DataPathDelay), InMHz(ClockFrequency));
+                Logger.Log("\t{3}>> Data path delay = {0} ns\r\n({1} cycle at {2} MHz clock)", DataPathDelay, NanosecondToClockPeriod(DataPathDelay), InMHz(ClockFrequency), Marker);
             if(ExtendedSyncParametersAvailable)
             {
                 Logger.Log(
@@ -112,7 +112,7 @@ namespace HastlayerTimingTester
                     "\tRequirement for arrival = {1} ns\r\n" +
                     "\tRequirement plus delays = {2} ns\r\n" +
                     "\tTiming window available = {3} ns\r\n" +
-                    "\t>> Timing window diff from requirement = {4} ns\r\n" +
+                    "\t{8}>> Timing window diff from requirement = {4} ns\r\n" +
                     "\t\t({5} cycle at {6} MHz clock)\r\n" +
                     "\tMax clock frequency = {7} MHz ",
                     SourceClockDelay,
@@ -120,7 +120,8 @@ namespace HastlayerTimingTester
                     RequirementPlusDelays,
                     TimingWindowAvailable,
                     TimingWindowDiffFromRequirement, NanosecondToClockPeriod(TimingWindowDiffFromRequirement), InMHz(ClockFrequency),
-                    InMHz(MaxClockFrequency)
+                    InMHz(MaxClockFrequency),
+                    Marker
                     );
             }
         }

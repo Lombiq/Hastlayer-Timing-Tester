@@ -79,9 +79,9 @@ report_timing_summary -check_timing_verbose -file SynthTimingSummary.txt
 show_schematic [get_nets]
 write_schematic -force -format pdf -orientation landscape Schematic.pdf
 if {%IMPLEMENT% == 0} { quit }
-opt_design -quiet
-place_design -quiet
-route_design -quiet
+opt_design
+place_design
+route_design
 report_timing -file ImplTimingReport.txt
 report_timing_summary -check_timing_verbose -file ImplTimingSummary.txt
 quit
@@ -192,7 +192,7 @@ quit
                                 synthVivadoResult.TimingSummary = File.ReadAllText(synthTimingSummaryOutputPath);
                                 Parser.Parse(synthVivadoResult);
                                 Logger.Log("Synthesis:\r\n----------");
-                                Parser.PrintParsedTimingReport();
+                                Parser.PrintParsedTimingReport("S");
                                 Parser.PrintParsedTimingSummary();
 
                                 if(Test.ImplementDesign)
@@ -205,7 +205,7 @@ quit
                                         implVivadoResult.TimingSummary = File.ReadAllText(implTimingSummaryOutputPath);
                                         Parser.Parse(implVivadoResult);
                                         Logger.Log("Implementation:\r\n---------------");
-                                        Parser.PrintParsedTimingReport();
+                                        Parser.PrintParsedTimingReport("I");
                                         Parser.PrintParsedTimingSummary();
                                     }
                                 }
