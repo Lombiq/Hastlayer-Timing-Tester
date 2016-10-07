@@ -221,7 +221,7 @@ quit
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
                                     myVhdlTemplate.Name,
-                                    (Test.ImplementDesign ? "impl" : "synth"),
+                                    ((Test.ImplementDesign && ImplementationSuccessful) ? "impl" : "synth"),
                                     Parser.DataPathDelay,
                                     Parser.TimingWindowDiffFromRequirement
                                 );
