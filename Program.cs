@@ -90,6 +90,8 @@ quit
         string CurrentTestOutputBaseDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
         string CurrentTestOutputDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
 
+        public static string TimeNow() { return DateTime.Now.ToString("yyyy-MM-dd__hh-mm-ss"); }
+
         public void InitializeTest(TimingTestConfigBase test)
         {
             ///<summary>This functio gets things ready before the test, then runs the test.
@@ -100,15 +102,19 @@ quit
             Directory.CreateDirectory("VivadoFiles");
             File.WriteAllText("VivadoFiles\\Generate.tcl", TclTemplate.Replace("%PART%", Test.Part).Replace("%IMPLEMENT%", (Convert.ToInt32(Test.ImplementDesign)).ToString()));
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
-            string currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__hh-mm-ss")+"__"+Test.Name;
+            DateTime timeNow = DateTime.Now;
+            string currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__hh-mm-ss")+"__"+Test.Name;
             CurrentTestOutputBaseDirectory = "TestResults\\"+currentTestDirectoryName;
             if(Directory.Exists(CurrentTestOutputBaseDirectory))
             { Logger.Log("Fatal error: the test directory already exists ({0}), which is very unlikely" +
                 "because we used the date and time to generate the directory name.", CurrentTestOutputBaseDirectory); return; }
             Directory.CreateDirectory(CurrentTestOutputBaseDirectory);
-            Logger.Init(CurrentTestOutputBaseDirectory+"\\Log.txt");
+            Logger.Init(CurrentTestOutputBaseDirectory+"\\Log.txt", CurrentTestOutputBaseDirectory+"\\Results.txt");
+            Logger.WriteResult("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
             if(Test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
+            Logger.Log("Starting analysis at: {0}", timeNow.ToString("yyyy-MM-dd hh:mm:ss"));
             RunTest();
+            Logger.Log("Analysis finished at: {0}", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"));
         }
 
         string RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
@@ -209,6 +215,16 @@ quit
                                         Parser.PrintParsedTimingSummary();
                                     }
                                 }
+
+                                Logger.WriteResult("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\r\n",
+                                    op.VhdlString,
+                                    inputDataTypeFunction(inputSize, true),
+                                    op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
+                                    myVhdlTemplate.Name,
+                                    (Test.ImplementDesign ? "impl" : "synth"),
+                                    Parser.DataPathDelay,
+                                    Parser.TimingWindowDiffFromRequirement
+                                );
                                 //return;
                             }
                             catch(Exception myException)
@@ -234,21 +250,26 @@ quit
 
     static class Logger
     {
-        ///<summary>Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the console.</summary>
+        ///<summary>Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the console. It also handles writing to the results file (Results.txt in CurrentTestOutputBaseDirectory).</summary>
         private static StreamWriter LogStreamWriter;
+        private static StreamWriter ResultsStreamWriter;
         private static bool Initialized;
 
-        static public void Init(string LogFilePath)
+        static public void Init(string LogFilePath, string ResultsFilePath)
         {
             ///<summary>This function initializes the Logger, to open the file given in LogFilePath.
             ///(Logger already works before initialization, but it only writes to the console.)</summary>
             LogStreamWriter = new StreamWriter(File.Create(LogFilePath));
             LogStreamWriter.AutoFlush = true;
+            ResultsStreamWriter = new StreamWriter(File.Create(ResultsFilePath));
+            ResultsStreamWriter.AutoFlush = true;
             Initialized = true;
         }
 
+        ///<summary>WriteResult writes a formatted string to the results file (if already initialized).</summary>
+        static public void WriteResult(string Format, params object[] Objs) { if(Initialized) ResultsStreamWriter.Write(Format, Objs); }
         ///<summary>Log writes a formatted string to both a log file (if already initialized) and the console, ending with a line break.</summary>
-        static public void Log(string Format, params object[] Objs) { LogInternal(Format, false , Objs); } //Log writes
+        static public void Log(string Format, params object[] Objs) { LogInternal(Format, false , Objs); }
         ///<summary>LogInline writes a formatted string to both a log file (if already initialized) and the console. It does not end with a line break.</summary>
         static public void LogInline(string Format, params object[] Objs) { LogInternal(Format, true, Objs); }
         ///<summary>LogInternal implements the functionality described for <see cref="Logger.Log"/> and <see cref="Logger.LogInline"/>.</summary>
