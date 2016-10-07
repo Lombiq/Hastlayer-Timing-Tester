@@ -109,7 +109,7 @@ quit
             { Logger.Log("Fatal error: the test directory already exists ({0}), which is very unlikely" +
                 "because we used the date and time to generate the directory name.", CurrentTestOutputBaseDirectory); return; }
             Directory.CreateDirectory(CurrentTestOutputBaseDirectory);
-            Logger.Init(CurrentTestOutputBaseDirectory+"\\Log.txt", CurrentTestOutputBaseDirectory+"\\Results.txt");
+            Logger.Init(CurrentTestOutputBaseDirectory+"\\Log.txt", CurrentTestOutputBaseDirectory+"\\Results.tsv");
             Logger.WriteResult("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
             if(Test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
             Logger.Log("Starting analysis at: {0}", timeNow.ToString("yyyy-MM-dd hh:mm:ss"));
@@ -250,7 +250,7 @@ quit
 
     static class Logger
     {
-        ///<summary>Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the console. It also handles writing to the results file (Results.txt in CurrentTestOutputBaseDirectory).</summary>
+        ///<summary>Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the console. It also handles writing to the results file (Results.tsv in CurrentTestOutputBaseDirectory).</summary>
         private static StreamWriter LogStreamWriter;
         private static StreamWriter ResultsStreamWriter;
         private static bool Initialized;
