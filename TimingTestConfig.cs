@@ -21,19 +21,19 @@ namespace HastlayerTimingTester
                     //      VhdlOp.SameOutputDataType should be the default; it means that the output of the operator is the same as its input.
                     //      VhdlOp.ComparisonWithBoolOutput is used for comparisons, which e.g. can use numbers as their input, but they output a true/false value.
                     //      VhdlOp.DoubleSizedOutput is useful for multiplication, where e.g. we need an unsigned(63 downto 0) output if the operands are unsigned(31 downto 0).
+                    new VhdlOp("+",     "add",  VhdlOp.SameOutputDataType),
                     new VhdlOp(">",     "gt",   VhdlOp.ComparisonWithBoolOutput),
                     new VhdlOp("<",     "lt",   VhdlOp.ComparisonWithBoolOutput),
                     new VhdlOp(">=",    "ge",   VhdlOp.ComparisonWithBoolOutput),
                     new VhdlOp("<=",    "le",   VhdlOp.ComparisonWithBoolOutput),
                     new VhdlOp("=",     "eq",   VhdlOp.ComparisonWithBoolOutput),
                     new VhdlOp("/=",    "neq",  VhdlOp.ComparisonWithBoolOutput),
-                    new VhdlOp("+",     "add",  VhdlOp.SameOutputDataType),
                     new VhdlOp("-",     "sub",  VhdlOp.SameOutputDataType),
                     new VhdlOp("/",     "div",  VhdlOp.SameOutputDataType),
                     new VhdlOp("*",     "mul",  VhdlOp.DoubleSizedOutput),
                     new VhdlOp("mod",   "mod",  VhdlOp.SameOutputDataType),
                 };
-            InputSizes = new List<int> { 32, 128, 64, 16, 8 }; //The list of input sizes for the data type that we want to test
+            InputSizes = new List<int> { 128, 32, 64, 16, 8 }; //The list of input sizes for the data type that we want to test
             DataTypes = new List<DataTypeFromSizeDelegate> {
                 //A list of functions that can generate the input data types that we test.
                 //For example, for an input size of 32, we should get unsigned(31 downto 0) to be pasted into the VHDL template.
@@ -42,7 +42,7 @@ namespace HastlayerTimingTester
                     (size, getFriendlyName) => { return (getFriendlyName) ? String.Format("signed{0}", size) : String.Format("signed({0} downto 0)", size-1); }
                 };
             Part = "xc7a100tcsg324-1"; //The FPGA part number
-            VhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync(), new VhdlTemplateComb() }; //The VHDL templates that will be used for analysis
+            VhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync() }; //The VHDL templates that will be used for analysis
             Frequency = 100e6F; //System clock frequency in MHz
             Name = "default"; //Name of the configuration, will be used in the name of the output directory
             VivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat"; //The path where vivado.bat is located
@@ -50,6 +50,8 @@ namespace HastlayerTimingTester
                               //If it is false, the exceptions are logged and the program continues with the next test.
             VivadoBatchMode = true; //If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
                                      //It does not open the GUI for every single test. However, it cannot generate schematic drawings (Schematic.pdf).
+            ImplementDesign = true; //If it is true, Vivado will perform STA for both the synthesized and the implemented designs.
+                                    //If it is false, Vivado will skip implementation and the STA after it.
         }
     }
 }

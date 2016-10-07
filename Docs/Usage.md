@@ -168,14 +168,8 @@ This figure will hopefully make it clear where do some of these parameters come 
 ![](Images/WhereDoValuesComeFrom.png)
 
 
-## Other questions
+## Questions
 
 * Q: What is the difference between `VhdlTemplateSync` and `VhdlTemplateComb`?
 * A: `VhdlTemplateComb` is a pure design without a clock. Only the operator is there. In the synthesized design, the inputs are connected to IBUFs and the outputs are connected to OBUFs, which add a lot of time to the *Data Path Delay*. `VhdlTemplateSync` was added because I decided that calculating the operator once for every clock cycle, feeding its inputs and capturing its output with flip-flops is more realistic, as this is what happens in Hastlayer. Also Vivado can output more timing information for a design like that. I recommend using this template.
 
-## Lessons learned
-
-* I have observed that there is no difference in timing if we compile a design in project mode or non-project mode in Vivado. This is important becaue it means that Vivado does not apply hidden settings while creating a project with the GUI.
-* *Timing window diff from requirement* does not change if the same design is compiled using a different clock frequency. (A small difference is introduced by the precision of floating point operations.)
-* While `Setup_fdre_C_D` is expected to be negative, Vivado sometimes says that it is positive [(more here)](https://forums.xilinx.com/t5/Timing-Analysis/I-was-fogged-by-the-data-required-time-in-Vivado/td-p/424596). Anyway, we use the end result (*Requirement plus delays*), so it does not screw up anything.
-* If the critical path ends in a DPS48E1, *Timing window diff from requirement* will be much higher as the setup time of the DSP48E1 (~1.4ns) is higher than of the flipflops (0.06-0.183ns). Example for this: `mul_unsigned32_to_unsigned64_sync` (with -1.58ns of *Timing window diff from requirement*).
