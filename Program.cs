@@ -90,8 +90,6 @@ quit
         string CurrentTestOutputBaseDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
         string CurrentTestOutputDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
 
-        public static string TimeNow() { return DateTime.Now.ToString("yyyy-MM-dd__hh-mm-ss"); }
-
         public void InitializeTest(TimingTestConfigBase test)
         {
             ///<summary>This functio gets things ready before the test, then runs the test.
@@ -103,7 +101,7 @@ quit
             File.WriteAllText("VivadoFiles\\Generate.tcl", TclTemplate.Replace("%PART%", Test.Part).Replace("%IMPLEMENT%", (Convert.ToInt32(Test.ImplementDesign)).ToString()));
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
             DateTime timeNow = DateTime.Now;
-            string currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__hh-mm-ss")+"__"+Test.Name;
+            string currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__HH-mm-ss")+"__"+Test.Name;
             CurrentTestOutputBaseDirectory = "TestResults\\"+currentTestDirectoryName;
             if(Directory.Exists(CurrentTestOutputBaseDirectory))
             { Logger.Log("Fatal error: the test directory already exists ({0}), which is very unlikely" +
@@ -112,9 +110,9 @@ quit
             Logger.Init(CurrentTestOutputBaseDirectory+"\\Log.txt", CurrentTestOutputBaseDirectory+"\\Results.tsv");
             Logger.WriteResult("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
             if(Test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
-            Logger.Log("Starting analysis at: {0}", timeNow.ToString("yyyy-MM-dd hh:mm:ss"));
+            Logger.Log("Starting analysis at: {0}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"));
             RunTest();
-            Logger.Log("Analysis finished at: {0}", DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss"));
+            Logger.Log("Analysis finished at: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
         string RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
