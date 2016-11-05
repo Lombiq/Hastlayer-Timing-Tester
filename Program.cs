@@ -160,6 +160,13 @@ quit
                                 string implTimingSummaryOutputPath = "VivadoFiles\\ImplTimingSummary.txt";
                                 string schematicOutputPath = "VivadoFiles\\Schematic.pdf";
 
+                                //To see if Vivado succeeded with the implementation, the existence of the text file at [implTimingReportOutputPath] is checked later.
+                                //For that reason, we need to make sure this file does not exist at the beginning.
+                                if(File.Exists(implTimingReportOutputPath)) File.Delete(implTimingReportOutputPath);
+                                if(File.Exists(implTimingSummaryOutputPath)) File.Delete(implTimingSummaryOutputPath);
+                                if(File.Exists(synthTimingReportOutputPath)) File.Delete(synthTimingReportOutputPath);
+                                if(File.Exists(synthTimingSummaryOutputPath)) File.Delete(synthTimingSummaryOutputPath);
+
                                 Logger.Log("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString, inputSize, inputDataType, outputDataType);
                                 string testFriendlyName = String.Format("{0}_{1}_to_{2}_{3}",
                                     op.FriendlyName,
@@ -186,9 +193,9 @@ quit
                                 CopyFileToOutputDir(synthTimingReportOutputPath);
                                 CopyFileToOutputDir(synthTimingSummaryOutputPath);
                                 bool ImplementationSuccessful = true;
-                                if(File.Exists(implTimingReportOutputPath)) CopyFileToOutputDir(implTimingSummaryOutputPath);
-                                else ImplementationSuccessful = false;
                                 if(File.Exists(implTimingReportOutputPath)) CopyFileToOutputDir(implTimingReportOutputPath);
+                                else ImplementationSuccessful = false;
+                                if(File.Exists(implTimingSummaryOutputPath)) CopyFileToOutputDir(implTimingSummaryOutputPath);
                                 if(!Test.VivadoBatchMode) CopyFileToOutputDir(schematicOutputPath);
 
                                 VivadoResult synthVivadoResult = new VivadoResult();
