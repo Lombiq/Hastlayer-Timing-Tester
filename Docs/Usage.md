@@ -128,7 +128,7 @@ However, it raises even more questions:
 
 ## Limitations of the analysis
 
-This tool performs STA after synthesis. At this point we know how many hardware resources will be used (e.g. LUT, FDRE, DSP48E, etc.) and how they will be connected together. However, mapping these resources to real hardware has not been done yet.
+When the synthesis ends, we know how many hardware resources will be used (e.g. LUT, FDRE, DSP48E, etc.) and how they will be connected together. However, mapping these resources to real hardware has not been done yet.
 
 Accurate timing information can only be acquired after the implementation stage. At synthesis, we can only have approximations.
 
@@ -138,7 +138,11 @@ As an example of this, let's see the differences of timing summaries between onl
 
 In this case, the negative setup slack is ~20ns worse in the implemented design.
 
-Sometimes the critical path also changes after implementation, because it turns out that a different path happens to be worse after place and route.
+Sometimes the critical path will change to a different one after implementation, because it turns out that other path happens to be worse after place and route.
+
+The Haslayer Timing Tester tool gets the generated test code synhesized and implemented with Vivado, and checks STA at both stages. It uses the results acquired from the implementation stage unless Vivado failed to implement the design. The source of the results is clearly visible in `Results.tsv`.
+
+However, if the project size increases (e.g. by adding the Microblaze soft CPU and other IP cores that are required to run Hastlayer), it will make the compiler think harder to get everything routed, and often it will use more net resources, thus include more delays in the design. This behaviour can not be easily tested or approximated yet, because it depends very much on all the other logic used in the project.
 
 ----
 
