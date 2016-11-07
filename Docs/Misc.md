@@ -1,3 +1,5 @@
+# Miscellaneous information
+
 ## Lessons learned
 
 * I have observed that there is no difference in timing if we compile a design in project mode or non-project mode in Vivado. This is important becaue it means that Vivado does not apply hidden settings while creating a project with the GUI.
