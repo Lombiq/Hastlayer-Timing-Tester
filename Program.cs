@@ -23,31 +23,74 @@ namespace HastlayerTimingTester
         abstract public string Name { get; }
     }
 
-    ///<summary>VhdlOp provides data to fill a VHDL template with (see <see cref="VhdlString" /> and <see cref="OutputDataTypeFunction" />).</summary>
+    ///<summary>VhdlOp provides data to fill a VHDL template with (see <see cref="VhdlString" /> and
+    ///     <see cref="OutputDataTypeFunction" />).</summary>
     class VhdlOp
     {
-        public string VhdlString; ///<summary>VhdlString contains the actual operator (like "+", "-", "mod", etc.) that will be subsituted into the VHDL template.</summary>
-        public string FriendlyName; ///<summary>FriendlyName will be used in directory names, where you cannot use special characters. E.g. for "+" a good FriendlyName is "add".</summary>
-        public OutputDataTypeDelegate OutputDataTypeFunction;  ///<summary>OutputDataTypeFunction can generate the output data type from the input data type and size. It allows us to handle VHDL operators that have different input and output data types.</summary>
-        public VhdlOp(string vhdlString, string friendlyName, OutputDataTypeDelegate outputDataTypeFunction)
-            { this.VhdlString = vhdlString; this.FriendlyName = friendlyName; this.OutputDataTypeFunction = outputDataTypeFunction; }
+        ///<summary>VhdlString contains the actual operator (like "+", "-", "mod", etc.) that will be subsituted
+        ///     into the VHDL template.</summary>
+        public string VhdlString;
 
-        public delegate string OutputDataTypeDelegate(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName);
+        ///<summary>FriendlyName will be used in directory names, where you cannot use special characters. E.g. for "+"
+        ///     a good FriendlyName is "add".</summary>
+        public string FriendlyName;
+
+        ///<summary>OutputDataTypeFunction can generate the output data type from the input data type and size. It
+        ///     allows us to handle VHDL operators that have different input and output data types.</summary>
+        public OutputDataTypeDelegate OutputDataTypeFunction;
+
+        public VhdlOp(string vhdlString, string friendlyName, OutputDataTypeDelegate outputDataTypeFunction)
+        {
+            this.VhdlString = vhdlString;
+            this.FriendlyName = friendlyName;
+            this.OutputDataTypeFunction = outputDataTypeFunction;
+        }
+
+        public delegate string OutputDataTypeDelegate(
+            int inputSize,
+            TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction,
+            bool getFriendlyName
+        );
+
         ///<summary>SameOutputDataType is used if the output data type is the same as the input data type.</summary>
-        public static string SameOutputDataType(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName)
-            { return inputDataTypeFunction(inputSize, getFriendlyName); }
-        ///<summary>ComparisonWithBoolOutput is used for operators that strictly have boolean as their output data type (like all comparison operators).</summary>
-        public static string ComparisonWithBoolOutput(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName)
-            { return "boolean"; }
-        ///<summary>DoubleSizedOutput is used for operators whose output is the same type as their input, but with double data size (e.g. multiplication).</summary>
-        public static string DoubleSizedOutput(int inputSize, TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction, bool getFriendlyName)
-            { return inputDataTypeFunction(inputSize * 2, getFriendlyName); }
+        public static string SameOutputDataType(
+            int inputSize,
+            TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction,
+            bool getFriendlyName
+        )
+        {
+            return inputDataTypeFunction(inputSize, getFriendlyName);
+        }
+
+        ///<summary>ComparisonWithBoolOutput is used for operators that strictly have boolean as their output data type
+        ///     (like all comparison operators).</summary>
+        public static string ComparisonWithBoolOutput(
+            int inputSize,
+            TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction,
+            bool getFriendlyName
+        )
+        {
+            return "boolean";
+        }
+
+        ///<summary>DoubleSizedOutput is used for operators whose output is the same type as their input, but with
+        ///     double data size (e.g. multiplication).</summary>
+        public static string DoubleSizedOutput(
+            int inputSize,
+            TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction,
+            bool getFriendlyName
+        )
+        {
+            return inputDataTypeFunction(inputSize * 2, getFriendlyName);
+        }
     }
 
-    ///<summary>This is the base class for configuration. For more information, check the <see cref="TimingTestConfig" /> subclass.</summary>
+    ///<summary>This is the base class for configuration. For more information, check the
+    ///     <see cref="TimingTestConfig" /> subclass.</summary>
     abstract class TimingTestConfigBase
     {
-        public delegate string DataTypeFromSizeDelegate(int size, bool getFriendlyName); ///<summary>This is used for <see cref="DataTypes" />.</summary>
+        ///<summary>This is used for <see cref="DataTypes" />.</summary>
+        public delegate string DataTypeFromSizeDelegate(int size, bool getFriendlyName);
         public string Name;
         public List<VhdlOp> Operators;
         public List<VhdlTemplateBase> VhdlTemplates;
@@ -87,25 +130,39 @@ report_timing_summary -check_timing_verbose -file ImplTimingSummary.txt
 quit
 ";
 
-        string CurrentTestOutputBaseDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
-        string CurrentTestOutputDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
+        ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
+        string CurrentTestOutputBaseDirectory;
+
+        ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
+        string CurrentTestOutputDirectory;
 
         ///<summary>This function gets things ready before the test, then runs the test.
-        ///It creates the necessary directory structure, cleans up VivadoFiles and generates a Tcl script for Vivado.</summary>
+        ///     It creates the necessary directory structure, cleans up VivadoFiles and generates
+        ///     a Tcl script for Vivado.</summary>
         public void InitializeTest(TimingTestConfigBase test)
         {
             Test = test;
             Parser = new TimingOutputParser(test.Frequency);
-            if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true); //Clean the VivadoFiles directory (delete it recursively and mkdir)
+            //Clean the VivadoFiles directory (delete it recursively and mkdir):
+            if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true);
             Directory.CreateDirectory("VivadoFiles");
-            File.WriteAllText("VivadoFiles\\Generate.tcl", TclTemplate.Replace("%PART%", Test.Part).Replace("%IMPLEMENT%", (Convert.ToInt32(Test.ImplementDesign)).ToString()));
+            File.WriteAllText(
+                "VivadoFiles\\Generate.tcl",
+                TclTemplate
+                    .Replace("%PART%", Test.Part)
+                    .Replace("%IMPLEMENT%", (Convert.ToInt32(Test.ImplementDesign)).ToString())
+            );
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
             DateTime timeNow = DateTime.Now;
             string currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__HH-mm-ss")+"__"+Test.Name;
             CurrentTestOutputBaseDirectory = "TestResults\\"+currentTestDirectoryName;
             if(Directory.Exists(CurrentTestOutputBaseDirectory))
-            { Logger.Log("Fatal error: the test directory already exists ({0}), which is very unlikely" +
-                "because we used the date and time to generate the directory name.", CurrentTestOutputBaseDirectory); return; }
+            {
+                Logger.Log("Fatal error: the test directory already exists ({0}), which is very unlikely" +
+                    "because we used the date and time to generate the directory name.",
+                    CurrentTestOutputBaseDirectory);
+                return;
+            }
             Directory.CreateDirectory(CurrentTestOutputBaseDirectory);
             Logger.Init(CurrentTestOutputBaseDirectory+"\\Log.txt", CurrentTestOutputBaseDirectory+"\\Results.tsv");
             Logger.WriteResult("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
@@ -121,7 +178,8 @@ quit
             Process cp = new Process();
             cp.StartInfo.FileName = vivadoPath;
             cp.StartInfo.Arguments = ((batchMode)?" -mode batch":"") + " -source " + tclFile;
-            cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\VivadoFiles";
+            cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                "\\VivadoFiles";
             //Logger.Log("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
             cp.StartInfo.UseShellExecute = !batchMode;
             cp.StartInfo.CreateNoWindow = false;
@@ -138,7 +196,8 @@ quit
             File.Copy(inputPath, CurrentTestOutputDirectory+"\\"+Path.GetFileName(inputPath));
         }
 
-        ///<summary>It runs tests for all combinations of operators, input data types, data sizes and VHDL templates.</summary>
+        ///<summary>It runs tests for all combinations of operators, input data types,
+        ///     data sizes and VHDL templates.</summary>
         void RunTest()
         {
             foreach (VhdlOp op in Test.Operators)
@@ -150,7 +209,10 @@ quit
                             {
                                 Logger.Log("========================== starting test ==========================");
                                 string inputDataType = inputDataTypeFunction(inputSize, false);
-                                string outputDataType = op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, false);
+                                string outputDataType = op.OutputDataTypeFunction(
+                                    inputSize,
+                                    inputDataTypeFunction,
+                                    false);
 
                                 string uutPath = "VivadoFiles\\UUT.vhd";
                                 string xdcPath = "VivadoFiles\\Constraints.xdc";
@@ -160,14 +222,16 @@ quit
                                 string implTimingSummaryOutputPath = "VivadoFiles\\ImplTimingSummary.txt";
                                 string schematicOutputPath = "VivadoFiles\\Schematic.pdf";
 
-                                //To see if Vivado succeeded with the implementation, the existence of the text file at [implTimingReportOutputPath] is checked later.
+                                //To see if Vivado succeeded with the implementation, the existence of the text file at
+                                //[implTimingReportOutputPath] is checked later.
                                 //For that reason, we need to make sure this file does not exist at the beginning.
                                 if(File.Exists(implTimingReportOutputPath)) File.Delete(implTimingReportOutputPath);
                                 if(File.Exists(implTimingSummaryOutputPath)) File.Delete(implTimingSummaryOutputPath);
                                 if(File.Exists(synthTimingReportOutputPath)) File.Delete(synthTimingReportOutputPath);
                                 if(File.Exists(synthTimingSummaryOutputPath)) File.Delete(synthTimingSummaryOutputPath);
 
-                                Logger.Log("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString, inputSize, inputDataType, outputDataType);
+                                Logger.Log("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString,
+                                    inputSize, inputDataType, outputDataType);
                                 string testFriendlyName = String.Format("{0}_{1}_to_{2}_{3}",
                                     op.FriendlyName,
                                     inputDataTypeFunction(inputSize, true),
@@ -184,7 +248,11 @@ quit
                                     .Replace("%OPERATOR%", op.VhdlString);
                                 File.WriteAllText(uutPath, vhdl);
                                 CopyFileToOutputDir(uutPath);
-                                File.WriteAllText(xdcPath, myVhdlTemplate.XdcTemplate.Replace("%CLKPERIOD%", ((1.0 / Test.Frequency) * 1e9F).ToString(CultureInfo.InvariantCulture)));
+                                File.WriteAllText(
+                                    xdcPath,
+                                    myVhdlTemplate.XdcTemplate.Replace( "%CLKPERIOD%",
+                                        ((1.0 / Test.Frequency) * 1e9F).ToString(CultureInfo.InvariantCulture))
+                                );
                                 CopyFileToOutputDir(xdcPath);
 
                                 Logger.LogInline("Running Vivado... ");
@@ -193,9 +261,11 @@ quit
                                 CopyFileToOutputDir(synthTimingReportOutputPath);
                                 CopyFileToOutputDir(synthTimingSummaryOutputPath);
                                 bool ImplementationSuccessful = true;
-                                if(File.Exists(implTimingReportOutputPath)) CopyFileToOutputDir(implTimingReportOutputPath);
+                                if(File.Exists(implTimingReportOutputPath))
+                                    CopyFileToOutputDir(implTimingReportOutputPath);
                                 else ImplementationSuccessful = false;
-                                if(File.Exists(implTimingSummaryOutputPath)) CopyFileToOutputDir(implTimingSummaryOutputPath);
+                                if(File.Exists(implTimingSummaryOutputPath))
+                                    CopyFileToOutputDir(implTimingSummaryOutputPath);
                                 if(!Test.VivadoBatchMode) CopyFileToOutputDir(schematicOutputPath);
 
                                 VivadoResult synthVivadoResult = new VivadoResult();
@@ -253,7 +323,10 @@ quit
         }
     }
 
-    ///<summary>Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the console. It also handles writing to the results file (Results.tsv in CurrentTestOutputBaseDirectory).</summary>
+    ///<summary>Logger writes a formatted string to both a log file
+    ///     (Log.txt in CurrentTestOutputBaseDirectory) and the
+    ///     console. It also handles writing to the results file
+    ///     (Results.tsv in CurrentTestOutputBaseDirectory).</summary>
     static class Logger
     {
         private static StreamWriter LogStreamWriter;
@@ -272,16 +345,26 @@ quit
         }
 
         ///<summary>WriteResult writes a formatted string to the results file (if already initialized).</summary>
-        static public void WriteResult(string Format, params object[] Objs) { if(Initialized) ResultsStreamWriter.Write(Format, Objs); }
-        ///<summary>Log writes a formatted string to both a log file (if already initialized) and the console, ending with a line break.</summary>
+        static public void WriteResult(string Format, params object[] Objs)
+        {
+            if(Initialized) ResultsStreamWriter.Write(Format, Objs);
+        }
+        ///<summary>Log writes a formatted string to both a log file (if already initialized) and the console, ending
+        ///     with a line break.</summary>
         static public void Log(string Format, params object[] Objs) { LogInternal(Format, false , Objs); }
-        ///<summary>LogInline writes a formatted string to both a log file (if already initialized) and the console. It does not end with a line break.</summary>
+        ///<summary>LogInline writes a formatted string to both a log file (if already initialized) and the console.
+        ///     It does not end with a line break.</summary>
         static public void LogInline(string Format, params object[] Objs) { LogInternal(Format, true, Objs); }
-        ///<summary>LogInternal implements the functionality described for <see cref="Logger.Log"/> and <see cref="Logger.LogInline"/>.</summary>
-        ///<param name="Inline">It ends the line with a line break based on the Inline parameter.</param>
+        ///<summary>LogInternal implements the functionality described for <see cref="Logger.Log"/> and
+        ///     <see cref="Logger.LogInline"/>.</summary>
+        ///     <param name="Inline">It ends the line with a line break based on the Inline parameter.</param>
         static private void LogInternal(string Format, bool Inline, params object[] Objs)
         {
-            for(int i = 0; i < Objs.Length; i++ ) if(Objs[i].GetType() == typeof(float)) Objs[i] = ((float)Objs[i]).ToString(CultureInfo.InvariantCulture);
+            for(int i = 0; i < Objs.Length; i++ )
+            {
+                if(Objs[i].GetType() == typeof(float))
+                    Objs[i] = ((float)Objs[i]).ToString(CultureInfo.InvariantCulture);
+            }
             if(Initialized)
             {
                 if (Inline)
