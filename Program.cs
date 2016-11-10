@@ -7,25 +7,25 @@ using System.Reflection;
 
 namespace HastlayerTimingTester
 {
+    ///<summary>This is for passing the data output by Vivado into TimingOutputParser.</summary>
     struct VivadoResult
     {
-        ///<summary>This is for passing the data output by Vivado into TimingOutputParser.</summary>
         public string TimingReport;
         public string TimingSummary;
     }
 
+    ///<summary>VHDL templates contain the hardware project to be compiled. They consist of a VHDL and an XDC
+    ///(constraints file) template, both of which will be used by Vivado.</summary>
     abstract class VhdlTemplateBase
     {
-        ///<summary>VHDL templates contain the hardware project to be compiled. They consist of a VHDL and an XDC
-        ///(constraints file) template, both of which will be used by Vivado.</summary>
         public string VhdlTemplate { get; protected set; }
         public string XdcTemplate { get; protected set; }
         abstract public string Name { get; }
     }
 
+    ///<summary>VhdlOp provides data to fill a VHDL template with (see <see cref="VhdlString" /> and <see cref="OutputDataTypeFunction" />).</summary>
     class VhdlOp
     {
-        ///<summary>VhdlOp provides data to fill a VHDL template with (see <see cref="VhdlString" /> and <see cref="OutputDataTypeFunction" />).</summary>
         public string VhdlString; ///<summary>VhdlString contains the actual operator (like "+", "-", "mod", etc.) that will be subsituted into the VHDL template.</summary>
         public string FriendlyName; ///<summary>FriendlyName will be used in directory names, where you cannot use special characters. E.g. for "+" a good FriendlyName is "add".</summary>
         public OutputDataTypeDelegate OutputDataTypeFunction;  ///<summary>OutputDataTypeFunction can generate the output data type from the input data type and size. It allows us to handle VHDL operators that have different input and output data types.</summary>
@@ -44,9 +44,9 @@ namespace HastlayerTimingTester
             { return inputDataTypeFunction(inputSize * 2, getFriendlyName); }
     }
 
+    ///<summary>This is the base class for configuration. For more information, check the <see cref="TimingTestConfig" /> subclass.</summary>
     abstract class TimingTestConfigBase
     {
-        ///<summary>This is the base class for configuration. For more information, check the <see cref="TimingTestConfig" /> subclass.</summary>
         public delegate string DataTypeFromSizeDelegate(int size, bool getFriendlyName); ///<summary>This is used for <see cref="DataTypes" />.</summary>
         public string Name;
         public List<VhdlOp> Operators;
@@ -90,10 +90,10 @@ quit
         string CurrentTestOutputBaseDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
         string CurrentTestOutputDirectory; ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
 
+        ///<summary>This function gets things ready before the test, then runs the test.
+        ///It creates the necessary directory structure, cleans up VivadoFiles and generates a Tcl script for Vivado.</summary>
         public void InitializeTest(TimingTestConfigBase test)
         {
-            ///<summary>This functio gets things ready before the test, then runs the test.
-            ///It creates the necessary directory structure, cleans up VivadoFiles and generates a Tcl script for Vivado.</summary>
             Test = test;
             Parser = new TimingOutputParser(test.Frequency);
             if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true); //Clean the VivadoFiles directory (delete it recursively and mkdir)
@@ -115,9 +115,9 @@ quit
             Logger.Log("Analysis finished at: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
+        ///<summary>It runs Vivado.</summary>
         string RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
         {
-            ///<summary>It runs Vivado.</summary>
             Process cp = new Process();
             cp.StartInfo.FileName = vivadoPath;
             cp.StartInfo.Arguments = ((batchMode)?" -mode batch":"") + " -source " + tclFile;
@@ -132,15 +132,15 @@ quit
             return "";
         }
 
+        ///<summary>It copies the given file from VivadoFiles to the output directory of the current test.</summary>
         void CopyFileToOutputDir(string inputPath)
         {
-            ///<summary>It copies the given file from VivadoFiles to the output directory of the current test.</summary>
             File.Copy(inputPath, CurrentTestOutputDirectory+"\\"+Path.GetFileName(inputPath));
         }
 
+        ///<summary>It runs tests for all combinations of operators, input data types, data sizes and VHDL templates.</summary>
         void RunTest()
         {
-            ///<summary>It runs tests for all combinations of operators, input data types, data sizes and VHDL templates.</summary>
             foreach (VhdlOp op in Test.Operators)
                 foreach (int inputSize in Test.InputSizes)
                     foreach (TimingTestConfigBase.DataTypeFromSizeDelegate inputDataTypeFunction in Test.DataTypes)
@@ -253,17 +253,17 @@ quit
         }
     }
 
+    ///<summary>Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the console. It also handles writing to the results file (Results.tsv in CurrentTestOutputBaseDirectory).</summary>
     static class Logger
     {
-        ///<summary>Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the console. It also handles writing to the results file (Results.tsv in CurrentTestOutputBaseDirectory).</summary>
         private static StreamWriter LogStreamWriter;
         private static StreamWriter ResultsStreamWriter;
         private static bool Initialized;
 
+        ///<summary>This function initializes the Logger, to open the file given in LogFilePath.
+        ///(Logger already works before initialization, but it only writes to the console.)</summary>
         static public void Init(string LogFilePath, string ResultsFilePath)
         {
-            ///<summary>This function initializes the Logger, to open the file given in LogFilePath.
-            ///(Logger already works before initialization, but it only writes to the console.)</summary>
             LogStreamWriter = new StreamWriter(File.Create(LogFilePath));
             LogStreamWriter.AutoFlush = true;
             ResultsStreamWriter = new StreamWriter(File.Create(ResultsFilePath));

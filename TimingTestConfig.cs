@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 namespace HastlayerTimingTester
 {
+    ///<summary>Provides configuration for Hastlayer Timing Tester.</summary>
     class TimingTestConfig : TimingTestConfigBase
     {
-        ///<summary>Provides configuration for Hastlayer Timing Tester.</summary>
         public TimingTestConfig()
         {
             Operators = new List<VhdlOp>
