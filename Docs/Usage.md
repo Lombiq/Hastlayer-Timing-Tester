@@ -5,7 +5,7 @@
 * Visual Studio Community Edition 2015 (Version 14)
 * Xilinx Vivado 2016.2
 
-> While cloning the repository or unpacking the project, make sure that there are no special characters in the path (as Vivado cannot handle them).
+> While cloning the repository or unpacking the project, make sure that there are no special characters in the path (as Vivado cannot handle them, e.g. it can fail with: `TclStackFree: incorrect freePtr. Call out of sequence?`).
 
 ## How to configure
 
