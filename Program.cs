@@ -201,8 +201,11 @@ quit
         void RunTest()
         {
             foreach (VhdlOp op in Test.Operators)
+            {
                 foreach (int inputSize in Test.InputSizes)
+                {
                     foreach (TimingTestConfigBase.DataTypeFromSizeDelegate inputDataTypeFunction in Test.DataTypes)
+                    {
                         foreach (VhdlTemplateBase myVhdlTemplate in Test.VhdlTemplates)
                         {
                             try
@@ -308,6 +311,9 @@ quit
                                 else Logger.Log("Exception happened during test: {0}", myException.Message);
                             }
                         }
+                    }
+                }
+            }
 
             Logger.Log("Finished, exiting.");
         }
