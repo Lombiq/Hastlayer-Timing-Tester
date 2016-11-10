@@ -5,6 +5,8 @@
 * Visual Studio Community Edition 2015 (Version 14)
 * Xilinx Vivado 2016.2
 
+> While cloning the repository or unpacking the project, make sure that there are no special characters in the path (as Vivado cannot handle them).
+
 ## How to configure
 
 To configure Hastlayer Timing Tester, you will have to edit the source file `TimingTestConfig.cs`, the options of which are detailed in comments.
