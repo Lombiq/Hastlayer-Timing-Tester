@@ -7,9 +7,9 @@ using System.Text.RegularExpressions;
 namespace HastlayerTimingTester
 {
 
-    ///<summary>It parses the timing report and timing summary output of Vivado. It makes some calculations based on these.
-    ///It can also print the most important values.
-    ///Look at the documentation (Docs/Introduction.md and Docs/Usage.md) for the meaning of the properties of this class.</summary>
+    ///<summary>It parses the timing report and timing summary output of Vivado. It makes some calculations based on
+    ///     these. It can also print the most important values. Look at the documentation
+    ///     (Docs/Introduction.md and Docs/Usage.md) for the meaning of the properties of this class.</summary>
     class TimingOutputParser
     {
         public float ClockFrequency;
@@ -23,7 +23,11 @@ namespace HastlayerTimingTester
         public float TotalHoldSlack { get; private set; }
         public float WorstPulseWidthSlack { get; private set; }
         public float TotalPulseWidthSlack { get; private set; }
-        public bool DesignMetTimingRequirements { get { return TimingSummaryAvailable && TotalNegativeSlack == 0 && TotalHoldSlack == 0 && TotalPulseWidthSlack == 0; } }
+        public bool DesignMetTimingRequirements {
+            get { return TimingSummaryAvailable && TotalNegativeSlack == 0 &&
+                TotalHoldSlack == 0 &&
+                TotalPulseWidthSlack == 0; }
+        }
         public float RequirementPlusDelays { get; private set; }
         public float Requirement { get; private set; }
         public float SourceClockDelay { get; private set; }
@@ -31,7 +35,9 @@ namespace HastlayerTimingTester
         private bool ExtendedSyncParametersAvailable { get { return ExtendedSyncParametersCount == 3; } }
         public float TimingWindowAvailable { get { return RequirementPlusDelays - SourceClockDelay; } }
         public float TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - Requirement; } }
-        public float MaxClockFrequency { get { return 1.0F / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9F); } }
+        public float MaxClockFrequency {
+            get { return 1.0F / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9F); }
+        }
         public float NanosecondToClockPeriod(float ns) { return (ns * 1.0e-9F) / (1.0F / ClockFrequency); }
         public float InMHz(float fHz) { return fHz / 1e6F; } //Hz to MHz
 
@@ -75,11 +81,16 @@ namespace HastlayerTimingTester
             List<string> timingSummaryLines = Regex.Split(result.TimingSummary, "\r\n").ToList();
             for (int i = 0; i < timingSummaryLines.Count; i++)
             {
-                if (timingSummaryLines[i].StartsWith("| Design Timing Summary") && timingSummaryLines[i + 1].StartsWith("| ---------------------"))
+                if (
+                    timingSummaryLines[i].StartsWith("| Design Timing Summary") &&
+                    timingSummaryLines[i + 1].StartsWith("| ---------------------")
+                )
                 {
                     string totalTimingSummaryLine = timingSummaryLines[i + 6];
-                    while (totalTimingSummaryLine.Contains("  ")) totalTimingSummaryLine = totalTimingSummaryLine.Replace("  ", " ");
-                    List<string> timingSummaryLineParts = totalTimingSummaryLine.Replace("  ", " ").Split(" ".ToCharArray()).ToList();
+                    while (totalTimingSummaryLine.Contains("  "))
+                        totalTimingSummaryLine = totalTimingSummaryLine.Replace("  ", " ");
+                    List<string> timingSummaryLineParts =
+                        totalTimingSummaryLine.Replace("  ", " ").Split(" ".ToCharArray()).ToList();
                     try
                     {
                         if (timingSummaryLineParts[1] != "NA")
@@ -103,7 +114,13 @@ namespace HastlayerTimingTester
         {
             Logger.Log("Timing Report:");
             if (DataPathDelayAvailable)
-                Logger.Log("\t{3}>> Data path delay = {0} ns  ({1} cycle at {2} MHz clock)", DataPathDelay, NanosecondToClockPeriod(DataPathDelay), InMHz(ClockFrequency), Marker);
+                Logger.Log(
+                    "\t{3}>> Data path delay = {0} ns  ({1} cycle at {2} MHz clock)",
+                    DataPathDelay,
+                    NanosecondToClockPeriod(DataPathDelay),
+                    InMHz(ClockFrequency),
+                    Marker
+                );
             if (ExtendedSyncParametersAvailable)
             {
                 Logger.Log(
@@ -117,7 +134,9 @@ namespace HastlayerTimingTester
                     Requirement,
                     RequirementPlusDelays,
                     TimingWindowAvailable,
-                    TimingWindowDiffFromRequirement, NanosecondToClockPeriod(TimingWindowDiffFromRequirement), InMHz(ClockFrequency),
+                    TimingWindowDiffFromRequirement,
+                    NanosecondToClockPeriod(TimingWindowDiffFromRequirement),
+                    InMHz(ClockFrequency),
                     InMHz(MaxClockFrequency),
                     Marker
                     );
