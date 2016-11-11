@@ -206,7 +206,7 @@ quit
                 {
                     foreach (TimingTestConfigBase.DataTypeFromSizeDelegate inputDataTypeFunction in Test.DataTypes)
                     {
-                        foreach (VhdlTemplateBase myVhdlTemplate in Test.VhdlTemplates)
+                        foreach (VhdlTemplateBase vhdlTemplate in Test.VhdlTemplates)
                         {
                             try
                             {
@@ -239,13 +239,13 @@ quit
                                     op.FriendlyName,
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
-                                    myVhdlTemplate.Name);
+                                    vhdlTemplate.Name);
                                 //friendly name should contain something from each "foreach" iterator
                                 CurrentTestOutputDirectory = CurrentTestOutputBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(CurrentTestOutputDirectory);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
-                                string vhdl = myVhdlTemplate.VhdlTemplate
+                                string vhdl = vhdlTemplate.VhdlTemplate
                                     .Replace("%INTYPE%", inputDataType)
                                     .Replace("%OUTTYPE%", outputDataType)
                                     .Replace("%OPERATOR%", op.VhdlString);
@@ -253,7 +253,7 @@ quit
                                 CopyFileToOutputDir(uutPath);
                                 File.WriteAllText(
                                     xdcPath,
-                                    myVhdlTemplate.XdcTemplate.Replace("%CLKPERIOD%",
+                                    vhdlTemplate.XdcTemplate.Replace("%CLKPERIOD%",
                                         ((1.0 / Test.Frequency) * 1e9F).ToString(CultureInfo.InvariantCulture))
                                 );
                                 CopyFileToOutputDir(xdcPath);
@@ -298,17 +298,17 @@ quit
                                     op.VhdlString,
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
-                                    myVhdlTemplate.Name,
+                                    vhdlTemplate.Name,
                                     ((Test.ImplementDesign && ImplementationSuccessful) ? "impl" : "synth"),
                                     Parser.DataPathDelay,
                                     Parser.TimingWindowDiffFromRequirement
                                 );
                                 //return;
                             }
-                            catch (Exception myException)
+                            catch (Exception exception)
                             {
                                 if (Test.DebugMode) throw;
-                                else Logger.Log("Exception happened during test: {0}", myException.Message);
+                                else Logger.Log("Exception happened during test: {0}", exception.Message);
                             }
                         }
                     }
@@ -323,9 +323,9 @@ quit
     {
         static void Main(string[] args)
         {
-            TimingTester myTimingTester = new TimingTester();
+            TimingTester timingTester = new TimingTester();
             TimingTestConfigBase test = new TimingTestConfig();
-            myTimingTester.InitializeTest(test);
+            timingTester.InitializeTest(test);
         }
     }
 

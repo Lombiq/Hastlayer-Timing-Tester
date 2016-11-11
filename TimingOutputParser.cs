@@ -49,36 +49,36 @@ namespace HastlayerTimingTester
         public void Parse(VivadoResult result)
         {
             //Data Path Delay
-            Match myMatch = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
-            if (myMatch.Success)
+            Match match = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
+            if (match.Success)
             {
-                DataPathDelay = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
+                DataPathDelay = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
                 DataPathDelayAvailable = true;
             }
 
             //Let's see a sync design
             ExtendedSyncParametersCount = 0;
             Requirement = 0;
-            myMatch = Regex.Match(result.TimingReport, @"(\s*)Requirement:(\s*)([0-9\.]*)ns");
-            if (myMatch.Success)
+            match = Regex.Match(result.TimingReport, @"(\s*)Requirement:(\s*)([0-9\.]*)ns");
+            if (match.Success)
             {
-                Requirement = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
+                Requirement = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
                 ExtendedSyncParametersCount++;
             }
 
             RequirementPlusDelays = 0;
-            myMatch = Regex.Match(result.TimingReport, @"\n(\s*)required time(\s*)([0-9\.]*)(\s*)");
-            if (myMatch.Success)
+            match = Regex.Match(result.TimingReport, @"\n(\s*)required time(\s*)([0-9\.]*)(\s*)");
+            if (match.Success)
             {
-                RequirementPlusDelays = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
+                RequirementPlusDelays = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
                 ExtendedSyncParametersCount++;
             }
 
             SourceClockDelay = 0;
-            myMatch = Regex.Match(result.TimingReport, @"(\s*)Source Clock Delay(\s*)\(SCD\):(\s*)([0-9\.]*)ns");
-            if (myMatch.Success)
+            match = Regex.Match(result.TimingReport, @"(\s*)Source Clock Delay(\s*)\(SCD\):(\s*)([0-9\.]*)ns");
+            if (match.Success)
             {
-                SourceClockDelay = float.Parse(myMatch.Groups[4].Value, CultureInfo.InvariantCulture);
+                SourceClockDelay = float.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
                 ExtendedSyncParametersCount++;
             }
 
