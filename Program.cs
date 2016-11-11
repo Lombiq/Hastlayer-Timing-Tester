@@ -153,8 +153,8 @@ quit
                     .Replace("%IMPLEMENT%", (Convert.ToInt32(Test.ImplementDesign)).ToString())
             );
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
-            DateTime timeNow = DateTime.Now;
-            string currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + Test.Name;
+            var timeNow = DateTime.Now;
+            var currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + Test.Name;
             CurrentTestOutputBaseDirectory = "TestResults\\" + currentTestDirectoryName;
             if (Directory.Exists(CurrentTestOutputBaseDirectory))
             {
@@ -175,7 +175,7 @@ quit
         ///<summary>It runs Vivado.</summary>
         string RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
         {
-            Process cp = new Process();
+            var cp = new Process();
             cp.StartInfo.FileName = vivadoPath;
             cp.StartInfo.Arguments = ((batchMode) ? " -mode batch" : "") + " -source " + tclFile;
             cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
@@ -200,30 +200,30 @@ quit
         ///     data sizes and VHDL templates.</summary>
         void RunTest()
         {
-            foreach (VhdlOp op in Test.Operators)
+            foreach (var op in Test.Operators)
             {
-                foreach (int inputSize in Test.InputSizes)
+                foreach (var inputSize in Test.InputSizes)
                 {
-                    foreach (TimingTestConfigBase.DataTypeFromSizeDelegate inputDataTypeFunction in Test.DataTypes)
+                    foreach (var inputDataTypeFunction in Test.DataTypes)
                     {
-                        foreach (VhdlTemplateBase vhdlTemplate in Test.VhdlTemplates)
+                        foreach (var vhdlTemplate in Test.VhdlTemplates)
                         {
                             try
                             {
                                 Logger.Log("========================== starting test ==========================");
-                                string inputDataType = inputDataTypeFunction(inputSize, false);
-                                string outputDataType = op.OutputDataTypeFunction(
+                                var inputDataType = inputDataTypeFunction(inputSize, false);
+                                var outputDataType = op.OutputDataTypeFunction(
                                     inputSize,
                                     inputDataTypeFunction,
                                     false);
 
-                                string uutPath = "VivadoFiles\\UUT.vhd";
-                                string xdcPath = "VivadoFiles\\Constraints.xdc";
-                                string synthTimingReportOutputPath = "VivadoFiles\\SynthTimingReport.txt";
-                                string synthTimingSummaryOutputPath = "VivadoFiles\\SynthTimingSummary.txt";
-                                string implTimingReportOutputPath = "VivadoFiles\\ImplTimingReport.txt";
-                                string implTimingSummaryOutputPath = "VivadoFiles\\ImplTimingSummary.txt";
-                                string schematicOutputPath = "VivadoFiles\\Schematic.pdf";
+                                var uutPath = "VivadoFiles\\UUT.vhd";
+                                var xdcPath = "VivadoFiles\\Constraints.xdc";
+                                var synthTimingReportOutputPath = "VivadoFiles\\SynthTimingReport.txt";
+                                var synthTimingSummaryOutputPath = "VivadoFiles\\SynthTimingSummary.txt";
+                                var implTimingReportOutputPath = "VivadoFiles\\ImplTimingReport.txt";
+                                var implTimingSummaryOutputPath = "VivadoFiles\\ImplTimingSummary.txt";
+                                var schematicOutputPath = "VivadoFiles\\Schematic.pdf";
 
                                 //To see if Vivado succeeded with the implementation, the existence of the text file at
                                 //[implTimingReportOutputPath] is checked later.
@@ -235,7 +235,7 @@ quit
 
                                 Logger.Log("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString,
                                     inputSize, inputDataType, outputDataType);
-                                string testFriendlyName = string.Format("{0}_{1}_to_{2}_{3}",
+                                var testFriendlyName = string.Format("{0}_{1}_to_{2}_{3}",
                                     op.FriendlyName,
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
@@ -245,7 +245,7 @@ quit
                                 Directory.CreateDirectory(CurrentTestOutputDirectory);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
-                                string vhdl = vhdlTemplate.VhdlTemplate
+                                var vhdl = vhdlTemplate.VhdlTemplate
                                     .Replace("%INTYPE%", inputDataType)
                                     .Replace("%OUTTYPE%", outputDataType)
                                     .Replace("%OPERATOR%", op.VhdlString);
@@ -263,7 +263,7 @@ quit
                                 Logger.Log("Done.");
                                 CopyFileToOutputDir(synthTimingReportOutputPath);
                                 CopyFileToOutputDir(synthTimingSummaryOutputPath);
-                                bool ImplementationSuccessful = true;
+                                var ImplementationSuccessful = true;
                                 if (File.Exists(implTimingReportOutputPath))
                                     CopyFileToOutputDir(implTimingReportOutputPath);
                                 else ImplementationSuccessful = false;
@@ -271,7 +271,7 @@ quit
                                     CopyFileToOutputDir(implTimingSummaryOutputPath);
                                 if (!Test.VivadoBatchMode) CopyFileToOutputDir(schematicOutputPath);
 
-                                VivadoResult synthVivadoResult = new VivadoResult();
+                                var synthVivadoResult = new VivadoResult();
                                 synthVivadoResult.TimingReport = File.ReadAllText(synthTimingReportOutputPath);
                                 synthVivadoResult.TimingSummary = File.ReadAllText(synthTimingSummaryOutputPath);
                                 Parser.Parse(synthVivadoResult);
@@ -284,7 +284,7 @@ quit
                                     if (!ImplementationSuccessful) Logger.Log("Implementation (or STA) failed!");
                                     else
                                     {
-                                        VivadoResult implVivadoResult = new VivadoResult();
+                                        var implVivadoResult = new VivadoResult();
                                         implVivadoResult.TimingReport = File.ReadAllText(implTimingReportOutputPath);
                                         implVivadoResult.TimingSummary = File.ReadAllText(implTimingSummaryOutputPath);
                                         Parser.Parse(implVivadoResult);
@@ -323,8 +323,8 @@ quit
     {
         static void Main(string[] args)
         {
-            TimingTester timingTester = new TimingTester();
-            TimingTestConfigBase test = new TimingTestConfig();
+            var timingTester = new TimingTester();
+            var test = new TimingTestConfig();
             timingTester.InitializeTest(test);
         }
     }
@@ -357,19 +357,29 @@ quit
         }
         ///<summary>Log writes a formatted string to both a log file (if already initialized) and the console, ending
         ///     with a line break.</summary>
-        static public void Log(string Format, params object[] Objs) { LogInternal(Format, false, Objs); }
+        static public void Log(string Format, params object[] Objs)
+        {
+            LogInternal(Format, false, Objs);
+        }
+
         ///<summary>LogInline writes a formatted string to both a log file (if already initialized) and the console.
         ///     It does not end with a line break.</summary>
-        static public void LogInline(string Format, params object[] Objs) { LogInternal(Format, true, Objs); }
+        static public void LogInline(string Format, params object[] Objs)
+        {
+            LogInternal(Format, true, Objs);
+        }
+
         ///<summary>LogInternal implements the functionality described for <see cref="Logger.Log"/> and
         ///     <see cref="Logger.LogInline"/>.</summary>
         ///     <param name="Inline">It ends the line with a line break based on the Inline parameter.</param>
         static private void LogInternal(string Format, bool Inline, params object[] Objs)
         {
-            for (int i = 0; i < Objs.Length; i++)
+            for (var i = 0; i < Objs.Length; i++)
             {
                 if (Objs[i].GetType() == typeof(float))
+                {
                     Objs[i] = ((float)Objs[i]).ToString(CultureInfo.InvariantCulture);
+                }
             }
             if (Initialized)
             {

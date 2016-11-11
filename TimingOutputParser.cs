@@ -28,8 +28,8 @@ namespace HastlayerTimingTester
             get
             {
                 return TimingSummaryAvailable && TotalNegativeSlack == 0 &&
-              TotalHoldSlack == 0 &&
-              TotalPulseWidthSlack == 0;
+                    TotalHoldSlack == 0 &&
+                    TotalPulseWidthSlack == 0;
             }
         }
         public float RequirementPlusDelays { get; private set; }
@@ -49,7 +49,7 @@ namespace HastlayerTimingTester
         public void Parse(VivadoResult result)
         {
             //Data Path Delay
-            Match match = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
+            var match = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
             if (match.Success)
             {
                 DataPathDelay = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
@@ -83,18 +83,18 @@ namespace HastlayerTimingTester
             }
 
             //Timing Summary
-            List<string> timingSummaryLines = Regex.Split(result.TimingSummary, "\r\n").ToList();
-            for (int i = 0; i < timingSummaryLines.Count; i++)
+            var timingSummaryLines = Regex.Split(result.TimingSummary, "\r\n").ToList();
+            for (var i = 0; i < timingSummaryLines.Count; i++)
             {
                 if (
                     timingSummaryLines[i].StartsWith("| Design Timing Summary") &&
                     timingSummaryLines[i + 1].StartsWith("| ---------------------")
                 )
                 {
-                    string totalTimingSummaryLine = timingSummaryLines[i + 6];
+                    var totalTimingSummaryLine = timingSummaryLines[i + 6];
                     while (totalTimingSummaryLine.Contains("  "))
                         totalTimingSummaryLine = totalTimingSummaryLine.Replace("  ", " ");
-                    List<string> timingSummaryLineParts =
+                    var timingSummaryLineParts =
                         totalTimingSummaryLine.Replace("  ", " ").Split(" ".ToCharArray()).ToList();
                     try
                     {
