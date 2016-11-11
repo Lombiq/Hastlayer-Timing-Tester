@@ -48,14 +48,14 @@ namespace HastlayerTimingTester
                 (size, getFriendlyName) =>
                 {
                     return (getFriendlyName) ?
-                        String.Format("unsigned{0}", size) :
-                        String.Format("unsigned({0} downto 0)", size-1);
+                        string.Format("unsigned{0}", size) :
+                        string.Format("unsigned({0} downto 0)", size-1);
                 },
                 (size, getFriendlyName) =>
                 {
                     return (getFriendlyName) ?
-                        String.Format("signed{0}", size) :
-                        String.Format("signed({0} downto 0)", size-1);
+                        string.Format("signed{0}", size) :
+                        string.Format("signed({0} downto 0)", size-1);
                 }
             };
 

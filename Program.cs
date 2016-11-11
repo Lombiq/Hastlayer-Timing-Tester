@@ -235,7 +235,7 @@ quit
 
                                 Logger.Log("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString,
                                     inputSize, inputDataType, outputDataType);
-                                string testFriendlyName = String.Format("{0}_{1}_to_{2}_{3}",
+                                string testFriendlyName = string.Format("{0}_{1}_to_{2}_{3}",
                                     op.FriendlyName,
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
