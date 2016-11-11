@@ -35,8 +35,8 @@ namespace HastlayerTimingTester
         public float RequirementPlusDelays { get; private set; }
         public float Requirement { get; private set; }
         public float SourceClockDelay { get; private set; }
-        private int ExtendedSyncParametersCount;
-        private bool ExtendedSyncParametersAvailable { get { return ExtendedSyncParametersCount == 3; } }
+        private int _extendedSyncParametersCount;
+        private bool ExtendedSyncParametersAvailable { get { return _extendedSyncParametersCount == 3; } }
         public float TimingWindowAvailable { get { return RequirementPlusDelays - SourceClockDelay; } }
         public float TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - Requirement; } }
         public float MaxClockFrequency
@@ -57,13 +57,13 @@ namespace HastlayerTimingTester
             }
 
             //Let's see a sync design
-            ExtendedSyncParametersCount = 0;
+            _extendedSyncParametersCount = 0;
             Requirement = 0;
             match = Regex.Match(result.TimingReport, @"(\s*)Requirement:(\s*)([0-9\.]*)ns");
             if (match.Success)
             {
                 Requirement = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
-                ExtendedSyncParametersCount++;
+                _extendedSyncParametersCount++;
             }
 
             RequirementPlusDelays = 0;
@@ -71,7 +71,7 @@ namespace HastlayerTimingTester
             if (match.Success)
             {
                 RequirementPlusDelays = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
-                ExtendedSyncParametersCount++;
+                _extendedSyncParametersCount++;
             }
 
             SourceClockDelay = 0;
@@ -79,7 +79,7 @@ namespace HastlayerTimingTester
             if (match.Success)
             {
                 SourceClockDelay = float.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
-                ExtendedSyncParametersCount++;
+                _extendedSyncParametersCount++;
             }
 
             //Timing Summary

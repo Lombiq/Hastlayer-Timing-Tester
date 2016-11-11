@@ -107,8 +107,8 @@ namespace HastlayerTimingTester
 
     class TimingTester
     {
-        private TimingOutputParser Parser;
-        private TimingTestConfigBase Test;
+        private TimingOutputParser _parser;
+        private TimingTestConfigBase _test;
 
         ///<summary>This template is filled with data during the test, and then opened and ran by Vivado.
         ///It synthesizes the project, generates reports and a schematic diagram.</summary>
@@ -141,20 +141,20 @@ quit
         ///     a Tcl script for Vivado.</summary>
         public void InitializeTest(TimingTestConfigBase test)
         {
-            Test = test;
-            Parser = new TimingOutputParser(test.Frequency);
+            _test = test;
+            _parser = new TimingOutputParser(test.Frequency);
             //Clean the VivadoFiles directory (delete it recursively and mkdir):
             if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true);
             Directory.CreateDirectory("VivadoFiles");
             File.WriteAllText(
                 "VivadoFiles\\Generate.tcl",
                 TclTemplate
-                    .Replace("%PART%", Test.Part)
-                    .Replace("%IMPLEMENT%", (Convert.ToInt32(Test.ImplementDesign)).ToString())
+                    .Replace("%PART%", _test.Part)
+                    .Replace("%IMPLEMENT%", (Convert.ToInt32(_test.ImplementDesign)).ToString())
             );
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
             var timeNow = DateTime.Now;
-            var currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + Test.Name;
+            var currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + _test.Name;
             CurrentTestOutputBaseDirectory = "TestResults\\" + currentTestDirectoryName;
             if (Directory.Exists(CurrentTestOutputBaseDirectory))
             {
@@ -166,7 +166,7 @@ quit
             Directory.CreateDirectory(CurrentTestOutputBaseDirectory);
             Logger.Init(CurrentTestOutputBaseDirectory + "\\Log.txt", CurrentTestOutputBaseDirectory + "\\Results.tsv");
             Logger.WriteResult("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
-            if (Test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
+            if (_test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
             Logger.Log("Starting analysis at: {0}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"));
             RunTest();
             Logger.Log("Analysis finished at: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -200,13 +200,13 @@ quit
         ///     data sizes and VHDL templates.</summary>
         void RunTest()
         {
-            foreach (var op in Test.Operators)
+            foreach (var op in _test.Operators)
             {
-                foreach (var inputSize in Test.InputSizes)
+                foreach (var inputSize in _test.InputSizes)
                 {
-                    foreach (var inputDataTypeFunction in Test.DataTypes)
+                    foreach (var inputDataTypeFunction in _test.DataTypes)
                     {
-                        foreach (var vhdlTemplate in Test.VhdlTemplates)
+                        foreach (var vhdlTemplate in _test.VhdlTemplates)
                         {
                             try
                             {
@@ -254,12 +254,12 @@ quit
                                 File.WriteAllText(
                                     xdcPath,
                                     vhdlTemplate.XdcTemplate.Replace("%CLKPERIOD%",
-                                        ((1.0 / Test.Frequency) * 1e9F).ToString(CultureInfo.InvariantCulture))
+                                        ((1.0 / _test.Frequency) * 1e9F).ToString(CultureInfo.InvariantCulture))
                                 );
                                 CopyFileToOutputDir(xdcPath);
 
                                 Logger.LogInline("Running Vivado... ");
-                                RunVivado(Test.VivadoPath, "Generate.tcl", Test.VivadoBatchMode);
+                                RunVivado(_test.VivadoPath, "Generate.tcl", _test.VivadoBatchMode);
                                 Logger.Log("Done.");
                                 CopyFileToOutputDir(synthTimingReportOutputPath);
                                 CopyFileToOutputDir(synthTimingSummaryOutputPath);
@@ -269,17 +269,17 @@ quit
                                 else ImplementationSuccessful = false;
                                 if (File.Exists(implTimingSummaryOutputPath))
                                     CopyFileToOutputDir(implTimingSummaryOutputPath);
-                                if (!Test.VivadoBatchMode) CopyFileToOutputDir(schematicOutputPath);
+                                if (!_test.VivadoBatchMode) CopyFileToOutputDir(schematicOutputPath);
 
                                 var synthVivadoResult = new VivadoResult();
                                 synthVivadoResult.TimingReport = File.ReadAllText(synthTimingReportOutputPath);
                                 synthVivadoResult.TimingSummary = File.ReadAllText(synthTimingSummaryOutputPath);
-                                Parser.Parse(synthVivadoResult);
+                                _parser.Parse(synthVivadoResult);
                                 Logger.Log("Synthesis:\r\n----------");
-                                Parser.PrintParsedTimingReport("S");
-                                Parser.PrintParsedTimingSummary();
+                                _parser.PrintParsedTimingReport("S");
+                                _parser.PrintParsedTimingSummary();
 
-                                if (Test.ImplementDesign)
+                                if (_test.ImplementDesign)
                                 {
                                     if (!ImplementationSuccessful) Logger.Log("Implementation (or STA) failed!");
                                     else
@@ -287,10 +287,10 @@ quit
                                         var implVivadoResult = new VivadoResult();
                                         implVivadoResult.TimingReport = File.ReadAllText(implTimingReportOutputPath);
                                         implVivadoResult.TimingSummary = File.ReadAllText(implTimingSummaryOutputPath);
-                                        Parser.Parse(implVivadoResult);
+                                        _parser.Parse(implVivadoResult);
                                         Logger.Log("Implementation:\r\n---------------");
-                                        Parser.PrintParsedTimingReport("I");
-                                        Parser.PrintParsedTimingSummary();
+                                        _parser.PrintParsedTimingReport("I");
+                                        _parser.PrintParsedTimingSummary();
                                     }
                                 }
 
@@ -299,15 +299,15 @@ quit
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
                                     vhdlTemplate.Name,
-                                    ((Test.ImplementDesign && ImplementationSuccessful) ? "impl" : "synth"),
-                                    Parser.DataPathDelay,
-                                    Parser.TimingWindowDiffFromRequirement
+                                    ((_test.ImplementDesign && ImplementationSuccessful) ? "impl" : "synth"),
+                                    _parser.DataPathDelay,
+                                    _parser.TimingWindowDiffFromRequirement
                                 );
                                 //return;
                             }
                             catch (Exception exception)
                             {
-                                if (Test.DebugMode) throw;
+                                if (_test.DebugMode) throw;
                                 else Logger.Log("Exception happened during test: {0}", exception.Message);
                             }
                         }
@@ -335,25 +335,25 @@ quit
     ///     (Results.tsv in CurrentTestOutputBaseDirectory).</summary>
     static class Logger
     {
-        private static StreamWriter LogStreamWriter;
-        private static StreamWriter ResultsStreamWriter;
-        private static bool Initialized;
+        private static StreamWriter _logStreamWriter;
+        private static StreamWriter _resultsStreamWriter;
+        private static bool _initialized;
 
         ///<summary>This function initializes the Logger, to open the file given in LogFilePath.
         ///(Logger already works before initialization, but it only writes to the console.)</summary>
         static public void Init(string LogFilePath, string ResultsFilePath)
         {
-            LogStreamWriter = new StreamWriter(File.Create(LogFilePath));
-            LogStreamWriter.AutoFlush = true;
-            ResultsStreamWriter = new StreamWriter(File.Create(ResultsFilePath));
-            ResultsStreamWriter.AutoFlush = true;
-            Initialized = true;
+            _logStreamWriter = new StreamWriter(File.Create(LogFilePath));
+            _logStreamWriter.AutoFlush = true;
+            _resultsStreamWriter = new StreamWriter(File.Create(ResultsFilePath));
+            _resultsStreamWriter.AutoFlush = true;
+            _initialized = true;
         }
 
         ///<summary>WriteResult writes a formatted string to the results file (if already initialized).</summary>
         static public void WriteResult(string Format, params object[] Objs)
         {
-            if (Initialized) ResultsStreamWriter.Write(Format, Objs);
+            if (_initialized) _resultsStreamWriter.Write(Format, Objs);
         }
         ///<summary>Log writes a formatted string to both a log file (if already initialized) and the console, ending
         ///     with a line break.</summary>
@@ -381,16 +381,16 @@ quit
                     Objs[i] = ((float)Objs[i]).ToString(CultureInfo.InvariantCulture);
                 }
             }
-            if (Initialized)
+            if (_initialized)
             {
                 if (Inline)
                 {
-                    LogStreamWriter.Write(Format, Objs);
+                    _logStreamWriter.Write(Format, Objs);
                     Console.Write(Format, Objs);
                 }
                 else
                 {
-                    LogStreamWriter.WriteLine(Format, Objs);
+                    _logStreamWriter.WriteLine(Format, Objs);
                     Console.WriteLine(Format, Objs);
                 }
             }
