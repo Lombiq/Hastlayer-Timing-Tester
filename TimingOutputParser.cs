@@ -12,17 +12,17 @@ namespace HastlayerTimingTester
     ///     (Docs/Introduction.md and Docs/Usage.md) for the meaning of the properties of this class.</summary>
     class TimingOutputParser
     {
-        public float ClockFrequency;
-        public TimingOutputParser(float clockFrequency) { ClockFrequency = clockFrequency; }
-        public float DataPathDelay { get; private set; }
+        public decimal ClockFrequency;
+        public TimingOutputParser(decimal clockFrequency) { ClockFrequency = clockFrequency; }
+        public decimal DataPathDelay { get; private set; }
         public bool DataPathDelayAvailable { get; private set; }
         public bool TimingSummaryAvailable { get; private set; }
-        public float WorstNegativeSlack { get; private set; }
-        public float TotalNegativeSlack { get; private set; }
-        public float WorstHoldSlack { get; private set; }
-        public float TotalHoldSlack { get; private set; }
-        public float WorstPulseWidthSlack { get; private set; }
-        public float TotalPulseWidthSlack { get; private set; }
+        public decimal WorstNegativeSlack { get; private set; }
+        public decimal TotalNegativeSlack { get; private set; }
+        public decimal WorstHoldSlack { get; private set; }
+        public decimal TotalHoldSlack { get; private set; }
+        public decimal WorstPulseWidthSlack { get; private set; }
+        public decimal TotalPulseWidthSlack { get; private set; }
         public bool DesignMetTimingRequirements
         {
             get
@@ -32,19 +32,19 @@ namespace HastlayerTimingTester
                     TotalPulseWidthSlack == 0;
             }
         }
-        public float RequirementPlusDelays { get; private set; }
-        public float Requirement { get; private set; }
-        public float SourceClockDelay { get; private set; }
+        public decimal RequirementPlusDelays { get; private set; }
+        public decimal Requirement { get; private set; }
+        public decimal SourceClockDelay { get; private set; }
         private int _extendedSyncParametersCount;
         private bool ExtendedSyncParametersAvailable { get { return _extendedSyncParametersCount == 3; } }
-        public float TimingWindowAvailable { get { return RequirementPlusDelays - SourceClockDelay; } }
-        public float TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - Requirement; } }
-        public float MaxClockFrequency
+        public decimal TimingWindowAvailable { get { return RequirementPlusDelays - SourceClockDelay; } }
+        public decimal TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - Requirement; } }
+        public decimal MaxClockFrequency
         {
-            get { return 1.0F / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9F); }
+            get { return 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m); }
         }
-        public float NanosecondToClockPeriod(float ns) { return (ns * 1.0e-9F) / (1.0F / ClockFrequency); }
-        public float InMHz(float fHz) { return fHz / 1e6F; } //Hz to MHz
+        public decimal NanosecondToClockPeriod(decimal ns) { return (ns * 1.0e-9m) / (1.0m / ClockFrequency); }
+        public decimal InMHz(decimal fHz) { return fHz / 1e6m; } //Hz to MHz
 
         public void Parse(VivadoResult result)
         {
@@ -52,7 +52,7 @@ namespace HastlayerTimingTester
             var match = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
             if (match.Success)
             {
-                DataPathDelay = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
+                DataPathDelay = decimal.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
                 DataPathDelayAvailable = true;
             }
 
@@ -62,7 +62,7 @@ namespace HastlayerTimingTester
             match = Regex.Match(result.TimingReport, @"(\s*)Requirement:(\s*)([0-9\.]*)ns");
             if (match.Success)
             {
-                Requirement = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
+                Requirement = decimal.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
                 _extendedSyncParametersCount++;
             }
 
@@ -70,7 +70,7 @@ namespace HastlayerTimingTester
             match = Regex.Match(result.TimingReport, @"\n(\s*)required time(\s*)([0-9\.]*)(\s*)");
             if (match.Success)
             {
-                RequirementPlusDelays = float.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
+                RequirementPlusDelays = decimal.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
                 _extendedSyncParametersCount++;
             }
 
@@ -78,7 +78,7 @@ namespace HastlayerTimingTester
             match = Regex.Match(result.TimingReport, @"(\s*)Source Clock Delay(\s*)\(SCD\):(\s*)([0-9\.]*)ns");
             if (match.Success)
             {
-                SourceClockDelay = float.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
+                SourceClockDelay = decimal.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
                 _extendedSyncParametersCount++;
             }
 
@@ -100,12 +100,12 @@ namespace HastlayerTimingTester
                     {
                         if (timingSummaryLineParts[1] != "NA")
                         {
-                            WorstNegativeSlack = float.Parse(timingSummaryLineParts[1], CultureInfo.InvariantCulture);
-                            TotalNegativeSlack = float.Parse(timingSummaryLineParts[2], CultureInfo.InvariantCulture);
-                            WorstHoldSlack = float.Parse(timingSummaryLineParts[5], CultureInfo.InvariantCulture);
-                            TotalHoldSlack = float.Parse(timingSummaryLineParts[6], CultureInfo.InvariantCulture);
-                            WorstPulseWidthSlack = float.Parse(timingSummaryLineParts[9], CultureInfo.InvariantCulture);
-                            TotalPulseWidthSlack = float.Parse(timingSummaryLineParts[10], CultureInfo.InvariantCulture);
+                            WorstNegativeSlack = decimal.Parse(timingSummaryLineParts[1], CultureInfo.InvariantCulture);
+                            TotalNegativeSlack = decimal.Parse(timingSummaryLineParts[2], CultureInfo.InvariantCulture);
+                            WorstHoldSlack = decimal.Parse(timingSummaryLineParts[5], CultureInfo.InvariantCulture);
+                            TotalHoldSlack = decimal.Parse(timingSummaryLineParts[6], CultureInfo.InvariantCulture);
+                            WorstPulseWidthSlack = decimal.Parse(timingSummaryLineParts[9], CultureInfo.InvariantCulture);
+                            TotalPulseWidthSlack = decimal.Parse(timingSummaryLineParts[10], CultureInfo.InvariantCulture);
                             TimingSummaryAvailable = true;
                         }
                     }

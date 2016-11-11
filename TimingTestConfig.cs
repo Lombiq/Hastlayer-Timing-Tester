@@ -63,7 +63,7 @@ namespace HastlayerTimingTester
 
             //VhdlTemplates: the VHDL templates that will be used for analysis
             VhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync() };
-            Frequency = 100e6F; //System clock frequency in MHz
+            Frequency = 100e6m; //System clock frequency in MHz
             Name = "default"; //Name of the configuration, will be used in the name of the output directory
             VivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat"; //The path where vivado.bat is located
 

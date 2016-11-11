@@ -99,7 +99,7 @@ namespace HastlayerTimingTester
         public List<DataTypeFromSizeDelegate> DataTypes;
         public string VivadoPath;
         public bool DebugMode;
-        public float Frequency;
+        public decimal Frequency;
         public bool VivadoBatchMode;
         public bool ImplementDesign;
     }
@@ -254,7 +254,7 @@ quit
                                 File.WriteAllText(
                                     xdcPath,
                                     vhdlTemplate.XdcTemplate.Replace("%CLKPERIOD%",
-                                        ((1.0 / _test.Frequency) * 1e9F).ToString(CultureInfo.InvariantCulture))
+                                        ((1.0m / _test.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture))
                                 );
                                 CopyFileToOutputDir(xdcPath);
 
@@ -376,9 +376,9 @@ quit
         {
             for (var i = 0; i < Objs.Length; i++)
             {
-                if (Objs[i].GetType() == typeof(float))
+                if (Objs[i].GetType() == typeof(decimal))
                 {
-                    Objs[i] = ((float)Objs[i]).ToString(CultureInfo.InvariantCulture);
+                    Objs[i] = ((decimal)Objs[i]).ToString(CultureInfo.InvariantCulture);
                 }
             }
             if (_initialized)
