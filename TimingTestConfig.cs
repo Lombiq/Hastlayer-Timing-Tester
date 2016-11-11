@@ -49,7 +49,7 @@ namespace HastlayerTimingTester
             DebugMode = true; //If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
                               //If it is false, the exceptions are logged and the program continues with the next test.
             VivadoBatchMode = true; //If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
-                                     //It does not open the GUI for every single test. However, it cannot generate schematic drawings (Schematic.pdf).
+                                    //It does not open the GUI for every single test. However, it cannot generate schematic drawings (Schematic.pdf).
             ImplementDesign = true; //If it is true, Vivado will perform STA for both the synthesized and the implemented designs.
                                     //If it is false, Vivado will skip implementation and the STA after it.
         }

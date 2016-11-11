@@ -28,18 +28,18 @@ namespace HastlayerTimingTester
         public float Requirement { get; private set; }
         public float SourceClockDelay { get; private set; }
         private int ExtendedSyncParametersCount;
-        private bool ExtendedSyncParametersAvailable  { get { return ExtendedSyncParametersCount == 3; } }
+        private bool ExtendedSyncParametersAvailable { get { return ExtendedSyncParametersCount == 3; } }
         public float TimingWindowAvailable { get { return RequirementPlusDelays - SourceClockDelay; } }
         public float TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - Requirement; } }
-        public float MaxClockFrequency { get { return 1.0F/((DataPathDelay-TimingWindowDiffFromRequirement)*1.0e-9F); } }
-        public float NanosecondToClockPeriod(float ns) { return (ns * 1.0e-9F)/(1.0F / ClockFrequency); }
-        public float InMHz(float fHz) { return fHz/1e6F; } //Hz to MHz
+        public float MaxClockFrequency { get { return 1.0F / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9F); } }
+        public float NanosecondToClockPeriod(float ns) { return (ns * 1.0e-9F) / (1.0F / ClockFrequency); }
+        public float InMHz(float fHz) { return fHz / 1e6F; } //Hz to MHz
 
         public void Parse(VivadoResult result)
         {
             //Data Path Delay
             Match myMatch = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
-            if(myMatch.Success)
+            if (myMatch.Success)
             {
                 DataPathDelay = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
                 DataPathDelayAvailable = true;
@@ -49,7 +49,7 @@ namespace HastlayerTimingTester
             ExtendedSyncParametersCount = 0;
             Requirement = 0;
             myMatch = Regex.Match(result.TimingReport, @"(\s*)Requirement:(\s*)([0-9\.]*)ns");
-            if(myMatch.Success)
+            if (myMatch.Success)
             {
                 Requirement = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
                 ExtendedSyncParametersCount++;
@@ -57,7 +57,7 @@ namespace HastlayerTimingTester
 
             RequirementPlusDelays = 0;
             myMatch = Regex.Match(result.TimingReport, @"\n(\s*)required time(\s*)([0-9\.]*)(\s*)");
-            if(myMatch.Success)
+            if (myMatch.Success)
             {
                 RequirementPlusDelays = float.Parse(myMatch.Groups[3].Value, CultureInfo.InvariantCulture);
                 ExtendedSyncParametersCount++;
@@ -65,7 +65,7 @@ namespace HastlayerTimingTester
 
             SourceClockDelay = 0;
             myMatch = Regex.Match(result.TimingReport, @"(\s*)Source Clock Delay(\s*)\(SCD\):(\s*)([0-9\.]*)ns");
-            if(myMatch.Success)
+            if (myMatch.Success)
             {
                 SourceClockDelay = float.Parse(myMatch.Groups[4].Value, CultureInfo.InvariantCulture);
                 ExtendedSyncParametersCount++;
@@ -73,16 +73,16 @@ namespace HastlayerTimingTester
 
             //Timing Summary
             List<string> timingSummaryLines = Regex.Split(result.TimingSummary, "\r\n").ToList();
-            for(int i=0; i<timingSummaryLines.Count; i++)
+            for (int i = 0; i < timingSummaryLines.Count; i++)
             {
-                if(timingSummaryLines[i].StartsWith("| Design Timing Summary") && timingSummaryLines[i+1].StartsWith("| ---------------------"))
+                if (timingSummaryLines[i].StartsWith("| Design Timing Summary") && timingSummaryLines[i + 1].StartsWith("| ---------------------"))
                 {
-                    string totalTimingSummaryLine = timingSummaryLines[i+6];
-                    while(totalTimingSummaryLine.Contains("  ")) totalTimingSummaryLine = totalTimingSummaryLine.Replace("  ", " ");
+                    string totalTimingSummaryLine = timingSummaryLines[i + 6];
+                    while (totalTimingSummaryLine.Contains("  ")) totalTimingSummaryLine = totalTimingSummaryLine.Replace("  ", " ");
                     List<string> timingSummaryLineParts = totalTimingSummaryLine.Replace("  ", " ").Split(" ".ToCharArray()).ToList();
                     try
                     {
-                        if(timingSummaryLineParts[1]!="NA")
+                        if (timingSummaryLineParts[1] != "NA")
                         {
                             WorstNegativeSlack = float.Parse(timingSummaryLineParts[1], CultureInfo.InvariantCulture);
                             TotalNegativeSlack = float.Parse(timingSummaryLineParts[2], CultureInfo.InvariantCulture);
@@ -102,9 +102,9 @@ namespace HastlayerTimingTester
         public void PrintParsedTimingReport(string Marker = "")
         {
             Logger.Log("Timing Report:");
-            if(DataPathDelayAvailable)
+            if (DataPathDelayAvailable)
                 Logger.Log("\t{3}>> Data path delay = {0} ns  ({1} cycle at {2} MHz clock)", DataPathDelay, NanosecondToClockPeriod(DataPathDelay), InMHz(ClockFrequency), Marker);
-            if(ExtendedSyncParametersAvailable)
+            if (ExtendedSyncParametersAvailable)
             {
                 Logger.Log(
                     "\tSource clock delay = {0} ns\r\n" +
@@ -125,7 +125,7 @@ namespace HastlayerTimingTester
         }
         public void PrintParsedTimingSummary()
         {
-            if(TimingSummaryAvailable)
+            if (TimingSummaryAvailable)
             {
                 Logger.Log(
                     "Timing Summary:\r\n" +
@@ -142,9 +142,9 @@ namespace HastlayerTimingTester
                     WorstHoldSlack, TotalHoldSlack,
                     WorstPulseWidthSlack, TotalPulseWidthSlack
                 );
-                if(TotalNegativeSlack>0) Logger.Log("WARNING: setup time violation!");
-                if(TotalHoldSlack>0) Logger.Log("WARNING: hold time violation!");
-                if(TotalPulseWidthSlack>0) Logger.Log("WARNING: minimum pulse width violation!");
+                if (TotalNegativeSlack > 0) Logger.Log("WARNING: setup time violation!");
+                if (TotalHoldSlack > 0) Logger.Log("WARNING: hold time violation!");
+                if (TotalPulseWidthSlack > 0) Logger.Log("WARNING: minimum pulse width violation!");
             }
             else Logger.Log("Timing summary did not contain slack values (or could not be parsed).");
         }

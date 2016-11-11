@@ -154,9 +154,9 @@ quit
             );
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
             DateTime timeNow = DateTime.Now;
-            string currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__HH-mm-ss")+"__"+Test.Name;
-            CurrentTestOutputBaseDirectory = "TestResults\\"+currentTestDirectoryName;
-            if(Directory.Exists(CurrentTestOutputBaseDirectory))
+            string currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + Test.Name;
+            CurrentTestOutputBaseDirectory = "TestResults\\" + currentTestDirectoryName;
+            if (Directory.Exists(CurrentTestOutputBaseDirectory))
             {
                 Logger.Log("Fatal error: the test directory already exists ({0}), which is very unlikely" +
                     "because we used the date and time to generate the directory name.",
@@ -164,9 +164,9 @@ quit
                 return;
             }
             Directory.CreateDirectory(CurrentTestOutputBaseDirectory);
-            Logger.Init(CurrentTestOutputBaseDirectory+"\\Log.txt", CurrentTestOutputBaseDirectory+"\\Results.tsv");
+            Logger.Init(CurrentTestOutputBaseDirectory + "\\Log.txt", CurrentTestOutputBaseDirectory + "\\Results.tsv");
             Logger.WriteResult("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
-            if(Test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
+            if (Test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
             Logger.Log("Starting analysis at: {0}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"));
             RunTest();
             Logger.Log("Analysis finished at: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -177,7 +177,7 @@ quit
         {
             Process cp = new Process();
             cp.StartInfo.FileName = vivadoPath;
-            cp.StartInfo.Arguments = ((batchMode)?" -mode batch":"") + " -source " + tclFile;
+            cp.StartInfo.Arguments = ((batchMode) ? " -mode batch" : "") + " -source " + tclFile;
             cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
                 "\\VivadoFiles";
             //Logger.Log("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
@@ -193,7 +193,7 @@ quit
         ///<summary>It copies the given file from VivadoFiles to the output directory of the current test.</summary>
         void CopyFileToOutputDir(string inputPath)
         {
-            File.Copy(inputPath, CurrentTestOutputDirectory+"\\"+Path.GetFileName(inputPath));
+            File.Copy(inputPath, CurrentTestOutputDirectory + "\\" + Path.GetFileName(inputPath));
         }
 
         ///<summary>It runs tests for all combinations of operators, input data types,
@@ -228,10 +228,10 @@ quit
                                 //To see if Vivado succeeded with the implementation, the existence of the text file at
                                 //[implTimingReportOutputPath] is checked later.
                                 //For that reason, we need to make sure this file does not exist at the beginning.
-                                if(File.Exists(implTimingReportOutputPath)) File.Delete(implTimingReportOutputPath);
-                                if(File.Exists(implTimingSummaryOutputPath)) File.Delete(implTimingSummaryOutputPath);
-                                if(File.Exists(synthTimingReportOutputPath)) File.Delete(synthTimingReportOutputPath);
-                                if(File.Exists(synthTimingSummaryOutputPath)) File.Delete(synthTimingSummaryOutputPath);
+                                if (File.Exists(implTimingReportOutputPath)) File.Delete(implTimingReportOutputPath);
+                                if (File.Exists(implTimingSummaryOutputPath)) File.Delete(implTimingSummaryOutputPath);
+                                if (File.Exists(synthTimingReportOutputPath)) File.Delete(synthTimingReportOutputPath);
+                                if (File.Exists(synthTimingSummaryOutputPath)) File.Delete(synthTimingSummaryOutputPath);
 
                                 Logger.Log("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString,
                                     inputSize, inputDataType, outputDataType);
@@ -240,7 +240,7 @@ quit
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
                                     myVhdlTemplate.Name);
-                                    //friendly name should contain something from each "foreach" iterator
+                                //friendly name should contain something from each "foreach" iterator
                                 CurrentTestOutputDirectory = CurrentTestOutputBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(CurrentTestOutputDirectory);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
@@ -253,7 +253,7 @@ quit
                                 CopyFileToOutputDir(uutPath);
                                 File.WriteAllText(
                                     xdcPath,
-                                    myVhdlTemplate.XdcTemplate.Replace( "%CLKPERIOD%",
+                                    myVhdlTemplate.XdcTemplate.Replace("%CLKPERIOD%",
                                         ((1.0 / Test.Frequency) * 1e9F).ToString(CultureInfo.InvariantCulture))
                                 );
                                 CopyFileToOutputDir(xdcPath);
@@ -264,12 +264,12 @@ quit
                                 CopyFileToOutputDir(synthTimingReportOutputPath);
                                 CopyFileToOutputDir(synthTimingSummaryOutputPath);
                                 bool ImplementationSuccessful = true;
-                                if(File.Exists(implTimingReportOutputPath))
+                                if (File.Exists(implTimingReportOutputPath))
                                     CopyFileToOutputDir(implTimingReportOutputPath);
                                 else ImplementationSuccessful = false;
-                                if(File.Exists(implTimingSummaryOutputPath))
+                                if (File.Exists(implTimingSummaryOutputPath))
                                     CopyFileToOutputDir(implTimingSummaryOutputPath);
-                                if(!Test.VivadoBatchMode) CopyFileToOutputDir(schematicOutputPath);
+                                if (!Test.VivadoBatchMode) CopyFileToOutputDir(schematicOutputPath);
 
                                 VivadoResult synthVivadoResult = new VivadoResult();
                                 synthVivadoResult.TimingReport = File.ReadAllText(synthTimingReportOutputPath);
@@ -279,9 +279,9 @@ quit
                                 Parser.PrintParsedTimingReport("S");
                                 Parser.PrintParsedTimingSummary();
 
-                                if(Test.ImplementDesign)
+                                if (Test.ImplementDesign)
                                 {
-                                    if(!ImplementationSuccessful) Logger.Log("Implementation (or STA) failed!");
+                                    if (!ImplementationSuccessful) Logger.Log("Implementation (or STA) failed!");
                                     else
                                     {
                                         VivadoResult implVivadoResult = new VivadoResult();
@@ -305,7 +305,7 @@ quit
                                 );
                                 //return;
                             }
-                            catch(Exception myException)
+                            catch (Exception myException)
                             {
                                 if (Test.DebugMode) throw;
                                 else Logger.Log("Exception happened during test: {0}", myException.Message);
@@ -353,11 +353,11 @@ quit
         ///<summary>WriteResult writes a formatted string to the results file (if already initialized).</summary>
         static public void WriteResult(string Format, params object[] Objs)
         {
-            if(Initialized) ResultsStreamWriter.Write(Format, Objs);
+            if (Initialized) ResultsStreamWriter.Write(Format, Objs);
         }
         ///<summary>Log writes a formatted string to both a log file (if already initialized) and the console, ending
         ///     with a line break.</summary>
-        static public void Log(string Format, params object[] Objs) { LogInternal(Format, false , Objs); }
+        static public void Log(string Format, params object[] Objs) { LogInternal(Format, false, Objs); }
         ///<summary>LogInline writes a formatted string to both a log file (if already initialized) and the console.
         ///     It does not end with a line break.</summary>
         static public void LogInline(string Format, params object[] Objs) { LogInternal(Format, true, Objs); }
@@ -366,12 +366,12 @@ quit
         ///     <param name="Inline">It ends the line with a line break based on the Inline parameter.</param>
         static private void LogInternal(string Format, bool Inline, params object[] Objs)
         {
-            for(int i = 0; i < Objs.Length; i++ )
+            for (int i = 0; i < Objs.Length; i++)
             {
-                if(Objs[i].GetType() == typeof(float))
+                if (Objs[i].GetType() == typeof(float))
                     Objs[i] = ((float)Objs[i]).ToString(CultureInfo.InvariantCulture);
             }
-            if(Initialized)
+            if (Initialized)
             {
                 if (Inline)
                 {
