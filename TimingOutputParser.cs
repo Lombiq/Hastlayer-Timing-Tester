@@ -23,10 +23,14 @@ namespace HastlayerTimingTester
         public float TotalHoldSlack { get; private set; }
         public float WorstPulseWidthSlack { get; private set; }
         public float TotalPulseWidthSlack { get; private set; }
-        public bool DesignMetTimingRequirements {
-            get { return TimingSummaryAvailable && TotalNegativeSlack == 0 &&
-                TotalHoldSlack == 0 &&
-                TotalPulseWidthSlack == 0; }
+        public bool DesignMetTimingRequirements
+        {
+            get
+            {
+                return TimingSummaryAvailable && TotalNegativeSlack == 0 &&
+              TotalHoldSlack == 0 &&
+              TotalPulseWidthSlack == 0;
+            }
         }
         public float RequirementPlusDelays { get; private set; }
         public float Requirement { get; private set; }
@@ -35,7 +39,8 @@ namespace HastlayerTimingTester
         private bool ExtendedSyncParametersAvailable { get { return ExtendedSyncParametersCount == 3; } }
         public float TimingWindowAvailable { get { return RequirementPlusDelays - SourceClockDelay; } }
         public float TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - Requirement; } }
-        public float MaxClockFrequency {
+        public float MaxClockFrequency
+        {
             get { return 1.0F / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9F); }
         }
         public float NanosecondToClockPeriod(float ns) { return (ns * 1.0e-9F) / (1.0F / ClockFrequency); }
