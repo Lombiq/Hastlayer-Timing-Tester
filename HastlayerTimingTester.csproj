@@ -43,10 +43,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimingOutputParser.cs" />
     <Compile Include="TimingTestConfig.cs" />
+    <Compile Include="TimingTestConfigBase.cs" />
+    <Compile Include="TimingTester.cs" />
+    <Compile Include="VhdlOp.cs" />
+    <Compile Include="VhdlTemplateBase.cs" />
     <Compile Include="VhdlTemplateComb.cs" />
     <Compile Include="VhdlTemplateSync.cs" />
   </ItemGroup>
