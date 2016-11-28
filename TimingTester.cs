@@ -187,6 +187,8 @@ quit
                                 Logger.Log("Synthesis:\r\n----------");
                                 _parser.PrintParsedTimingReport("S");
                                 _parser.PrintParsedTimingSummary();
+                                var synthDataPathDelay = _parser.DataPathDelay;
+                                var synthTimingWindowDiffFromRequirement = _parser.TimingWindowDiffFromRequirement;
 
                                 if (_test.ImplementDesign)
                                 {
@@ -203,14 +205,18 @@ quit
                                     }
                                 }
 
+                                bool useImplementationResults = _test.ImplementDesign && ImplementationSuccessful &&
+                                    synthDataPathDelay + synthTimingWindowDiffFromRequirement <
+                                    _parser.DataPathDelay + _parser.TimingWindowDiffFromRequirement;
+
                                 Logger.WriteResult("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\r\n",
                                     op.VhdlString,
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
                                     vhdlTemplate.Name,
-                                    ((_test.ImplementDesign && ImplementationSuccessful) ? "impl" : "synth"),
-                                    _parser.DataPathDelay,
-                                    _parser.TimingWindowDiffFromRequirement
+                                    (useImplementationResults) ? "impl" : "synth",
+                                    (useImplementationResults) ? _parser.DataPathDelay : synthDataPathDelay,
+                                    (useImplementationResults) ? _parser.TimingWindowDiffFromRequirement : synthTimingWindowDiffFromRequirement
                                 );
                                 //return;
                             }
