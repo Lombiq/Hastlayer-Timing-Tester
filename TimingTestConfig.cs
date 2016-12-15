@@ -44,6 +44,7 @@ namespace HastlayerTimingTester
             //There are lists of VHDL templates below. Any of them can be used as a parameter to VhdlOp constructor.
             //(It is advised to start with the Operators variable when looking at this file.)
             List<VhdlTemplateBase> DefaultVhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync() };
+            List<VhdlTemplateBase> UnaryVhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSyncUnary() };
 
             //Operators is the list of operators where VhdlOp is like:
             //  new VhdlOp(string vhdlString, string friendlyName, OutputDataTypeDelegate outputDataTypeFunction)
@@ -60,6 +61,7 @@ namespace HastlayerTimingTester
             //          unsigned(63 downto 0) output if the operands are unsigned(31 downto 0).
             Operators = new List<VhdlOp>
             {
+                new VhdlOp("not",   "not",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        UnaryVhdlTemplates),
                 new VhdlOp("and",   "and",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
                 new VhdlOp("nand",  "nand", StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
                 new VhdlOp("or",    "or",   StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
