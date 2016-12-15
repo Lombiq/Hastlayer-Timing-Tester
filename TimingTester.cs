@@ -74,6 +74,7 @@ quit
             }
             Directory.CreateDirectory(CurrentTestOutputBaseDirectory);
             Logger.Init(CurrentTestOutputBaseDirectory + "\\Log.txt", CurrentTestOutputBaseDirectory + "\\Results.tsv");
+            if(_test.DryRun) Logger.Log("Warning: DryRun is on, Vivado will not be run.");
             Logger.WriteResult("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
             if (_test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
             Logger.Log("Starting analysis at: {0}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"));
@@ -113,9 +114,9 @@ quit
             {
                 foreach (var inputSize in _test.InputSizes)
                 {
-                    foreach (var inputDataTypeFunction in _test.DataTypes)
+                    foreach (var inputDataTypeFunction in op.DataTypes)
                     {
-                        foreach (var vhdlTemplate in _test.VhdlTemplates)
+                        foreach (var vhdlTemplate in op.VhdlTemplates)
                         {
                             try
                             {
@@ -167,6 +168,7 @@ quit
                                 );
                                 CopyFileToOutputDir(xdcPath);
 
+                                if(_test.DryRun) continue;
                                 Logger.LogInline("Running Vivado... ");
                                 RunVivado(_test.VivadoPath, "Generate.tcl", _test.VivadoBatchMode);
                                 Logger.Log("Done.");
