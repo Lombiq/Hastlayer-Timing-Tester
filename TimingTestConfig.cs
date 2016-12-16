@@ -106,7 +106,7 @@ namespace HastlayerTimingTester
 
             //If DryRun is true, Vivado will not ne ran, only the tests to be taken will be logged.
             //The VivadoFiles directory will still be cleaned, and the UUT will be generated for all test cases.
-            DryRun = true;
+            DryRun = false;
         }
     }
 }
