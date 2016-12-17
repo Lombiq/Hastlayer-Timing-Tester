@@ -98,6 +98,9 @@ namespace HastlayerTimingTester
             //If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
             //It does not open the GUI for every single test. However, it cannot generate schematic drawings
             //(Schematic.pdf).
+            //Note: if you are using Vivado in GUI mode with VivadoBatchMode = false and with ImplementDesign = true,
+            //only generate designs that are possible to implement, or a message box will pop up with Tcl errors,
+            //and the tests will hang.
             VivadoBatchMode = true;
 
             //If ImplementDesign is true, Vivado will perform STA for both the synthesized and the implemented designs.
