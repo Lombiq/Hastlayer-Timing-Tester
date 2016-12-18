@@ -54,6 +54,7 @@
     <Compile Include="VhdlTemplateBase.cs" />
     <Compile Include="VhdlTemplateComb.cs" />
     <Compile Include="VhdlTemplateSync.cs" />
+    <Compile Include="VhdlTemplateSyncUnary.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

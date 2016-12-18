@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace HastlayerTimingTester
 {
 
@@ -17,23 +19,34 @@ namespace HastlayerTimingTester
         ///     allows us to handle VHDL operators that have different input and output data types.</summary>
         public OutputDataTypeDelegate OutputDataTypeFunction;
 
-        public VhdlOp(string vhdlString, string friendlyName, OutputDataTypeDelegate outputDataTypeFunction)
+        ///<summary>DataTypes contain a list of functions that should be used for the data types the operation should be tested for.</summary>
+        public List<DataTypeFromSizeDelegate> DataTypes;
+
+        ///<summary>This is used for <see cref="DataTypes" />.</summary>
+        public delegate string DataTypeFromSizeDelegate(int size, bool getFriendlyName);
+
+        ///<summary>VhdlTemplates: the VHDL templates that will be used for analysis.</summary>
+        public List<VhdlTemplateBase> VhdlTemplates;
+
+        public VhdlOp(string vhdlString, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes, OutputDataTypeDelegate outputDataTypeFunction, List<VhdlTemplateBase> vhdlTemplates)
         {
             this.VhdlString = vhdlString;
             this.FriendlyName = friendlyName;
             this.OutputDataTypeFunction = outputDataTypeFunction;
+            this.DataTypes = dataTypes;
+            this.VhdlTemplates = vhdlTemplates;
         }
 
         public delegate string OutputDataTypeDelegate(
             int inputSize,
-            TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction,
+            DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName
         );
 
         ///<summary>SameOutputDataType is used if the output data type is the same as the input data type.</summary>
         public static string SameOutputDataType(
             int inputSize,
-            TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction,
+            DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName
         )
         {
@@ -44,7 +57,7 @@ namespace HastlayerTimingTester
         ///     (like all comparison operators).</summary>
         public static string ComparisonWithBoolOutput(
             int inputSize,
-            TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction,
+            DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName
         )
         {
@@ -55,7 +68,7 @@ namespace HastlayerTimingTester
         ///     double data size (e.g. multiplication).</summary>
         public static string DoubleSizedOutput(
             int inputSize,
-            TimingTestConfig.DataTypeFromSizeDelegate inputDataTypeFunction,
+            DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName
         )
         {
