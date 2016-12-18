@@ -50,7 +50,7 @@ namespace HastlayerTimingTester
             {
                 if (Objs[i].GetType() == typeof(decimal))
                 {
-                    Objs[i] = ((decimal)Objs[i]).ToString(CultureInfo.InvariantCulture);
+                    Objs[i] = ((decimal)Objs[i]).ToString("0.###", CultureInfo.InvariantCulture);
                 }
             }
             if (_initialized)
