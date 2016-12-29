@@ -46,11 +46,11 @@ namespace HastlayerTimingTester
             get { return 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m); }
         }
         public decimal NanosecondToClockPeriod(decimal ns) { return (ns * 1.0e-9m) / (1.0m / ClockFrequency); }
-        public decimal InMHz(decimal fHz) { return fHz / 1e6m; } //Hz to MHz
+        public decimal InMHz(decimal fHz) { return fHz / 1e6m; } // Hz to MHz
 
         public void Parse(VivadoResult result)
         {
-            //Data Path Delay
+            // Data Path Delay
             var match = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
             if (match.Success)
             {
@@ -58,7 +58,7 @@ namespace HastlayerTimingTester
                 DataPathDelayAvailable = true;
             }
 
-            //Let's see a sync design
+            // Let's see a sync design
             _extendedSyncParametersCount = 0;
             Requirement = 0;
             match = Regex.Match(result.TimingReport, @"(\s*)Requirement:(\s*)([0-9\.]*)ns");
@@ -84,7 +84,7 @@ namespace HastlayerTimingTester
                 _extendedSyncParametersCount++;
             }
 
-            //Timing Summary
+            // Timing Summary
             var timingSummaryLines = Regex.Split(result.TimingSummary, "\r\n").ToList();
             for (var i = 0; i < timingSummaryLines.Count; i++)
             {
@@ -111,7 +111,7 @@ namespace HastlayerTimingTester
                             TimingSummaryAvailable = true;
                         }
                     }
-                    catch (FormatException) { } //pass, at least TimingSummaryAvailable will stay false
+                    catch (FormatException) { } // pass, at least TimingSummaryAvailable will stay false
                     break;
                 }
             }

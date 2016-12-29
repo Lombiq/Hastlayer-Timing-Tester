@@ -14,12 +14,12 @@ namespace HastlayerTimingTester
     {
         public TimingTestConfig()
         {
-            //There are lists of functions below that can generate input data types to test.
-            //Any of these can be used as a parameter to the constructor of VhdlOp.
-            //(It is advised to start with the Operators variable when looking at this file.)
-            //For example, for an input size of 32, we should get "unsigned(31 downto 0)" to be pasted into the VHDL
-            //template. However, if a friendly name is requested instead, "unsigned32" is returned, which can be safely
-            //used in directory names.
+            // There are lists of functions below that can generate input data types to test.
+            // Any of these can be used as a parameter to the constructor of VhdlOp.
+            // (It is advised to start with the Operators variable when looking at this file.)
+            // For example, for an input size of 32, we should get "unsigned(31 downto 0)" to be pasted into the VHDL
+            // template. However, if a friendly name is requested instead, "unsigned32" is returned, which can be safely
+            // used in directory names.
             List<VhdlOp.DataTypeFromSizeDelegate> SUNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate> {
                 (size, getFriendlyName) =>
                 {
@@ -43,12 +43,12 @@ namespace HastlayerTimingTester
                 }
             };
 
-            //There are lists of VHDL templates below. Any of them can be used as a parameter to VhdlOp constructor.
-            //(It is advised to start with the Operators variable when looking at this file.)
+            // There are lists of VHDL templates below. Any of them can be used as a parameter to VhdlOp constructor.
+            // (It is advised to start with the Operators variable when looking at this file.)
             List<VhdlTemplateBase> DefaultVhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync() };
             List<VhdlTemplateBase> UnaryVhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSyncUnary() };
 
-            //Operators is the list of operators where VhdlOp is like:
+            // Operators is the list of operators where VhdlOp is like:
             //  new VhdlOp(string vhdlString, string friendlyName, OutputDataTypeDelegate outputDataTypeFunction)
             //      vhdlString is the part actually substituted into the VHDL template while testing the operator.
             //  friendlyName is the name used in the results: logs, directory names, etc. This is required as
@@ -83,34 +83,34 @@ namespace HastlayerTimingTester
                 new VhdlOp("mod",   "mod",  SUNumericDataTypes,     VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
             };
 
-            //InputSizes is the list of input sizes for the data type that we want to test
+            // InputSizes is the list of input sizes for the data type that we want to test
             InputSizes = new List<int> { 128, 32, 64, 16, 8 };
 
-            Part = "xc7a100tcsg324-1"; //The FPGA part number
+            Part = "xc7a100tcsg324-1"; // The FPGA part number
 
 
-            Frequency = 100e6m; //System clock frequency in MHz
-            Name = "default"; //Name of the configuration, will be used in the name of the output directory
-            VivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat"; //The path where vivado.bat is located
+            Frequency = 100e6m; // System clock frequency in MHz
+            Name = "default"; // Name of the configuration, will be used in the name of the output directory
+            VivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat"; // The path where vivado.bat is located
 
-            //If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
-            //If it is false, the exceptions are logged and the program continues with the next test.
+            // If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
+            // If it is false, the exceptions are logged and the program continues with the next test.
             DebugMode = true;
 
-            //If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
-            //It does not open the GUI for every single test. However, it cannot generate schematic drawings
-            //(Schematic.pdf).
-            //Note: if you are using Vivado in GUI mode with VivadoBatchMode = false and with ImplementDesign = true,
-            //only generate designs that are possible to implement, or a message box will pop up with Tcl errors,
-            //and the tests will hang.
+            // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
+            // It does not open the GUI for every single test. However, it cannot generate schematic drawings
+            // (Schematic.pdf).
+            // Note: if you are using Vivado in GUI mode with VivadoBatchMode = false and with ImplementDesign = true,
+            // only generate designs that are possible to implement, or a message box will pop up with Tcl errors,
+            // and the tests will hang.
             VivadoBatchMode = true;
 
-            //If ImplementDesign is true, Vivado will perform STA for both the synthesized and the implemented designs.
-            //If it is false, Vivado will only do synthesis + STA, and skip implementation + STA.
+            // If ImplementDesign is true, Vivado will perform STA for both the synthesized and the implemented designs.
+            // If it is false, Vivado will only do synthesis + STA, and skip implementation + STA.
             ImplementDesign = true;
 
-            //If DryRun is true, Vivado will not ne ran, only the tests to be taken will be logged.
-            //The VivadoFiles directory will still be cleaned, and the UUT will be generated for all test cases.
+            // If DryRun is true, Vivado will not ne ran, only the tests to be taken will be logged.
+            // The VivadoFiles directory will still be cleaned, and the UUT will be generated for all test cases.
             DryRun = false;
         }
     }

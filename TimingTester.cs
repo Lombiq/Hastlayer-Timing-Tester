@@ -56,7 +56,7 @@ quit
         {
             _test = test;
             _parser = new TimingOutputParser(test.Frequency);
-            //Clean the VivadoFiles directory (delete it recursively and mkdir):
+            // Clean the VivadoFiles directory (delete it recursively and mkdir):
             if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true);
             Directory.CreateDirectory("VivadoFiles");
             File.WriteAllText(
@@ -94,13 +94,13 @@ quit
             cp.StartInfo.Arguments = ((batchMode) ? " -mode batch" : "") + " -source " + tclFile;
             cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
                 "\\VivadoFiles";
-            //Logger.Log("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
+            // Logger.Log("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
             cp.StartInfo.UseShellExecute = !batchMode;
             cp.StartInfo.CreateNoWindow = false;
             cp.StartInfo.RedirectStandardOutput = false;
             cp.Start();
             cp.WaitForExit();
-            //return cp.StandardOutput.ReadToEnd();
+            // return cp.StandardOutput.ReadToEnd();
             return "";
         }
 
@@ -140,9 +140,9 @@ quit
                                 var implTimingSummaryOutputPath = "VivadoFiles\\ImplTimingSummary.txt";
                                 var schematicOutputPath = "VivadoFiles\\Schematic.pdf";
 
-                                //To see if Vivado succeeded with the implementation, the existence of the text file at
-                                //[implTimingReportOutputPath] is checked later.
-                                //For that reason, we need to make sure this file does not exist at the beginning.
+                                // To see if Vivado succeeded with the implementation, the existence of the text file at
+                                // [implTimingReportOutputPath] is checked later.
+                                // For that reason, we need to make sure this file does not exist at the beginning.
                                 if (File.Exists(implTimingReportOutputPath)) File.Delete(implTimingReportOutputPath);
                                 if (File.Exists(implTimingSummaryOutputPath)) File.Delete(implTimingSummaryOutputPath);
                                 if (File.Exists(synthTimingReportOutputPath)) File.Delete(synthTimingReportOutputPath);
@@ -155,7 +155,7 @@ quit
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
                                     vhdlTemplate.Name);
-                                //friendly name should contain something from each "foreach" iterator
+                                // friendly name should contain something from each "foreach" iterator
                                 CurrentTestOutputDirectory = CurrentTestOutputBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(CurrentTestOutputDirectory);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
@@ -225,7 +225,7 @@ quit
                                     (useImplementationResults) ? _parser.DataPathDelay : synthDataPathDelay,
                                     (useImplementationResults) ? _parser.TimingWindowDiffFromRequirement : synthTimingWindowDiffFromRequirement
                                 );
-                                //return;
+                                // return;
                             }
                             catch (Exception exception)
                             {
