@@ -134,7 +134,7 @@ namespace HastlayerTimingTester
                     "\tRequirement plus delays = {2} ns\r\n" +
                     "\tTiming window available = {3} ns\r\n" +
                     "\t{8}>> Timing window diff from requirement = {4} ns  ({5} cycle at {6} MHz clock)\r\n" +
-                    "\tMax clock frequency = {7} MHz ", 
+                    "\tMax clock frequency = {7} MHz ",
                     SourceClockDelay,
                     Requirement,
                     RequirementPlusDelays,
