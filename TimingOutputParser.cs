@@ -8,7 +8,7 @@ namespace HastlayerTimingTester
 {
 
     /// <summary>
-    /// It parses the timing report and timing summary output of Vivado. It makes some calculations based on
+    /// Parses the timing report and timing summary output of Vivado. It makes some calculations based on
     /// these. It can also print the most important values. Look at the documentation
     /// (Docs/Introduction.md and Docs/Usage.md) for the meaning of the properties of this class.
     /// </summary>

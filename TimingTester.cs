@@ -86,7 +86,7 @@ quit
             Logger.Log("Analysis finished at: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
-        /// <summary>Runs Vivado.</summary>
+        /// <summary>Runs Vivado in a separate process.</summary>
         string RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
         {
             var cp = new Process();
@@ -111,7 +111,7 @@ quit
         }
 
         /// <summary>
-        /// It runs tests for all combinations of operators, input data types, data sizes and VHDL templates.
+        /// Runs tests for all combinations of operators, input data types, data sizes and VHDL templates.
         /// </summary>
         void RunTest()
         {
