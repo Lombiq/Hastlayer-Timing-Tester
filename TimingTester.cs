@@ -56,16 +56,20 @@ quit
         {
             _test = test;
             _parser = new TimingOutputParser(test.Frequency);
+
             // Clean the VivadoFiles directory (delete it recursively and mkdir):
             if (Directory.Exists("VivadoFiles")) Directory.Delete("VivadoFiles", true);
             Directory.CreateDirectory("VivadoFiles");
+
             File.WriteAllText(
                 "VivadoFiles\\Generate.tcl",
                 TclTemplate
                     .Replace("%PART%", _test.Part)
                     .Replace("%IMPLEMENT%", (Convert.ToInt32(_test.ImplementDesign)).ToString())
             );
+
             if (!Directory.Exists("TestResults")) Directory.CreateDirectory("TestResults");
+
             var timeNow = DateTime.Now;
             var currentTestDirectoryName = timeNow.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + _test.Name;
             CurrentTestOutputBaseDirectory = "TestResults\\" + currentTestDirectoryName;
@@ -77,9 +81,11 @@ quit
                 return;
             }
             Directory.CreateDirectory(CurrentTestOutputBaseDirectory);
+
             Logger.Init(CurrentTestOutputBaseDirectory + "\\Log.txt", CurrentTestOutputBaseDirectory + "\\Results.tsv");
             if (_test.DryRun) Logger.Log("Warning: DryRun is on, Vivado will not be run.");
             Logger.WriteResult("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
+
             if (_test.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
             Logger.Log("Starting analysis at: {0}", timeNow.ToString("yyyy-MM-dd HH:mm:ss"));
             RunTest();
