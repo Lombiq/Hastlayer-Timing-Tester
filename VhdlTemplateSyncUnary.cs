@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace HastlayerTimingTester
 {
-    ///<summary>This is a VHDL template using an unary operator in a sequential, synchronous logic design.</summary>
+    /// <summary>This is a VHDL template using an unary operator in a sequential, synchronous logic design.</summary>
     class VhdlTemplateSyncUnary : VhdlTemplateBase
     {
         public VhdlTemplateSyncUnary()

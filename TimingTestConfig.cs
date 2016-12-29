@@ -4,10 +4,12 @@ using System.Collections.Generic;
 
 namespace HastlayerTimingTester
 {
-    ///<summary>Provides configuration for Hastlayer Timing Tester.
-    ///You need to edit the source and recompile the application to change configuration.
-    ///See the comments in the source of this class for detailed description of the options.
-    ///It is advised to check <see cref="Operators"> first.</summary>
+    /// <summary>
+    /// Provides configuration for Hastlayer Timing Tester.
+    /// You need to edit the source and recompile the application to change configuration.
+    /// See the comments in the source of this class for detailed description of the options.
+    /// It is advised to check <see cref="Operators"> first.
+    /// </summary>
     class TimingTestConfig : TimingTestConfigBase
     {
         public TimingTestConfig()

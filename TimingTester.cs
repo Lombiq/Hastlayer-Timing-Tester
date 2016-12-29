@@ -6,21 +6,23 @@ using System.Reflection;
 
 namespace HastlayerTimingTester
 {
-    ///<summary>This is for passing the data output by Vivado into TimingOutputParser.</summary>
+    /// <summary>This is for passing the data output by Vivado into TimingOutputParser.</summary>
     struct VivadoResult
     {
         public string TimingReport;
         public string TimingSummary;
     }
 
-    ///<summary>This class implements the core functionality of the Hastlayer Timing Tester application.</summary>
+    /// <summary>This class implements the core functionality of the Hastlayer Timing Tester application.</summary>
     class TimingTester
     {
         private TimingOutputParser _parser;
         private TimingTestConfigBase _test;
 
-        ///<summary>This template is filled with data during the test, and then opened and ran by Vivado.
-        ///It synthesizes the project, generates reports and a schematic diagram.</summary>
+        /// <summary>
+        /// This template is filled with data during the test, and then opened and ran by Vivado.
+        /// It synthesizes the project, generates reports and a schematic diagram.
+        /// </summary>
         const string TclTemplate = @"
 read_vhdl UUT.vhd
 read_xdc Constraints.xdc
@@ -39,15 +41,17 @@ report_timing_summary -check_timing_verbose -file ImplTimingSummary.txt
 quit
 ";
 
-        ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
+        /// <summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
         string CurrentTestOutputBaseDirectory;
 
-        ///<summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
+        /// <summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
         string CurrentTestOutputDirectory;
 
-        ///<summary>This function gets things ready before the test, then runs the test.
-        ///     It creates the necessary directory structure, cleans up VivadoFiles and generates
-        ///     a Tcl script for Vivado.</summary>
+        /// <summary>
+        /// This function gets things ready before the test, then runs the test.
+        /// It creates the necessary directory structure, cleans up VivadoFiles and generates
+        /// a Tcl script for Vivado.
+        /// </summary>
         public void InitializeTest(TimingTestConfigBase test)
         {
             _test = test;
@@ -82,7 +86,7 @@ quit
             Logger.Log("Analysis finished at: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
-        ///<summary>It runs Vivado.</summary>
+        /// <summary>Runs Vivado.</summary>
         string RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
         {
             var cp = new Process();
@@ -100,14 +104,15 @@ quit
             return "";
         }
 
-        ///<summary>It copies the given file from VivadoFiles to the output directory of the current test.</summary>
+        /// <summary>Copies the given file from VivadoFiles to the output directory of the current test.</summary>
         void CopyFileToOutputDir(string inputPath)
         {
             File.Copy(inputPath, CurrentTestOutputDirectory + "\\" + Path.GetFileName(inputPath));
         }
 
-        ///<summary>It runs tests for all combinations of operators, input data types,
-        ///     data sizes and VHDL templates.</summary>
+        /// <summary>
+        /// It runs tests for all combinations of operators, input data types, data sizes and VHDL templates.
+        /// </summary>
         void RunTest()
         {
             foreach (var op in _test.Operators)

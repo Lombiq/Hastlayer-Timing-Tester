@@ -3,8 +3,10 @@ using System.Collections.Generic;
 namespace HastlayerTimingTester
 {
 
-    ///<summary>This is the base class for configuration. For more information, check the
-    ///     <see cref="TimingTestConfig" /> subclass.</summary>
+    /// <summary>
+    /// This is the base class for configuration. For more information, check the
+    /// <see cref="TimingTestConfig" /> subclass.
+    /// </summary>
     abstract class TimingTestConfigBase
     {
         public string Name;

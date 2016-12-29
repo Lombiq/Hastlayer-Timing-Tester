@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace HastlayerTimingTester
 {
-    ///<summary>This is a VHDL template using the operator in a sequential, synchronous logic design.</summary>
+    /// <summary>This is a VHDL template using the operator in a sequential, synchronous logic design.</summary>
     class VhdlTemplateSync : VhdlTemplateBase
     {
         public VhdlTemplateSync()
