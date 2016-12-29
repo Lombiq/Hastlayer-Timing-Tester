@@ -87,21 +87,21 @@ quit
         }
 
         /// <summary>Runs Vivado in a separate process.</summary>
-        string RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
+        void RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
         {
             var cp = new Process();
             cp.StartInfo.FileName = vivadoPath;
             cp.StartInfo.Arguments = ((batchMode) ? " -mode batch" : "") + " -source " + tclFile;
             cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
                 "\\VivadoFiles";
+            // We could log the working directory of the new process:
             // Logger.Log("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
             cp.StartInfo.UseShellExecute = !batchMode;
             cp.StartInfo.CreateNoWindow = false;
             cp.StartInfo.RedirectStandardOutput = false;
             cp.Start();
             cp.WaitForExit();
-            // return cp.StandardOutput.ReadToEnd();
-            return "";
+            return;
         }
 
         /// <summary>Copies the given file from VivadoFiles to the output directory of the current test.</summary>
@@ -225,7 +225,6 @@ quit
                                     (useImplementationResults) ? _parser.DataPathDelay : synthDataPathDelay,
                                     (useImplementationResults) ? _parser.TimingWindowDiffFromRequirement : synthTimingWindowDiffFromRequirement
                                 );
-                                // return;
                             }
                             catch (Exception exception)
                             {
@@ -240,5 +239,4 @@ quit
             Logger.Log("Finished, exiting.");
         }
     }
-
 }
