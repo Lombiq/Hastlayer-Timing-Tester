@@ -84,7 +84,7 @@ namespace HastlayerTimingTester
             };
 
             // InputSizes is the list of input sizes for the data type that we want to test
-            InputSizes = new List<int> { 128, 32, 64, 16, 8 };
+            InputSizes = new List<int> { 1, 128, 32, 64, 16, 8 };
 
             Part = "xc7a100tcsg324-1"; // The FPGA part number
 
