@@ -14,24 +14,17 @@ namespace HastlayerTimingTester
     static class Logger
     {
         private static StreamWriter _logStreamWriter;
-        private static StreamWriter _resultsStreamWriter;
         private static bool _initialized;
         /// <summary>
         /// This function initializes the Logger, to open the file given in LogFilePath.
         /// (Logger already works before initialization, but it only writes to the console.)
         /// </summary>
-        static public void Init(string LogFilePath, string ResultsFilePath)
+        static public void Init(string LogFilePath, bool CreateFile = true)
         {
-            _logStreamWriter = new StreamWriter(File.Create(LogFilePath));
+            _logStreamWriter = new StreamWriter(File.Open(LogFilePath, 
+                (CreateFile) ? FileMode.Create : FileMode.Append));
             _logStreamWriter.AutoFlush = true;
-            _resultsStreamWriter = new StreamWriter(File.Create(ResultsFilePath));
-            _resultsStreamWriter.AutoFlush = true;
             _initialized = true;
-        }
-        /// <summary>WriteResult writes a formatted string to the results file (if already initialized).</summary>
-        static public void WriteResult(string Format, params object[] Objs)
-        {
-            if (_initialized) _resultsStreamWriter.Write(Format, Objs);
         }
         /// <summary>
         /// Log writes a formatted string to both a log file (if already initialized) and the console, ending

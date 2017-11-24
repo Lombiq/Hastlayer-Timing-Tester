@@ -97,6 +97,12 @@ namespace HastlayerTimingTester
             // If it is false, the exceptions are logged and the program continues with the next test.
             DebugMode = true;
 
+            // This selects for which FPGA vendor do we want to run the timing test. 
+            // XilinxDriver supports Vivado.
+            // IntelDriver supports Quartus and TimeQuest.
+            Driver = new XilinxDriver(this);
+            //Driver = new IntelDriver(this);
+
             // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
             // It does not open the GUI for every single test. However, it cannot generate schematic drawings
             // (Schematic.pdf).
@@ -108,10 +114,6 @@ namespace HastlayerTimingTester
             // If ImplementDesign is true, Vivado will perform STA for both the synthesized and the implemented designs.
             // If it is false, Vivado will only do synthesis + STA, and skip implementation + STA.
             ImplementDesign = true;
-
-            // If DryRun is true, Vivado will not ne ran, only the tests to be taken will be logged.
-            // The VivadoFiles directory will still be cleaned, and the UUT will be generated for all test cases.
-            DryRun = false;
         }
     }
 }

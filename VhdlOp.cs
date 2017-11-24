@@ -7,7 +7,7 @@ namespace HastlayerTimingTester
     /// VhdlOp provides data to fill a VHDL template with (see <see cref="VhdlString" /> and
     /// <see cref="OutputDataTypeFunction" />).
     /// </summary>
-    class VhdlOp
+    public class VhdlOp
     {
         /// <summary>
         /// VhdlString contains the actual operator (like "+", "-", "mod", etc.) that will be subsituted

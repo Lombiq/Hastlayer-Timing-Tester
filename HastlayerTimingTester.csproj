@@ -33,6 +33,10 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
+      <HintPath>packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -43,9 +47,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IntelDriver.cs" />
+    <Compile Include="IFpgaVendorSpecificMethods.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ResultWriter.cs" />
     <Compile Include="TimingOutputParser.cs" />
     <Compile Include="TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigBase.cs" />
@@ -55,9 +62,11 @@
     <Compile Include="VhdlTemplateComb.cs" />
     <Compile Include="VhdlTemplateSync.cs" />
     <Compile Include="VhdlTemplateSyncUnary.cs" />
+    <Compile Include="XilinxDriver.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.

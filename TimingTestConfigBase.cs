@@ -7,7 +7,7 @@ namespace HastlayerTimingTester
     /// This is the base class for configuration. For more information, check the
     /// <see cref="TimingTestConfig" /> subclass.
     /// </summary>
-    abstract class TimingTestConfigBase
+    public abstract class TimingTestConfigBase
     {
         public string Name;
         public List<VhdlOp> Operators;
@@ -18,7 +18,7 @@ namespace HastlayerTimingTester
         public decimal Frequency;
         public bool VivadoBatchMode;
         public bool ImplementDesign;
-        public bool DryRun;
+        public FpgaVendorDriver Driver;
     }
 
 }
