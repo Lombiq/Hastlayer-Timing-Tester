@@ -30,7 +30,7 @@ namespace HastlayerTimingTester
             Logger.Log("=== HastlayerTimingTester Prepare stage ===");
             //var currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + _testConfig.Name;
             _testConfig.Driver.InitPrepare();
-
+            StreamWriter batchWriter = new StreamWriter(File.Open(CurrentTestBaseDirectory + "\\Run.bat", FileMode.Create));
             foreach (var op in _testConfig.Operators)
             {
                 foreach (var inputSize in _testConfig.InputSizes)
@@ -59,7 +59,8 @@ namespace HastlayerTimingTester
                                     inputSize, inputDataType, outputDataType);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
-                                _testConfig.Driver.Prepare(testFriendlyName, op, inputSize, inputDataType, outputDataType, vhdlTemplate);
+                                _testConfig.Driver.Prepare(testFriendlyName, op, inputSize, inputDataType, 
+                                    outputDataType, vhdlTemplate, batchWriter);
                             }
                             catch (Exception exception)
                             {
@@ -70,13 +71,10 @@ namespace HastlayerTimingTester
                     }
                 }
             }
+            batchWriter.Close();
 
         }
 
-        public void ExecSta()
-        {
-
-        }
 
         public void Analyze()
         {
@@ -125,6 +123,27 @@ namespace HastlayerTimingTester
             }
             if (options.Analyze) Analyze();
         }
+
+        public void RunBatchFile(string path)
+        {
+            var cp = new Process();
+            cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                "\\" + TimingTester.CurrentTestBaseDirectory;
+            cp.StartInfo.FileName = cp.StartInfo.WorkingDirectory + "\\Run.bat";
+            cp.StartInfo.UseShellExecute = false;
+            cp.StartInfo.CreateNoWindow = false;
+            cp.StartInfo.RedirectStandardOutput = false;
+            cp.Start();
+            cp.WaitForExit();
+            return;
+        }
+
+
+        public void ExecSta()
+        {
+            RunBatchFile(TimingTester.CurrentTestBaseDirectory+"\\Run.bat");
+        }
+
     }
 
 

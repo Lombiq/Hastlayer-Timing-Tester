@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace HastlayerTimingTester
@@ -14,17 +15,14 @@ namespace HastlayerTimingTester
             this.testConfig = testConfig;
         }
         public abstract void Prepare(string outputDirectoryName, VhdlOp op, int inputSize, string inputDataType, string outputDataType,
-            VhdlTemplateBase vhdlTemplate);
-        public virtual void InitPrepare()
-        {
-            batchWriter = new StreamWriter(File.Open(BaseDir + "\\Run.bat", FileMode.Create));
-        }
+            VhdlTemplateBase vhdlTemplate, StreamWriter batchWriter);
+        public abstract void InitPrepare();
         //abstract public void InitPrepare();
         //void BatchFileCreate(string path);
         //void BatchFileCommitTest();
+
         //void BatchFileFinalize();
     }
-
     public static class StreamWriterExtension
     {
         public static void FormattedWriteLine(this StreamWriter writer, string format, params Object[] args)

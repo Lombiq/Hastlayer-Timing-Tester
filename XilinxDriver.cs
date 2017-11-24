@@ -40,7 +40,6 @@ quit
 
         public override void InitPrepare() 
         {
-            base.InitPrepare();
             File.WriteAllText(
                 BaseDir + "\\Generate.tcl",
                 TclTemplate
@@ -50,7 +49,7 @@ quit
         }
 
         public override void Prepare(string outputDirectoryName, VhdlOp op, int inputSize, string inputDataType, string outputDataType,
-            VhdlTemplateBase vhdlTemplate)
+            VhdlTemplateBase vhdlTemplate, StreamWriter batchWriter)
         {
             string uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
             string xdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.xdc";
@@ -70,6 +69,8 @@ quit
             batchWriter.FormattedWriteLine("cd ..");
 
         }
+
+
         /*
         public override void StaPrepare()
         {
@@ -77,14 +78,6 @@ quit
             //TODO put this into batch file if (_testConfig.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
 
         }
-        public void ExecSta()
-        {
-            Logger.LogInline("Running Vivado... ");
-            RunVivado(_testConfig.VivadoPath, "Generate.tcl", _testConfig.VivadoBatchMode);
-            Logger.Log("Done.");
-            var ImplementationSuccessful = true;
-        }
-
         public void Analyze()
         {
             // To see if Vivado succeeded with the implementation, the existence of the text file at
@@ -129,25 +122,6 @@ quit
                 (useImplementationResults) ? _parser.TimingWindowDiffFromRequirement : synthTimingWindowDiffFromRequirement
             );
 
-        }
-
-        /// <summary>Runs Vivado in a separate process.</summary>
-        // TODO: will we need this at all?
-        void RunVivado(string vivadoPath, string tclFile, bool batchMode = false)
-        {
-            var cp = new Process();
-            cp.StartInfo.FileName = vivadoPath;
-            cp.StartInfo.Arguments = ((batchMode) ? " -mode batch" : "") + " -source " + tclFile;
-            cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                "\\VivadoFiles";
-            // We could log the working directory of the new process:
-            // Logger.Log("WorkingDirectory = " + cp.StartInfo.WorkingDirectory);
-            cp.StartInfo.UseShellExecute = !batchMode;
-            cp.StartInfo.CreateNoWindow = false;
-            cp.StartInfo.RedirectStandardOutput = false;
-            cp.Start();
-            cp.WaitForExit();
-            return;
         }
         */
     }
