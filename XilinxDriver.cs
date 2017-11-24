@@ -38,8 +38,9 @@ quit
         //string implTimingSummaryOutputPath { get { return BaseDir + "ImplTimingSummary.txt"; }}
         //string schematicOutputPath { get { return BaseDir + "Schematic.pdf"; }}
 
-        public override void InitPrepare()
+        public override void InitPrepare() 
         {
+            base.InitPrepare();
             File.WriteAllText(
                 BaseDir + "\\Generate.tcl",
                 TclTemplate
@@ -48,11 +49,11 @@ quit
             );
         }
 
-        public override void Prepare(string outputDirectory, VhdlOp op, int inputSize, string inputDataType, string outputDataType,
+        public override void Prepare(string outputDirectoryName, VhdlOp op, int inputSize, string inputDataType, string outputDataType,
             VhdlTemplateBase vhdlTemplate)
         {
-            string uutPath = outputDirectory + "\\UUT.vhd";
-            string xdcPath = outputDirectory + "\\Constraints.xdc";
+            string uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
+            string xdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.xdc";
             var vhdl = vhdlTemplate.VhdlTemplate
                 .Replace("%INTYPE%", inputDataType)
                 .Replace("%OUTTYPE%", outputDataType)
@@ -64,7 +65,9 @@ quit
                     ((1.0m / testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture))
             );
 
-
+            batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
+            batchWriter.FormattedWriteLine("{0} -mode batch -source ../Generate.tcl", testConfig.VivadoPath);
+            batchWriter.FormattedWriteLine("cd ..");
 
         }
         /*

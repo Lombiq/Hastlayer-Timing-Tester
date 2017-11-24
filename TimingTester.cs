@@ -20,7 +20,7 @@ namespace HastlayerTimingTester
         private TimingTestConfigBase _testConfig;
 
         /// <summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
-        string CurrentTestBaseDirectory = "CurrentTest";
+        public const string CurrentTestBaseDirectory = "CurrentTest";
 
         /// <summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
         string CurrentTestOutputDirectory;
@@ -59,7 +59,7 @@ namespace HastlayerTimingTester
                                     inputSize, inputDataType, outputDataType);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
-                                _testConfig.Driver.Prepare(CurrentTestOutputDirectory, op, inputSize, inputDataType, outputDataType, vhdlTemplate);
+                                _testConfig.Driver.Prepare(testFriendlyName, op, inputSize, inputDataType, outputDataType, vhdlTemplate);
                             }
                             catch (Exception exception)
                             {

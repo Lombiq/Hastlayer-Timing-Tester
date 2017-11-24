@@ -91,7 +91,7 @@ namespace HastlayerTimingTester
 
             Frequency = 100e6m; // System clock frequency in MHz
             Name = "default"; // Name of the configuration, will be used in the name of the output directory
-            VivadoPath = "C:\\Xilinx\\Vivado\\2016.2\\bin\\vivado.bat"; // The path where vivado.bat is located
+            VivadoPath = "C:\\Xilinx\\Vivado\\2016.4\\bin\\vivado.bat"; // The path where vivado.bat is located
 
             // If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
             // If it is false, the exceptions are logged and the program continues with the next test.
