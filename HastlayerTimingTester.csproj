@@ -48,7 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="IntelDriver.cs" />
-    <Compile Include="IFpgaVendorSpecificMethods.cs" />
+    <Compile Include="FpgaVendorDriver.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -63,6 +63,7 @@
     <Compile Include="VhdlTemplateSync.cs" />
     <Compile Include="VhdlTemplateSyncUnary.cs" />
     <Compile Include="XilinxDriver.cs" />
+    <Compile Include="XilinxParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

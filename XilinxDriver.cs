@@ -32,14 +32,10 @@ report_timing_summary -check_timing_verbose -file ImplTimingSummary.txt
 quit
 ";
 
-        //string synthTimingReportOutputPath { get { return BaseDir + "SynthTimingReport.txt"; }}
-        //string synthTimingSummaryOutputPath { get { return BaseDir + "SynthTimingSummary.txt"; }}
-        //string implTimingReportOutputPath { get { return BaseDir + "ImplTimingReport.txt"; }}
-        //string implTimingSummaryOutputPath { get { return BaseDir + "ImplTimingSummary.txt"; }}
-        //string schematicOutputPath { get { return BaseDir + "Schematic.pdf"; }}
-
-        public override void InitPrepare() 
+        public override void InitPrepare(StreamWriter batchWriter)
         {
+            base.InitPrepare(batchWriter);
+            batchWriter.FormattedWriteLine("echo \"Vivado cannot generate Schematic.pdf for designs in batch mode.\"");
             File.WriteAllText(
                 BaseDir + "\\Generate.tcl",
                 TclTemplate
@@ -49,7 +45,7 @@ quit
         }
 
         public override void Prepare(string outputDirectoryName, VhdlOp op, int inputSize, string inputDataType, string outputDataType,
-            VhdlTemplateBase vhdlTemplate, StreamWriter batchWriter)
+            VhdlTemplateBase vhdlTemplate)
         {
             string uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
             string xdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.xdc";
@@ -70,59 +66,28 @@ quit
 
         }
 
-
-        /*
-        public override void StaPrepare()
+        public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
+            var parser = new XilinxParser(testConfig.Frequency);
+            var synthTimingReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingReport.txt";
+            var synthTimingSummaryOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingSummary.txt";
+            var implTimingReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingReport.txt";
+            var implTimingSummaryOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingSummary.txt";
 
-            //TODO put this into batch file if (_testConfig.VivadoBatchMode) Logger.Log("Vivado cannot generate Schematic.pdf for designs in batch mode.");
+            if (phase == StaPhase.Implementation && !testConfig.ImplementDesign)
+                throw new Exception("Can't analyze for implementation if ImplementDesign is false in the config.");
 
-        }
-        public void Analyze()
-        {
-            // To see if Vivado succeeded with the implementation, the existence of the text file at
-            // [implTimingReportOutputPath] is needed to be checked later. TODO
-
-            if (_testConfig.ImplementDesign)
+            if (phase == StaPhase.Implementation)
             {
+                var ImplementationSuccessful = File.Exists(implTimingReportOutputPath);
                 if (!ImplementationSuccessful) Logger.Log("Implementation (or STA) failed!");
-                else
-                {
-                    var implVivadoResult = new VivadoResult();
-                    implVivadoResult.TimingReport = File.ReadAllText(implTimingReportOutputPath);
-                    implVivadoResult.TimingSummary = File.ReadAllText(implTimingSummaryOutputPath);
-                    _parser.Parse(implVivadoResult);
-                    Logger.Log("Implementation:\r\n---------------");
-                    _parser.PrintParsedTimingReport("I");
-                    _parser.PrintParsedTimingSummary();
-                }
+                return null;
             }
-
-            bool useImplementationResults = _testConfig.ImplementDesign && ImplementationSuccessful &&
-                synthDataPathDelay + synthTimingWindowDiffFromRequirement <
-                _parser.DataPathDelay + _parser.TimingWindowDiffFromRequirement;
-
-            var synthVivadoResult = new VivadoResult();
-            synthVivadoResult.TimingReport = File.ReadAllText(synthTimingReportOutputPath);
-            synthVivadoResult.TimingSummary = File.ReadAllText(synthTimingSummaryOutputPath);
-            _parser.Parse(synthVivadoResult);
-            Logger.Log("Synthesis:\r\n----------");
-            _parser.PrintParsedTimingReport("S");
-            _parser.PrintParsedTimingSummary();
-            var synthDataPathDelay = _parser.DataPathDelay;
-            var synthTimingWindowDiffFromRequirement = _parser.TimingWindowDiffFromRequirement;
-
-            Logger.WriteResult("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}\r\n",
-                op.VhdlString,
-                inputDataTypeFunction(inputSize, true),
-                op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
-                vhdlTemplate.Name,
-                (useImplementationResults) ? "impl" : "synth",
-                (useImplementationResults) ? _parser.DataPathDelay : synthDataPathDelay,
-                (useImplementationResults) ? _parser.TimingWindowDiffFromRequirement : synthTimingWindowDiffFromRequirement
-            );
-
+            var result = new VivadoResult();
+            result.TimingReport  = File.ReadAllText((phase == StaPhase.Implementation) ? implTimingReportOutputPath : synthTimingReportOutputPath);
+            result.TimingSummary = File.ReadAllText((phase == StaPhase.Implementation) ? implTimingSummaryOutputPath : synthTimingSummaryOutputPath);
+            parser.Parse(result);
+            return parser;
         }
-        */
     }
 }

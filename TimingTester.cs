@@ -7,7 +7,7 @@ using System.Reflection;
 namespace HastlayerTimingTester
 {
     /// <summary>This is for passing the data output by Vivado into TimingOutputParser.</summary>
-    struct VivadoResult
+    public struct VivadoResult
     {
         public string TimingReport;
         public string TimingSummary;
@@ -16,7 +16,6 @@ namespace HastlayerTimingTester
     /// <summary>This class implements the core functionality of the Hastlayer Timing Tester application.</summary>
     class TimingTester
     {
-        private TimingOutputParser _parser;
         private TimingTestConfigBase _testConfig;
 
         /// <summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
@@ -25,12 +24,28 @@ namespace HastlayerTimingTester
         /// <summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
         string CurrentTestOutputDirectory;
 
-        void Prepare()
+        enum TaskChoice { Prepare, Analyze }
+
+        void PrepareAnalyze(TaskChoice taskChoice)
         {
-            Logger.Log("=== HastlayerTimingTester Prepare stage ===");
+            string taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
+            Logger.Log("=== HastlayerTimingTester {0} stage ===", taskChoiceString);
             //var currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + _testConfig.Name;
-            _testConfig.Driver.InitPrepare();
-            StreamWriter batchWriter = new StreamWriter(File.Open(CurrentTestBaseDirectory + "\\Run.bat", FileMode.Create));
+
+            StreamWriter batchWriter = null, resultsWriter = null;
+            if (taskChoice == TaskChoice.Prepare)
+            {
+                batchWriter = new StreamWriter(File.Open(CurrentTestBaseDirectory + "\\Run.bat", FileMode.Create));
+                batchWriter.AutoFlush = true;
+                _testConfig.Driver.InitPrepare(batchWriter);
+            }
+            else
+            {
+                resultsWriter = new StreamWriter(File.Open(CurrentTestBaseDirectory + "\\Results.tsv", FileMode.Create));
+                resultsWriter.AutoFlush = true;
+                _testConfig.Driver.InitPrepare(resultsWriter);
+            }
+
             foreach (var op in _testConfig.Operators)
             {
                 foreach (var inputSize in _testConfig.InputSizes)
@@ -59,8 +74,57 @@ namespace HastlayerTimingTester
                                     inputSize, inputDataType, outputDataType);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
-                                _testConfig.Driver.Prepare(testFriendlyName, op, inputSize, inputDataType, 
-                                    outputDataType, vhdlTemplate, batchWriter);
+                                if (taskChoice == TaskChoice.Prepare)
+                                {
+                                    _testConfig.Driver.Prepare(testFriendlyName, op, inputSize, inputDataType,
+                                        outputDataType, vhdlTemplate);
+                                }
+                                else
+                                {
+                                    var synthesisParser = _testConfig.Driver.Analyze(testFriendlyName, StaPhase.Synthesis);
+                                    Logger.Log("Synthesis:\r\n----------");
+                                    synthesisParser.PrintParsedTimingReport("S");
+                                    synthesisParser.PrintParsedTimingSummary();
+                                    var dataPathDelay = synthesisParser.DataPathDelay;
+                                    var timingWindowDiffFromRequirement = synthesisParser.TimingWindowDiffFromRequirement;
+                                    var useImplementationResults = false;
+
+                                    if (_testConfig.ImplementDesign)
+                                    {
+                                        var implementationParser = _testConfig.Driver.Analyze(testFriendlyName,
+                                            StaPhase.Implementation);
+                                        if (implementationParser != null)
+                                        {
+                                            Logger.Log("Implementation:\r\n---------------");
+                                            implementationParser.PrintParsedTimingReport("I");
+                                            implementationParser.PrintParsedTimingSummary();
+                                            useImplementationResults =
+                                                dataPathDelay + timingWindowDiffFromRequirement <
+                                                implementationParser.DataPathDelay +
+                                                implementationParser.TimingWindowDiffFromRequirement;
+                                            if (useImplementationResults)
+                                            {
+                                                Logger.Log("Chosen to use implementation results.");
+
+                                            }
+                                            else
+                                            {
+                                                Logger.Log("Chosen to skip implementation results.");
+
+
+                                            }
+                                        }
+                                    }
+                                    resultsWriter.FormattedWriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
+                                        op.VhdlString,
+                                        inputDataTypeFunction(inputSize, true),
+                                        op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
+                                        vhdlTemplate.Name,
+                                        (useImplementationResults) ? "impl" : "synth",
+                                        dataPathDelay,
+                                        timingWindowDiffFromRequirement
+                                    );
+                                }
                             }
                             catch (Exception exception)
                             {
@@ -72,20 +136,9 @@ namespace HastlayerTimingTester
                 }
             }
             batchWriter.Close();
-
         }
 
 
-        public void Analyze()
-        {
-            /*
-                Logger.WriteResult("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
-
-                Logger.Log("Starting analysis at: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                RunTest();
-                Logger.Log("Analysis finished at: {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-                */
-        }
 
         /// <summary>
         /// This function gets things ready before the test, then runs the test.
@@ -103,7 +156,6 @@ namespace HastlayerTimingTester
             }
 
             _testConfig = testConfig;
-            _parser = new TimingOutputParser(testConfig.Frequency);
             if (!Directory.Exists(CurrentTestBaseDirectory)) Directory.CreateDirectory(CurrentTestBaseDirectory);
             else if (Directory.GetFileSystemEntries(CurrentTestBaseDirectory).Length > 0)
             {
@@ -113,7 +165,7 @@ namespace HastlayerTimingTester
             Logger.Init(CurrentTestBaseDirectory + "\\Log.txt", !options.Prepare);
             _testConfig.Driver.BaseDir = CurrentTestBaseDirectory;
 
-            if (options.Prepare) Prepare();
+            if (options.Prepare) PrepareAnalyze(TaskChoice.Prepare);
             if (options.ExecSta) ExecSta();
             if (options.AllRemoteSta)
             {
@@ -121,7 +173,7 @@ namespace HastlayerTimingTester
                     "TODO"));
                 Console.ReadKey();
             }
-            if (options.Analyze) Analyze();
+            if (options.Analyze) PrepareAnalyze(TaskChoice.Analyze);
         }
 
         public void RunBatchFile(string path)
@@ -141,7 +193,7 @@ namespace HastlayerTimingTester
 
         public void ExecSta()
         {
-            RunBatchFile(TimingTester.CurrentTestBaseDirectory+"\\Run.bat");
+            RunBatchFile(TimingTester.CurrentTestBaseDirectory + "\\Run.bat");
         }
 
     }

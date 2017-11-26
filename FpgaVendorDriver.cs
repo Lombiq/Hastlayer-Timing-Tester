@@ -10,18 +10,20 @@ namespace HastlayerTimingTester
         protected TimingTestConfigBase testConfig;
         protected StreamWriter batchWriter;
         public string BaseDir;
+
         public FpgaVendorDriver(TimingTestConfigBase testConfig)
         {
             this.testConfig = testConfig;
         }
-        public abstract void Prepare(string outputDirectoryName, VhdlOp op, int inputSize, string inputDataType, string outputDataType,
-            VhdlTemplateBase vhdlTemplate, StreamWriter batchWriter);
-        public abstract void InitPrepare();
-        //abstract public void InitPrepare();
-        //void BatchFileCreate(string path);
-        //void BatchFileCommitTest();
 
-        //void BatchFileFinalize();
+        public abstract void Prepare(string outputDirectoryName, VhdlOp op, int inputSize, string inputDataType, string outputDataType,
+            VhdlTemplateBase vhdlTemplate);
+        public abstract TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase);
+
+        public virtual void InitPrepare(StreamWriter batchWriter)
+        {
+            this.batchWriter = batchWriter;
+        }
     }
     public static class StreamWriterExtension
     {

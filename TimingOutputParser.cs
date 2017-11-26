@@ -6,25 +6,29 @@ using System.Text.RegularExpressions;
 
 namespace HastlayerTimingTester
 {
+    public enum StaPhase
+    {
+        Synthesis, Implementation
+    }
 
     /// <summary>
     /// Parses the timing report and timing summary output of Vivado. It makes some calculations based on
     /// these. It can also print the most important values. Look at the documentation
     /// (Docs/Introduction.md and Docs/Usage.md) for the meaning of the properties of this class.
     /// </summary>
-    class TimingOutputParser
+    public abstract class TimingOutputParser
     {
         public decimal ClockFrequency;
         public TimingOutputParser(decimal clockFrequency) { ClockFrequency = clockFrequency; }
-        public decimal DataPathDelay { get; private set; }
-        public bool DataPathDelayAvailable { get; private set; }
-        public bool TimingSummaryAvailable { get; private set; }
-        public decimal WorstNegativeSlack { get; private set; }
-        public decimal TotalNegativeSlack { get; private set; }
-        public decimal WorstHoldSlack { get; private set; }
-        public decimal TotalHoldSlack { get; private set; }
-        public decimal WorstPulseWidthSlack { get; private set; }
-        public decimal TotalPulseWidthSlack { get; private set; }
+        public decimal DataPathDelay { get; protected set; }
+        public bool DataPathDelayAvailable { get; protected set; }
+        public bool TimingSummaryAvailable { get; protected set; }
+        public decimal WorstNegativeSlack { get; protected set; }
+        public decimal TotalNegativeSlack { get; protected set; }
+        public decimal WorstHoldSlack { get; protected set; }
+        public decimal TotalHoldSlack { get; protected set; }
+        public decimal WorstPulseWidthSlack { get; protected set; }
+        public decimal TotalPulseWidthSlack { get; protected set; }
         public bool DesignMetTimingRequirements
         {
             get
@@ -34,10 +38,10 @@ namespace HastlayerTimingTester
                     TotalPulseWidthSlack == 0;
             }
         }
-        public decimal RequirementPlusDelays { get; private set; }
-        public decimal Requirement { get; private set; }
-        public decimal SourceClockDelay { get; private set; }
-        private int _extendedSyncParametersCount;
+        public decimal RequirementPlusDelays { get; protected set; }
+        public decimal Requirement { get; protected set; }
+        public decimal SourceClockDelay { get; protected set; }
+        protected int _extendedSyncParametersCount;
         private bool ExtendedSyncParametersAvailable { get { return _extendedSyncParametersCount == 3; } }
         public decimal TimingWindowAvailable { get { return RequirementPlusDelays - SourceClockDelay; } }
         public decimal TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - Requirement; } }
@@ -48,75 +52,7 @@ namespace HastlayerTimingTester
         public decimal NanosecondToClockPeriod(decimal ns) { return (ns * 1.0e-9m) / (1.0m / ClockFrequency); }
         public decimal InMHz(decimal fHz) { return fHz / 1e6m; } // Hz to MHz
 
-        public void Parse(VivadoResult result)
-        {
-            // Data Path Delay
-            var match = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
-            if (match.Success)
-            {
-                DataPathDelay = decimal.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
-                DataPathDelayAvailable = true;
-            }
-
-            // Let's see a sync design
-            _extendedSyncParametersCount = 0;
-            Requirement = 0;
-            match = Regex.Match(result.TimingReport, @"(\s*)Requirement:(\s*)([0-9\.]*)ns");
-            if (match.Success)
-            {
-                Requirement = decimal.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
-                _extendedSyncParametersCount++;
-            }
-
-            RequirementPlusDelays = 0;
-            match = Regex.Match(result.TimingReport, @"\n(\s*)required time(\s*)([0-9\.]*)(\s*)");
-            if (match.Success)
-            {
-                RequirementPlusDelays = decimal.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
-                _extendedSyncParametersCount++;
-            }
-
-            SourceClockDelay = 0;
-            match = Regex.Match(result.TimingReport, @"(\s*)Source Clock Delay(\s*)\(SCD\):(\s*)([0-9\.]*)ns");
-            if (match.Success)
-            {
-                SourceClockDelay = decimal.Parse(match.Groups[4].Value, CultureInfo.InvariantCulture);
-                _extendedSyncParametersCount++;
-            }
-
-            // Timing Summary
-            var timingSummaryLines = Regex.Split(result.TimingSummary, "\r\n").ToList();
-            for (var i = 0; i < timingSummaryLines.Count; i++)
-            {
-                if (
-                    timingSummaryLines[i].StartsWith("| Design Timing Summary") &&
-                    timingSummaryLines[i + 1].StartsWith("| ---------------------")
-                )
-                {
-                    var totalTimingSummaryLine = timingSummaryLines[i + 6];
-                    while (totalTimingSummaryLine.Contains("  "))
-                        totalTimingSummaryLine = totalTimingSummaryLine.Replace("  ", " ");
-                    var timingSummaryLineParts =
-                        totalTimingSummaryLine.Replace("  ", " ").Split(" ".ToCharArray()).ToList();
-                    try
-                    {
-                        if (timingSummaryLineParts[1] != "NA")
-                        {
-                            WorstNegativeSlack = decimal.Parse(timingSummaryLineParts[1], CultureInfo.InvariantCulture);
-                            TotalNegativeSlack = decimal.Parse(timingSummaryLineParts[2], CultureInfo.InvariantCulture);
-                            WorstHoldSlack = decimal.Parse(timingSummaryLineParts[5], CultureInfo.InvariantCulture);
-                            TotalHoldSlack = decimal.Parse(timingSummaryLineParts[6], CultureInfo.InvariantCulture);
-                            WorstPulseWidthSlack = decimal.Parse(timingSummaryLineParts[9], CultureInfo.InvariantCulture);
-                            TotalPulseWidthSlack = decimal.Parse(timingSummaryLineParts[10], CultureInfo.InvariantCulture);
-                            TimingSummaryAvailable = true;
-                        }
-                    }
-                    catch (FormatException) { } // pass, at least TimingSummaryAvailable will stay false
-                    break;
-                }
-            }
-
-        }
+        public abstract void Parse(VivadoResult result);
         public void PrintParsedTimingReport(string Marker = "")
         {
             Logger.Log("Timing Report:");
