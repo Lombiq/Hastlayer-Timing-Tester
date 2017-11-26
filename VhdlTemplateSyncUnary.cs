@@ -39,7 +39,7 @@ begin
     end process;
     aout <= aout_reg;
 end imp;";
-            XdcTemplate = "create_clock -period %CLKPERIOD% -name clk [get_ports {clk}]";
+            HasTimingConstraints = true;
         }
 
         override public string Name { get { return "sync"; } }

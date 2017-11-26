@@ -76,8 +76,11 @@ namespace HastlayerTimingTester
 
                                 if (taskChoice == TaskChoice.Prepare)
                                 {
-                                    _testConfig.Driver.Prepare(testFriendlyName, op, inputSize, inputDataType,
-                                        outputDataType, vhdlTemplate);
+                                    var vhdl = vhdlTemplate.VhdlTemplate
+                                        .Replace("%INTYPE%", inputDataType)
+                                        .Replace("%OUTTYPE%", outputDataType)
+                                        .Replace("%OPERATOR%", op.VhdlString);
+                                    _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
                                 }
                                 else
                                 {
@@ -105,13 +108,13 @@ namespace HastlayerTimingTester
                                             if (useImplementationResults)
                                             {
                                                 Logger.Log("Chosen to use implementation results.");
-
+                                                dataPathDelay = implementationParser.DataPathDelay;
+                                                timingWindowDiffFromRequirement = 
+                                                    implementationParser.TimingWindowDiffFromRequirement;
                                             }
                                             else
                                             {
                                                 Logger.Log("Chosen to skip implementation results.");
-
-
                                             }
                                         }
                                     }

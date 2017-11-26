@@ -32,6 +32,8 @@ report_timing_summary -check_timing_verbose -file ImplTimingSummary.txt
 quit
 ";
 
+        const string XdcTemplate = "create_clock -period %CLKPERIOD% -name clk [get_ports {clk}]";
+
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
@@ -44,20 +46,16 @@ quit
             );
         }
 
-        public override void Prepare(string outputDirectoryName, VhdlOp op, int inputSize, string inputDataType, string outputDataType,
-            VhdlTemplateBase vhdlTemplate)
+        public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
         {
             string uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
             string xdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.xdc";
-            var vhdl = vhdlTemplate.VhdlTemplate
-                .Replace("%INTYPE%", inputDataType)
-                .Replace("%OUTTYPE%", outputDataType)
-                .Replace("%OPERATOR%", op.VhdlString);
             File.WriteAllText(uutPath, vhdl);
             File.WriteAllText(
                 xdcPath,
-                vhdlTemplate.XdcTemplate.Replace("%CLKPERIOD%",
-                    ((1.0m / testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture))
+                (vhdlTemplate.HasTimingConstraints) ? 
+                    XdcTemplate.Replace("%CLKPERIOD%",
+                    ((1.0m / testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture)) : ""
             );
 
             batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
@@ -84,7 +82,7 @@ quit
                 return null;
             }
             var result = new VivadoResult();
-            result.TimingReport  = File.ReadAllText((phase == StaPhase.Implementation) ? implTimingReportOutputPath : synthTimingReportOutputPath);
+            result.TimingReport = File.ReadAllText((phase == StaPhase.Implementation) ? implTimingReportOutputPath : synthTimingReportOutputPath);
             result.TimingSummary = File.ReadAllText((phase == StaPhase.Implementation) ? implTimingSummaryOutputPath : synthTimingSummaryOutputPath);
             parser.Parse(result);
             return parser;

@@ -16,8 +16,7 @@ namespace HastlayerTimingTester
             this.testConfig = testConfig;
         }
 
-        public abstract void Prepare(string outputDirectoryName, VhdlOp op, int inputSize, string inputDataType, string outputDataType,
-            VhdlTemplateBase vhdlTemplate);
+        public abstract void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate);
         public abstract TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase);
 
         public virtual void InitPrepare(StreamWriter batchWriter)

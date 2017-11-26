@@ -8,7 +8,7 @@ namespace HastlayerTimingTester
     abstract public class VhdlTemplateBase
     {
         public string VhdlTemplate { get; protected set; }
-        public string XdcTemplate { get; protected set; }
+        public bool HasTimingConstraints { get; protected set; }
         abstract public string Name { get; }
     }
 

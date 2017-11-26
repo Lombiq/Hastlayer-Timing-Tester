@@ -31,7 +31,7 @@ end tf_sample;
 architecture imp of tf_sample is begin
     aout <= a1 %OPERATOR% a2;
 end imp;";
-            XdcTemplate = "";
+            HasTimingConstraints = false;
         }
 
         override public string Name { get { return "comb"; } }
