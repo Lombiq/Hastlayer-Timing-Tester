@@ -10,6 +10,8 @@ namespace HastlayerTimingTester
         protected TimingTestConfigBase testConfig;
         protected StreamWriter batchWriter;
         public string BaseDir;
+        public abstract bool CanStaAfterSynthesize { get; }
+        public abstract bool CanStaAfterImplementation { get; }
 
         public FpgaVendorDriver(TimingTestConfigBase testConfig)
         {

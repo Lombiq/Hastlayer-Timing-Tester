@@ -6,12 +6,6 @@ using System.Reflection;
 
 namespace HastlayerTimingTester
 {
-    /// <summary>This is for passing the data output by Vivado into TimingOutputParser.</summary>
-    public struct VivadoResult
-    {
-        public string TimingReport;
-        public string TimingSummary;
-    }
 
     /// <summary>This class implements the core functionality of the Hastlayer Timing Tester application.</summary>
     class TimingTester
@@ -84,15 +78,30 @@ namespace HastlayerTimingTester
                                 }
                                 else
                                 {
-                                    var synthesisParser = _testConfig.Driver.Analyze(testFriendlyName, StaPhase.Synthesis);
-                                    Logger.Log("Synthesis:\r\n----------");
-                                    synthesisParser.PrintParsedTimingReport("S");
-                                    synthesisParser.PrintParsedTimingSummary();
-                                    var dataPathDelay = synthesisParser.DataPathDelay;
-                                    var timingWindowDiffFromRequirement = synthesisParser.TimingWindowDiffFromRequirement;
+                                    decimal? dataPathDelay = null, timingWindowDiffFromRequirement = null;
                                     var useImplementationResults = false;
 
-                                    if (_testConfig.ImplementDesign)
+                                    if (!_testConfig.ImplementDesign &&
+                                        !_testConfig.Driver.CanStaAfterSynthesize &&
+                                        _testConfig.Driver.CanStaAfterImplementation)
+                                        throw new Exception("Can't STA after synthesize step for this FPGA vendor, " +
+                                            "although ImplementDesign is false in the config.");
+
+                                    if (_testConfig.ImplementDesign && !_testConfig.Driver.CanStaAfterImplementation)
+                                        throw new Exception("Can't STA after implementation step for this FPGA vendor, " +
+                                            "although ImplementDesign is true in the config.");
+
+                                    if (_testConfig.Driver.CanStaAfterSynthesize)
+                                    {
+                                        var synthesisParser = _testConfig.Driver.Analyze(testFriendlyName, StaPhase.Synthesis);
+                                        Logger.Log("Synthesis:\r\n----------");
+                                        synthesisParser.PrintParsedTimingReport("S");
+                                        synthesisParser.PrintParsedTimingSummary();
+                                        dataPathDelay = synthesisParser.DataPathDelay;
+                                        timingWindowDiffFromRequirement = synthesisParser.TimingWindowDiffFromRequirement;
+                                    }
+
+                                    if (_testConfig.Driver.CanStaAfterImplementation && _testConfig.ImplementDesign)
                                     {
                                         var implementationParser = _testConfig.Driver.Analyze(testFriendlyName,
                                             StaPhase.Implementation);
@@ -102,6 +111,8 @@ namespace HastlayerTimingTester
                                             implementationParser.PrintParsedTimingReport("I");
                                             implementationParser.PrintParsedTimingSummary();
                                             useImplementationResults =
+                                                dataPathDelay == null ||
+                                                timingWindowDiffFromRequirement == null ||
                                                 dataPathDelay + timingWindowDiffFromRequirement <
                                                 implementationParser.DataPathDelay +
                                                 implementationParser.TimingWindowDiffFromRequirement;
@@ -109,7 +120,7 @@ namespace HastlayerTimingTester
                                             {
                                                 Logger.Log("Chosen to use implementation results.");
                                                 dataPathDelay = implementationParser.DataPathDelay;
-                                                timingWindowDiffFromRequirement = 
+                                                timingWindowDiffFromRequirement =
                                                     implementationParser.TimingWindowDiffFromRequirement;
                                             }
                                             else
@@ -118,6 +129,13 @@ namespace HastlayerTimingTester
                                             }
                                         }
                                     }
+
+                                    if (dataPathDelay == null || timingWindowDiffFromRequirement == null)
+                                    {
+                                        throw new Exception("Couldn't acquire valid timing value from " +
+                                            "neither synthesis, nor implementation.");
+                                    }
+
                                     resultsWriter.FormattedWriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
                                         op.VhdlString,
                                         inputDataTypeFunction(inputSize, true),
@@ -172,8 +190,8 @@ namespace HastlayerTimingTester
             if (options.ExecSta) ExecSta();
             if (options.AllRemoteSta)
             {
-                Console.WriteLine(String.Format("Waiting for user to run tests and overwrite the result at {0}",
-                    "TODO"));
+                Console.WriteLine(String.Format("Waiting for user to run tests and overwrite the result in {0}", 
+                    CurrentTestBaseDirectory));
                 Console.ReadKey();
             }
             if (options.Analyze) PrepareAnalyze(TaskChoice.Analyze);

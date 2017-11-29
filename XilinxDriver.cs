@@ -8,7 +8,14 @@ namespace HastlayerTimingTester
 {
     public class XilinxDriver : FpgaVendorDriver
     {
-        public XilinxDriver(TimingTestConfigBase t) : base(t) { }
+        private string _vivadoPath;
+        public override bool CanStaAfterSynthesize { get { return true; } }
+        public override bool CanStaAfterImplementation { get { return true; } }
+
+        public XilinxDriver(TimingTestConfigBase t, string vivadoPath) : base(t)
+        {
+            _vivadoPath = vivadoPath;
+        }
 
         /// <summary>
         /// This template is filled with data during the test, and then opened and ran by Vivado.
@@ -53,13 +60,13 @@ quit
             File.WriteAllText(uutPath, vhdl);
             File.WriteAllText(
                 xdcPath,
-                (vhdlTemplate.HasTimingConstraints) ? 
+                (vhdlTemplate.HasTimingConstraints) ?
                     XdcTemplate.Replace("%CLKPERIOD%",
                     ((1.0m / testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture)) : ""
             );
 
             batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
-            batchWriter.FormattedWriteLine("{0} -mode batch -source ../Generate.tcl", testConfig.VivadoPath);
+            batchWriter.FormattedWriteLine("{0} -mode batch -source ../Generate.tcl", _vivadoPath);
             batchWriter.FormattedWriteLine("cd ..");
 
         }
@@ -78,10 +85,13 @@ quit
             if (phase == StaPhase.Implementation)
             {
                 var ImplementationSuccessful = File.Exists(implTimingReportOutputPath);
-                if (!ImplementationSuccessful) Logger.Log("Implementation (or STA) failed!");
-                return null;
+                if (!ImplementationSuccessful)
+                {
+                    Logger.Log("Implementation (or STA) failed!");
+                    return null;
+                }
             }
-            var result = new VivadoResult();
+            var result = new VivadoResult(); 
             result.TimingReport = File.ReadAllText((phase == StaPhase.Implementation) ? implTimingReportOutputPath : synthTimingReportOutputPath);
             result.TimingSummary = File.ReadAllText((phase == StaPhase.Implementation) ? implTimingSummaryOutputPath : synthTimingSummaryOutputPath);
             parser.Parse(result);

@@ -23,8 +23,8 @@ namespace HastlayerTimingTester
         public decimal DataPathDelay { get; protected set; }
         public bool DataPathDelayAvailable { get; protected set; }
         public bool TimingSummaryAvailable { get; protected set; }
-        public decimal WorstNegativeSlack { get; protected set; }
-        public decimal TotalNegativeSlack { get; protected set; }
+        public decimal WorstSetupSlack { get; protected set; } 
+        public decimal TotalSetupSlack { get; protected set; }
         public decimal WorstHoldSlack { get; protected set; }
         public decimal TotalHoldSlack { get; protected set; }
         public decimal WorstPulseWidthSlack { get; protected set; }
@@ -33,7 +33,7 @@ namespace HastlayerTimingTester
         {
             get
             {
-                return TimingSummaryAvailable && TotalNegativeSlack == 0 &&
+                return TimingSummaryAvailable && TotalSetupSlack == 0 &&
                     TotalHoldSlack == 0 &&
                     TotalPulseWidthSlack == 0;
             }
@@ -52,7 +52,6 @@ namespace HastlayerTimingTester
         public decimal NanosecondToClockPeriod(decimal ns) { return (ns * 1.0e-9m) / (1.0m / ClockFrequency); }
         public decimal InMHz(decimal fHz) { return fHz / 1e6m; } // Hz to MHz
 
-        public abstract void Parse(VivadoResult result);
         public void PrintParsedTimingReport(string Marker = "")
         {
             Logger.Log("Timing Report:");
@@ -100,11 +99,11 @@ namespace HastlayerTimingTester
                     "\tTotal Pulse Width Slack = {6} ns\r\n" +
                     "\t(Any \"worst slack\" is okay if positive,\r\n\t\tany \"total slack\" is okay if zero.)\r\n",
                     (DesignMetTimingRequirements) ? "PASSED" : "FAILED",
-                    WorstNegativeSlack, TotalNegativeSlack,
+                    WorstSetupSlack, TotalSetupSlack,
                     WorstHoldSlack, TotalHoldSlack,
                     WorstPulseWidthSlack, TotalPulseWidthSlack
                 );
-                if (TotalNegativeSlack > 0) Logger.Log("WARNING: setup time violation!");
+                if (TotalSetupSlack > 0) Logger.Log("WARNING: setup time violation!");
                 if (TotalHoldSlack > 0) Logger.Log("WARNING: hold time violation!");
                 if (TotalPulseWidthSlack > 0) Logger.Log("WARNING: minimum pulse width violation!");
             }

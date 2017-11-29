@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="IntelDriver.cs" />
     <Compile Include="FpgaVendorDriver.cs" />
+    <Compile Include="IntelParser.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

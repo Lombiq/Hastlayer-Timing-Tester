@@ -8,11 +8,19 @@ using System.Threading.Tasks;
 
 namespace HastlayerTimingTester
 {
+    /// <summary>This is for passing the data output by Vivado into TimingOutputParser.</summary>
+    public struct VivadoResult
+    {
+        public string TimingReport;
+        public string TimingSummary;
+    }
+
     class XilinxParser : TimingOutputParser
     {
-        public XilinxParser(decimal clockFrequency) : base(clockFrequency) {}
 
-        public override void Parse(VivadoResult result)
+        public XilinxParser(decimal clockFrequency) : base(clockFrequency) { }
+
+        public void Parse(VivadoResult result)
         {
             // Data Path Delay
             var match = Regex.Match(result.TimingReport, @"(\s*)Data Path Delay:(\s*)([0-9\.]*)ns");
@@ -66,8 +74,8 @@ namespace HastlayerTimingTester
                     {
                         if (timingSummaryLineParts[1] != "NA")
                         {
-                            WorstNegativeSlack = decimal.Parse(timingSummaryLineParts[1], CultureInfo.InvariantCulture);
-                            TotalNegativeSlack = decimal.Parse(timingSummaryLineParts[2], CultureInfo.InvariantCulture);
+                            WorstSetupSlack = decimal.Parse(timingSummaryLineParts[1], CultureInfo.InvariantCulture);
+                            TotalSetupSlack = decimal.Parse(timingSummaryLineParts[2], CultureInfo.InvariantCulture);
                             WorstHoldSlack = decimal.Parse(timingSummaryLineParts[5], CultureInfo.InvariantCulture);
                             TotalHoldSlack = decimal.Parse(timingSummaryLineParts[6], CultureInfo.InvariantCulture);
                             WorstPulseWidthSlack = decimal.Parse(timingSummaryLineParts[9], CultureInfo.InvariantCulture);

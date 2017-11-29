@@ -91,7 +91,6 @@ namespace HastlayerTimingTester
 
             Frequency = 100e6m; // System clock frequency in MHz
             Name = "default"; // Name of the configuration, will be used in the name of the output directory
-            VivadoPath = "C:\\Xilinx\\Vivado\\2016.4\\bin\\vivado.bat"; // The path where vivado.bat is located
 
             // If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
             // If it is false, the exceptions are logged and the program continues with the next test.
@@ -99,9 +98,10 @@ namespace HastlayerTimingTester
 
             // This selects for which FPGA vendor do we want to run the timing test. 
             // XilinxDriver supports Vivado.
+            Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
+
             // IntelDriver supports Quartus and TimeQuest.
-            Driver = new XilinxDriver(this);
-            //Driver = new IntelDriver(this);
+            //Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
 
             // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
             // It does not open the GUI for every single test. However, it cannot generate schematic drawings
