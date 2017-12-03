@@ -62,10 +62,10 @@ namespace HastlayerTimingTester
             //          unsigned(63 downto 0) output if the operands are unsigned(31 downto 0).
             Operators = new List<VhdlOp>
             {
-                //new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, 3), "shift_left",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
+                new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, 1), "shift_left",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
+                //new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, 1), "shift_right",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
                 //new VhdlOp(new UnaryOperatorVhdlExpression("not"),      "not",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                //new VhdlOp(new UnaryOperatorVhdlExpression("not"),      "not",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("and"),     "and",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("and"),     "and",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
                 //new VhdlOp(new BinaryOperatorVhdlExpression("nand"),  "nand", StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
                 //new VhdlOp(new BinaryOperatorVhdlExpression("or"),    "or",   StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
                 //new VhdlOp(new BinaryOperatorVhdlExpression("nor"),   "nor",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
@@ -100,10 +100,10 @@ namespace HastlayerTimingTester
 
             // This selects for which FPGA vendor do we want to run the timing test. 
             // XilinxDriver supports Vivado.
-            //Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
+            Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
 
             // IntelDriver supports Quartus and TimeQuest.
-            Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
+            //Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
 
             // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
             // It does not open the GUI for every single test. However, it cannot generate schematic drawings

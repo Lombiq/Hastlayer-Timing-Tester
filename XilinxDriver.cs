@@ -44,7 +44,8 @@ quit
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
-            batchWriter.FormattedWriteLine("echo \"Vivado cannot generate Schematic.pdf for designs in batch mode.\"");
+            if(testConfig.VivadoBatchMode)
+                batchWriter.FormattedWriteLine("echo \"Vivado cannot generate Schematic.pdf for designs in batch mode.\"");
             File.WriteAllText(
                 BaseDir + "\\Generate.tcl",
                 TclTemplate
@@ -66,7 +67,7 @@ quit
             );
 
             batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
-            batchWriter.FormattedWriteLine("cmd /c \"{0} -mode batch -source ../Generate.tcl\"", _vivadoPath);
+            batchWriter.FormattedWriteLine("cmd /c \"{0} {1} -source ../Generate.tcl\"", _vivadoPath, (testConfig.VivadoBatchMode)?"-mode batch":"");
             batchWriter.FormattedWriteLine("cd ..");
 
         }

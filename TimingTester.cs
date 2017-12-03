@@ -20,11 +20,10 @@ namespace HastlayerTimingTester
 
         enum TaskChoice { Prepare, Analyze }
 
+
         void PrepareAnalyze(TaskChoice taskChoice)
         {
-            string taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
-            Logger.Log("=== HastlayerTimingTester {0} stage ===", taskChoiceString);
-            Logger.Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            Logger.LogStageHeader((taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze");
             //var currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + _testConfig.Name;
 
             StreamWriter batchWriter = null, resultsWriter = null;
@@ -196,7 +195,7 @@ namespace HastlayerTimingTester
             if (options.ExecSta) ExecSta();
             if (options.AllRemoteSta)
             {
-                Console.WriteLine(String.Format("Waiting for user to run tests and overwrite the result in {0}",
+                Console.WriteLine(String.Format("\r\nWaiting for user to run tests and overwrite the result in {0}\r\n",
                     CurrentTestBaseDirectory));
                 Console.ReadKey();
             }
@@ -220,6 +219,7 @@ namespace HastlayerTimingTester
 
         public void ExecSta()
         {
+            Logger.LogStageHeader("execute-sta");
             RunBatchFile(TimingTester.CurrentTestBaseDirectory + "\\Run.bat");
         }
 

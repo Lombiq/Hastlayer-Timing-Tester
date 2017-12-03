@@ -70,6 +70,12 @@ namespace HastlayerTimingTester
                 }
             }
         }
+
+        public static void LogStageHeader(string stage)
+        {
+            Logger.Log("\r\n=== HastlayerTimingTester {0} stage ===", stage);
+            Logger.Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
     }
 
 }
