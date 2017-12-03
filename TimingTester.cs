@@ -64,8 +64,8 @@ namespace HastlayerTimingTester
                                 CurrentTestOutputDirectory = CurrentTestBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(CurrentTestOutputDirectory);
 
-                                Logger.Log("Now generating: {0}({1}), {2}, {3} to {4}", op.FriendlyName, op.VhdlString,
-                                    inputSize, inputDataType, outputDataType);
+                                Logger.Log("Now generating: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize, 
+                                    inputDataType, outputDataType);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
                                 if (taskChoice == TaskChoice.Prepare)
@@ -73,7 +73,8 @@ namespace HastlayerTimingTester
                                     var vhdl = vhdlTemplate.VhdlTemplate
                                         .Replace("%INTYPE%", inputDataType)
                                         .Replace("%OUTTYPE%", outputDataType)
-                                        .Replace("%OPERATOR%", op.VhdlString);
+                                        .Replace("%EXPRESSION%", 
+                                            op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs));
                                     _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
                                 }
                                 else
@@ -137,7 +138,7 @@ namespace HastlayerTimingTester
                                     }
 
                                     resultsWriter.FormattedWriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
-                                        op.VhdlString,
+                                        op.FriendlyName,
                                         inputDataTypeFunction(inputSize, true),
                                         op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
                                         vhdlTemplate.Name,

@@ -35,12 +35,13 @@ begin
         if clk'event and clk = '1' then
             a1_reg <= a1;
             a2_reg <= a2;
-            aout_reg <= a1_reg %OPERATOR% a2_reg;
+            aout_reg <= %EXPRESSION%;
         end if;
     end process;
     aout <= aout_reg;
 end imp;";
             HasTimingConstraints = true;
+            ExpressionInputs = new[] { "a1_reg", "a2_reg" };
         }
 
         override public string Name { get { return "sync"; } }

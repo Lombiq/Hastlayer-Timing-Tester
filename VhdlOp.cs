@@ -10,10 +10,10 @@ namespace HastlayerTimingTester
     public class VhdlOp
     {
         /// <summary>
-        /// VhdlString contains the actual operator (like "+", "-", "mod", etc.) that will be subsituted
+        /// VhdlExpression generates the VHDL code that will be subsituted
         /// into the VHDL template.
         /// </summary>
-        public string VhdlString;
+        public VhdlExpressionBase VhdlExpression;
 
         /// <summary>
         /// FriendlyName will be used in directory names, where you cannot use special characters. E.g. for "+"
@@ -36,9 +36,9 @@ namespace HastlayerTimingTester
         /// <summary>VhdlTemplates: the VHDL templates that will be used for analysis.</summary>
         public List<VhdlTemplateBase> VhdlTemplates;
 
-        public VhdlOp(string vhdlString, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes, OutputDataTypeDelegate outputDataTypeFunction, List<VhdlTemplateBase> vhdlTemplates)
+        public VhdlOp(VhdlExpressionBase vhdlExpression, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes, OutputDataTypeDelegate outputDataTypeFunction, List<VhdlTemplateBase> vhdlTemplates)
         {
-            this.VhdlString = vhdlString;
+            this.VhdlExpression = vhdlExpression;
             this.FriendlyName = friendlyName;
             this.OutputDataTypeFunction = outputDataTypeFunction;
             this.DataTypes = dataTypes;

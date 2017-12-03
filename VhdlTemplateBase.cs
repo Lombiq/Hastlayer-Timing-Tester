@@ -10,6 +10,7 @@ namespace HastlayerTimingTester
         public string VhdlTemplate { get; protected set; }
         public bool HasTimingConstraints { get; protected set; }
         abstract public string Name { get; }
+        public string[] ExpressionInputs { get; protected set; }
     }
 
 }

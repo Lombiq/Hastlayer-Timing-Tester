@@ -29,8 +29,9 @@ port(
 end tf_sample;
 
 architecture imp of tf_sample is begin
-    aout <= a1 %OPERATOR% a2;
+    aout <=  %EXPRESSION%;
 end imp;";
+            ExpressionInputs = new[] { "a1", "a2" };
             HasTimingConstraints = false;
         }
 
