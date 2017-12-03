@@ -37,7 +37,7 @@ namespace HastlayerTimingTester
             {
                 resultsWriter = new StreamWriter(File.Open(CurrentTestBaseDirectory + "\\Results.tsv", FileMode.Create));
                 resultsWriter.AutoFlush = true;
-                _testConfig.Driver.InitPrepare(resultsWriter);
+                resultsWriter.Write("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
             }
 
             foreach (var op in _testConfig.Operators)
@@ -157,8 +157,8 @@ namespace HastlayerTimingTester
                     }
                 }
             }
-            if(batchWriter != null) batchWriter.Close();
-            if(resultsWriter != null) resultsWriter.Close();
+            if (batchWriter != null) batchWriter.Close();
+            if (resultsWriter != null) resultsWriter.Close();
         }
 
 
