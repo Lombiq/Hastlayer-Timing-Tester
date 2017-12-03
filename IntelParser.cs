@@ -27,7 +27,7 @@ namespace HastlayerTimingTester
         public void Parse(QuartusResult result)
         {
             // Data Path Delay
-            var match = Regex.Match(result.SetupReport, @"^; Data Delay:(\s*);(\s*)([0-9\.]*)(\s*);");
+            var match = Regex.Match(result.SetupReport, @"; Data Delay(\s*);(\s*)([0-9\.]*)(\s*);");
             if (match.Success)
             {
                 DataPathDelay = decimal.Parse(match.Groups[3].Value, CultureInfo.InvariantCulture);
@@ -48,7 +48,7 @@ namespace HastlayerTimingTester
             match = Regex.Match(result.SetupReport, @"; Data Required Time ; ([0-9\.]*)");
             if (match.Success)
             {
-                RequirementPlusDelays = decimal.Parse(match.Groups[0].Value, CultureInfo.InvariantCulture);
+                RequirementPlusDelays = decimal.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture);
                 _extendedSyncParametersCount++;
             }
 
@@ -56,7 +56,7 @@ namespace HastlayerTimingTester
             match = Regex.Match(result.SetupReport, @"; Data Arrival Time  ; ([0-9\.]*)");
             if (match.Success)
             {
-                SourceClockDelay = decimal.Parse(match.Groups[0].Value, CultureInfo.InvariantCulture) - DataPathDelay;
+                SourceClockDelay = decimal.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture) - DataPathDelay;
                 _extendedSyncParametersCount++; 
             }
 
@@ -64,12 +64,12 @@ namespace HastlayerTimingTester
             var matches = Regex.Matches(result.TimingSummary, @"; clk   ; ([0-9\.]*) ; ([0-9\.]*)"); 
             if (matches.Count > 0)
             {
-                WorstSetupSlack = decimal.Parse(matches[0].Groups[0].Value, CultureInfo.InvariantCulture);
-                TotalSetupSlack = decimal.Parse(matches[0].Groups[1].Value, CultureInfo.InvariantCulture);
-                WorstHoldSlack = decimal.Parse(matches[1].Groups[0].Value, CultureInfo.InvariantCulture);
-                TotalHoldSlack = decimal.Parse(matches[1].Groups[1].Value, CultureInfo.InvariantCulture);
-                WorstPulseWidthSlack = decimal.Parse(matches[2].Groups[0].Value, CultureInfo.InvariantCulture);
-                TotalPulseWidthSlack = decimal.Parse(matches[2].Groups[1].Value, CultureInfo.InvariantCulture);
+                WorstSetupSlack = decimal.Parse(matches[0].Groups[1].Value, CultureInfo.InvariantCulture);
+                TotalSetupSlack = decimal.Parse(matches[0].Groups[2].Value, CultureInfo.InvariantCulture);
+                WorstHoldSlack = decimal.Parse(matches[1].Groups[1].Value, CultureInfo.InvariantCulture);
+                TotalHoldSlack = decimal.Parse(matches[1].Groups[2].Value, CultureInfo.InvariantCulture);
+                WorstPulseWidthSlack = decimal.Parse(matches[2].Groups[1].Value, CultureInfo.InvariantCulture);
+                TotalPulseWidthSlack = decimal.Parse(matches[2].Groups[2].Value, CultureInfo.InvariantCulture);
                 TimingSummaryAvailable = true;
             }
         }

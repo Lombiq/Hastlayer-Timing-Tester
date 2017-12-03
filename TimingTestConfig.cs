@@ -45,7 +45,7 @@ namespace HastlayerTimingTester
 
             // There are lists of VHDL templates below. Any of them can be used as a parameter to VhdlOp constructor.
             // (It is advised to start with the Operators variable when looking at this file.)
-            List<VhdlTemplateBase> DefaultVhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync(), new VhdlTemplateComb() };
+            List<VhdlTemplateBase> DefaultVhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync() };
 
             // Operators is the list of operators where VhdlOp is like:
             //  new VhdlOp(string vhdlString, string friendlyName, OutputDataTypeDelegate outputDataTypeFunction)
@@ -100,10 +100,10 @@ namespace HastlayerTimingTester
 
             // This selects for which FPGA vendor do we want to run the timing test. 
             // XilinxDriver supports Vivado.
-            Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
+            //Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
 
             // IntelDriver supports Quartus and TimeQuest.
-            //Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
+            Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
 
             // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
             // It does not open the GUI for every single test. However, it cannot generate schematic drawings

@@ -91,13 +91,13 @@ namespace HastlayerTimingTester
                 Logger.Log(
                     "Timing Summary:\r\n" +
                     "\tDesign {0} meeting timing requirements\r\n" +
-                    "\tWorst Negative Slack = {1} ns\r\n" +
-                    "\tTotal Negative Slack = {2} ns\r\n" +
+                    "\tWorst Setup Slack = {1} ns\r\n" +
+                    "\tTotal Setup Slack = {2} ns\r\n" +
                     "\tWorst Hold Slack = {3} ns\r\n" +
                     "\tTotal Hold Slack = {4} ns\r\n" +
                     "\tWorst Pulse Width Slack = {5} ns\r\n" +
                     "\tTotal Pulse Width Slack = {6} ns\r\n" +
-                    "\t(Any \"worst slack\" is okay if positive,\r\n\t\tany \"total slack\" is okay if zero.)\r\n",
+                    "\t(Any \"worst slack\" is okay if positive,\r\n\t\tany \"total slack\" is okay if zero.)",
                     (DesignMetTimingRequirements) ? "PASSED" : "FAILED",
                     WorstSetupSlack, TotalSetupSlack,
                     WorstHoldSlack, TotalHoldSlack,

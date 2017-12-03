@@ -24,6 +24,7 @@ namespace HastlayerTimingTester
         {
             string taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
             Logger.Log("=== HastlayerTimingTester {0} stage ===", taskChoiceString);
+            Logger.Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
             //var currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + _testConfig.Name;
 
             StreamWriter batchWriter = null, resultsWriter = null;
@@ -64,7 +65,7 @@ namespace HastlayerTimingTester
                                 CurrentTestOutputDirectory = CurrentTestBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(CurrentTestOutputDirectory);
 
-                                Logger.Log("Now generating: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize,
+                                Logger.Log("\r\nCurrent test item: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize,
                                     inputDataType, outputDataType);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
@@ -77,9 +78,9 @@ namespace HastlayerTimingTester
                                             op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs));
                                     _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
                                 }
-                                else
+                                else //taskChoice == TaskChoice.Analyze
                                 {
-                                    decimal? dataPathDelay = null, timingWindowDiffFromRequirement = null;
+                                   decimal? dataPathDelay = null, timingWindowDiffFromRequirement = null;
                                     var useImplementationResults = false;
 
                                     if (!_testConfig.ImplementDesign &&
@@ -95,7 +96,7 @@ namespace HastlayerTimingTester
                                     if (_testConfig.Driver.CanStaAfterSynthesize)
                                     {
                                         var synthesisParser = _testConfig.Driver.Analyze(testFriendlyName, StaPhase.Synthesis);
-                                        Logger.Log("Synthesis:\r\n----------");
+                                        Logger.Log("\r\nSynthesis:\r\n----------");
                                         synthesisParser.PrintParsedTimingReport("S");
                                         synthesisParser.PrintParsedTimingSummary();
                                         dataPathDelay = synthesisParser.DataPathDelay;
@@ -108,7 +109,7 @@ namespace HastlayerTimingTester
                                             StaPhase.Implementation);
                                         if (implementationParser != null)
                                         {
-                                            Logger.Log("Implementation:\r\n---------------");
+                                            Logger.Log("\r\nImplementation:\r\n---------------");
                                             implementationParser.PrintParsedTimingReport("I");
                                             implementationParser.PrintParsedTimingSummary();
                                             useImplementationResults =
@@ -188,7 +189,7 @@ namespace HastlayerTimingTester
                     Directory.CreateDirectory(CurrentTestBaseDirectory);
                 }
             }
-            Logger.Init(CurrentTestBaseDirectory + "\\Log.txt", !options.Prepare);
+            Logger.Init(CurrentTestBaseDirectory + "\\Log.txt", options.Prepare);
             _testConfig.Driver.BaseDir = CurrentTestBaseDirectory;
 
             if (options.Prepare) PrepareAnalyze(TaskChoice.Prepare);
