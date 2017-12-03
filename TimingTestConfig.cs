@@ -62,7 +62,9 @@ namespace HastlayerTimingTester
             //          unsigned(63 downto 0) output if the operands are unsigned(31 downto 0).
             Operators = new List<VhdlOp>
             {
-                new VhdlOp(new UnaryOperatorVhdlExpression("not"),      "not",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
+                //new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, 3), "shift_left",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
+                //new VhdlOp(new UnaryOperatorVhdlExpression("not"),      "not",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
+                //new VhdlOp(new UnaryOperatorVhdlExpression("not"),      "not",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("and"),     "and",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
                 //new VhdlOp(new BinaryOperatorVhdlExpression("nand"),  "nand", StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
                 //new VhdlOp(new BinaryOperatorVhdlExpression("or"),    "or",   StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),

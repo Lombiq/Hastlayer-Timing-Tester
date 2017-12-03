@@ -22,7 +22,7 @@ namespace HastlayerTimingTester
             "static timing analysis software, calculate timing parameters for Hastlayer.")]
         public bool Analyze { get; set; }
 
-        [Option('A', "all", DefaultValue = false,
+        [Option('x', "all", DefaultValue = false,
           HelpText = "Run all of the above.")]
         public bool All { get; set; }
 

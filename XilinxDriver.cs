@@ -66,7 +66,7 @@ quit
             );
 
             batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
-            batchWriter.FormattedWriteLine("{0} -mode batch -source ../Generate.tcl", _vivadoPath);
+            batchWriter.FormattedWriteLine("cmd /c \"{0} -mode batch -source ../Generate.tcl\"", _vivadoPath);
             batchWriter.FormattedWriteLine("cd ..");
 
         }

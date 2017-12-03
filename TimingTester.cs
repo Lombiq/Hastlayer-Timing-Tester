@@ -64,7 +64,7 @@ namespace HastlayerTimingTester
                                 CurrentTestOutputDirectory = CurrentTestBaseDirectory + "\\" + testFriendlyName;
                                 Directory.CreateDirectory(CurrentTestOutputDirectory);
 
-                                Logger.Log("Now generating: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize, 
+                                Logger.Log("Now generating: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize,
                                     inputDataType, outputDataType);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
@@ -73,7 +73,7 @@ namespace HastlayerTimingTester
                                     var vhdl = vhdlTemplate.VhdlTemplate
                                         .Replace("%INTYPE%", inputDataType)
                                         .Replace("%OUTTYPE%", outputDataType)
-                                        .Replace("%EXPRESSION%", 
+                                        .Replace("%EXPRESSION%",
                                             op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs));
                                     _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
                                 }
@@ -157,7 +157,8 @@ namespace HastlayerTimingTester
                     }
                 }
             }
-            batchWriter.Close();
+            if(batchWriter != null) batchWriter.Close();
+            if(resultsWriter != null) resultsWriter.Close();
         }
 
 
@@ -178,11 +179,14 @@ namespace HastlayerTimingTester
             }
 
             _testConfig = testConfig;
-            if (!Directory.Exists(CurrentTestBaseDirectory)) Directory.CreateDirectory(CurrentTestBaseDirectory);
-            else if (Directory.GetFileSystemEntries(CurrentTestBaseDirectory).Length > 0)
+            if (options.Prepare)
             {
-                Directory.Delete(CurrentTestBaseDirectory, true);
-                Directory.CreateDirectory(CurrentTestBaseDirectory);
+                if (!Directory.Exists(CurrentTestBaseDirectory)) Directory.CreateDirectory(CurrentTestBaseDirectory);
+                else if (Directory.GetFileSystemEntries(CurrentTestBaseDirectory).Length > 0)
+                {
+                    Directory.Delete(CurrentTestBaseDirectory, true);
+                    Directory.CreateDirectory(CurrentTestBaseDirectory);
+                }
             }
             Logger.Init(CurrentTestBaseDirectory + "\\Log.txt", !options.Prepare);
             _testConfig.Driver.BaseDir = CurrentTestBaseDirectory;
@@ -191,7 +195,7 @@ namespace HastlayerTimingTester
             if (options.ExecSta) ExecSta();
             if (options.AllRemoteSta)
             {
-                Console.WriteLine(String.Format("Waiting for user to run tests and overwrite the result in {0}", 
+                Console.WriteLine(String.Format("Waiting for user to run tests and overwrite the result in {0}",
                     CurrentTestBaseDirectory));
                 Console.ReadKey();
             }
