@@ -22,6 +22,7 @@ namespace HastlayerTimingTester
         /// It synthesizes the project, generates reports and a schematic diagram.
         /// </summary>
         const string TclTemplate = @"
+set_param general.maxThreads %NUMTHREADS%
 read_vhdl UUT.vhd
 read_xdc Constraints.xdc
 synth_design -part %PART% -top tf_sample
@@ -49,6 +50,7 @@ quit
             File.WriteAllText(
                 BaseDir + "\\Generate.tcl",
                 TclTemplate
+                    .Replace("%NUMTHREADS%", testConfig.NumberOfThreads.ToString())
                     .Replace("%PART%", testConfig.Part)
                     .Replace("%IMPLEMENT%", (Convert.ToInt32(testConfig.ImplementDesign)).ToString())
             );

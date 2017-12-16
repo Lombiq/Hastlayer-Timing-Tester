@@ -18,6 +18,7 @@ namespace HastlayerTimingTester
         public decimal Frequency;
         public bool VivadoBatchMode;
         public bool ImplementDesign;
+        public int NumberOfThreads;
         public FpgaVendorDriver Driver;
     }
 

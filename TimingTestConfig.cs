@@ -116,6 +116,10 @@ namespace HastlayerTimingTester
             // If ImplementDesign is true, Vivado will perform STA for both the synthesized and the implemented designs.
             // If it is false, Vivado will only do synthesis + STA, and skip implementation + STA.
             ImplementDesign = true;
+
+            //It sets the number of threads used during simulation, if the FPGA vendor tools supports it. 
+            //(Currently only Vivado supports multithreading.)
+            NumberOfThreads = 8;
         }
     }
 }
