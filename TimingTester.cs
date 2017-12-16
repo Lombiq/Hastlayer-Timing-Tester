@@ -23,7 +23,8 @@ namespace HastlayerTimingTester
 
         void PrepareAnalyze(TaskChoice taskChoice)
         {
-            Logger.LogStageHeader((taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze");
+            string taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
+            Logger.LogStageHeader(taskChoiceString);
             //var currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + _testConfig.Name;
 
             StreamWriter batchWriter = null, resultsWriter = null;
@@ -133,7 +134,7 @@ namespace HastlayerTimingTester
 
                                     if (dataPathDelay == null || timingWindowDiffFromRequirement == null)
                                     {
-                                        throw new Exception("Couldn't acquire valid timing value from " +
+                                        Logger.Log("Error: couldn't acquire valid timing value from " +
                                             "neither synthesis, nor implementation.");
                                     }
 
@@ -151,7 +152,8 @@ namespace HastlayerTimingTester
                             catch (Exception exception)
                             {
                                 if (_testConfig.DebugMode) throw;
-                                else Logger.Log("Exception happened during prepare: {0}", exception.Message);
+                                else Logger.Log("Exception happened during {0}: {1}", 
+                                    taskChoiceString, exception.Message);
                             }
                         }
                     }

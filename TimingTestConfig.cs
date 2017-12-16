@@ -100,10 +100,10 @@ namespace HastlayerTimingTester
 
             // This selects for which FPGA vendor do we want to run the timing test. 
             // XilinxDriver supports Vivado.
-            Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
+            //Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
 
             // IntelDriver supports Quartus and TimeQuest.
-            //Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
+            Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
 
             // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
             // It does not open the GUI for every single test. However, it cannot generate schematic drawings
