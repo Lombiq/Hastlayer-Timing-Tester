@@ -88,12 +88,29 @@ set_clock_uncertainty -fall_from [get_clocks {clk}] -rise_to [get_clocks {clk}] 
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -setup 0.070  
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060  
 ";
+        const string CleanupScriptTemplate = @"
+import os, shutil
+subdirs=filter(lambda x:os.path.isdir(x), os.listdir("".""))
+for subdir in subdirs:
+    items=os.listdir(subdir)
+    items=filter(lambda x: not x in [""UUT.vhd"", ""Constraints.sdc"", ""SetupReport.txt"", ""TimingSummary.txt""], items)
+    paths=map(lambda x: subdir+""\\""+x, items)
+    for path in paths:
+        print ""unlinking: ""+path
+        if os.path.isdir(path):
+            shutil.rmtree(path)
+        else:
+            os.unlink(path)
+";
+
+        const string CleanupScriptName = "Cleanup.py";
 
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
             File.WriteAllText(BaseDir + "\\Quartus.tcl", QuartusTclTemplate);
             File.WriteAllText(BaseDir + "\\TimeQuest.tcl", TimeQuestTclTemplate);
+            File.WriteAllText(BaseDir + "\\" + CleanupScriptName, CleanupScriptTemplate);
         }
 
         public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
