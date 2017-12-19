@@ -69,7 +69,8 @@ quit
             );
 
             batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
-            batchWriter.FormattedWriteLine("cmd /c \"{0} {1} -source ../Generate.tcl\"", _vivadoPath, (testConfig.VivadoBatchMode)?"-mode batch":"");
+            batchWriter.FormattedWriteLine("cmd /c \"{0} {1} -source ../Generate.tcl\"", 
+                _vivadoPath, (testConfig.VivadoBatchMode)?"-mode batch":"");
             batchWriter.FormattedWriteLine("cd ..");
 
         }
@@ -77,10 +78,14 @@ quit
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
             var parser = new XilinxParser(testConfig.Frequency);
-            var synthTimingReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingReport.txt";
-            var synthTimingSummaryOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingSummary.txt";
-            var implTimingReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingReport.txt";
-            var implTimingSummaryOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingSummary.txt";
+            var synthTimingReportOutputPath = 
+                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingReport.txt";
+            var synthTimingSummaryOutputPath = 
+                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingSummary.txt";
+            var implTimingReportOutputPath = 
+                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingReport.txt";
+            var implTimingSummaryOutputPath = 
+                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingSummary.txt";
 
             if (phase == StaPhase.Implementation && !testConfig.ImplementDesign)
                 throw new Exception("Can't analyze for implementation if ImplementDesign is false in the config.");
@@ -95,8 +100,10 @@ quit
                 }
             }
             var result = new VivadoResult(); 
-            result.TimingReport = File.ReadAllText((phase == StaPhase.Implementation) ? implTimingReportOutputPath : synthTimingReportOutputPath);
-            result.TimingSummary = File.ReadAllText((phase == StaPhase.Implementation) ? implTimingSummaryOutputPath : synthTimingSummaryOutputPath);
+            result.TimingReport = File.ReadAllText(
+                (phase == StaPhase.Implementation) ? implTimingReportOutputPath : synthTimingReportOutputPath);
+            result.TimingSummary = File.ReadAllText(
+                (phase == StaPhase.Implementation) ? implTimingSummaryOutputPath : synthTimingSummaryOutputPath);
             parser.Parse(result);
             return parser;
         }

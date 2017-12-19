@@ -27,7 +27,10 @@ namespace HastlayerTimingTester
         /// </summary>
         public OutputDataTypeDelegate OutputDataTypeFunction;
 
-        /// <summary>DataTypes contain a list of functions that should be used for the data types the operation should be tested for.</summary>
+        /// <summary>
+        /// DataTypes contain a list of functions that should be used for the data types the operation 
+        /// should be tested for.
+        /// </summary>
         public List<DataTypeFromSizeDelegate> DataTypes;
 
         /// <summary>This is used for <see cref="DataTypes" />.</summary>
@@ -36,7 +39,8 @@ namespace HastlayerTimingTester
         /// <summary>VhdlTemplates: the VHDL templates that will be used for analysis.</summary>
         public List<VhdlTemplateBase> VhdlTemplates;
 
-        public VhdlOp(VhdlExpressionBase vhdlExpression, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes, OutputDataTypeDelegate outputDataTypeFunction, List<VhdlTemplateBase> vhdlTemplates)
+        public VhdlOp(VhdlExpressionBase vhdlExpression, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes, 
+            OutputDataTypeDelegate outputDataTypeFunction, List<VhdlTemplateBase> vhdlTemplates)
         {
             this.VhdlExpression = vhdlExpression;
             this.FriendlyName = friendlyName;

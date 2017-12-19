@@ -95,7 +95,8 @@ namespace HastlayerTimingTester
 
                                     if (_testConfig.Driver.CanStaAfterSynthesize)
                                     {
-                                        var synthesisParser = _testConfig.Driver.Analyze(testFriendlyName, StaPhase.Synthesis);
+                                        var synthesisParser = _testConfig.Driver.Analyze(
+                                            testFriendlyName, StaPhase.Synthesis);
                                         Logger.Log("\r\nSynthesis:\r\n----------");
                                         synthesisParser.PrintParsedTimingReport("S");
                                         synthesisParser.PrintParsedTimingSummary();
