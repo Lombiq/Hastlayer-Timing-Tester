@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace HastlayerTimingTester
 {
-    class UnaryOperatorVhdlExpression: VhdlExpressionBase
+    class UnaryOperatorVhdlExpression : VhdlExpressionBase
     {
         string vhdlOperator;
 

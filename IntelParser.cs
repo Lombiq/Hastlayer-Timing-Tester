@@ -57,11 +57,11 @@ namespace HastlayerTimingTester
             if (match.Success)
             {
                 SourceClockDelay = decimal.Parse(match.Groups[1].Value, CultureInfo.InvariantCulture) - DataPathDelay;
-                _extendedSyncParametersCount++; 
+                _extendedSyncParametersCount++;
             }
 
             // Timing Summary
-            var matches = Regex.Matches(result.TimingSummary, @"; clk   ; ([0-9\.\-]*) ; ([0-9\.\-]*)"); 
+            var matches = Regex.Matches(result.TimingSummary, @"; clk   ; ([0-9\.\-]*) ; ([0-9\.\-]*)");
             if (matches.Count > 0)
             {
                 WorstSetupSlack = decimal.Parse(matches[0].Groups[1].Value, CultureInfo.InvariantCulture);

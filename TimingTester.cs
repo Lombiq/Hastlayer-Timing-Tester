@@ -80,7 +80,7 @@ namespace HastlayerTimingTester
                                 }
                                 else //taskChoice == TaskChoice.Analyze
                                 {
-                                   decimal? dataPathDelay = null, timingWindowDiffFromRequirement = null;
+                                    decimal? dataPathDelay = null, timingWindowDiffFromRequirement = null;
                                     var useImplementationResults = false;
 
                                     if (!_testConfig.ImplementDesign &&
@@ -153,7 +153,7 @@ namespace HastlayerTimingTester
                             catch (Exception exception)
                             {
                                 if (_testConfig.DebugMode) throw;
-                                else Logger.Log("Exception happened during {0}: {1}", 
+                                else Logger.Log("Exception happened during {0}: {1}",
                                     taskChoiceString, exception.Message);
                             }
                         }

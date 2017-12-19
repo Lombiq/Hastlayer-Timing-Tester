@@ -51,7 +51,7 @@ namespace HastlayerTimingTester
         {
             var options = new ProgramOptions();
             //This is a hack but I couldn't find an easy way to display the help if no parameters are present:
-            if (args.Length == 0) args = new string[] { "--help" }; 
+            if (args.Length == 0) args = new string[] { "--help" };
             if (CommandLine.Parser.Default.ParseArguments(args, options))
             {
                 var timingTester = new TimingTester();

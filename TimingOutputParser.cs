@@ -23,7 +23,7 @@ namespace HastlayerTimingTester
         public decimal DataPathDelay { get; protected set; }
         public bool DataPathDelayAvailable { get; protected set; }
         public bool TimingSummaryAvailable { get; protected set; }
-        public decimal WorstSetupSlack { get; protected set; } 
+        public decimal WorstSetupSlack { get; protected set; }
         public decimal TotalSetupSlack { get; protected set; }
         public decimal WorstHoldSlack { get; protected set; }
         public decimal TotalHoldSlack { get; protected set; }

@@ -45,7 +45,7 @@ quit
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
-            if(testConfig.VivadoBatchMode)
+            if (testConfig.VivadoBatchMode)
                 batchWriter.FormattedWriteLine("echo \"Vivado cannot generate Schematic.pdf for designs in batch mode.\"");
             File.WriteAllText(
                 BaseDir + "\\Generate.tcl",
@@ -69,8 +69,8 @@ quit
             );
 
             batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
-            batchWriter.FormattedWriteLine("cmd /c \"{0} {1} -source ../Generate.tcl\"", 
-                _vivadoPath, (testConfig.VivadoBatchMode)?"-mode batch":"");
+            batchWriter.FormattedWriteLine("cmd /c \"{0} {1} -source ../Generate.tcl\"",
+                _vivadoPath, (testConfig.VivadoBatchMode) ? "-mode batch" : "");
             batchWriter.FormattedWriteLine("cd ..");
 
         }
@@ -78,13 +78,13 @@ quit
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
             var parser = new XilinxParser(testConfig.Frequency);
-            var synthTimingReportOutputPath = 
+            var synthTimingReportOutputPath =
                 TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingReport.txt";
-            var synthTimingSummaryOutputPath = 
+            var synthTimingSummaryOutputPath =
                 TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingSummary.txt";
-            var implTimingReportOutputPath = 
+            var implTimingReportOutputPath =
                 TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingReport.txt";
-            var implTimingSummaryOutputPath = 
+            var implTimingSummaryOutputPath =
                 TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingSummary.txt";
 
             if (phase == StaPhase.Implementation && !testConfig.ImplementDesign)
@@ -99,7 +99,7 @@ quit
                     return null;
                 }
             }
-            var result = new VivadoResult(); 
+            var result = new VivadoResult();
             result.TimingReport = File.ReadAllText(
                 (phase == StaPhase.Implementation) ? implTimingReportOutputPath : synthTimingReportOutputPath);
             result.TimingSummary = File.ReadAllText(

@@ -39,7 +39,7 @@ namespace HastlayerTimingTester
         /// <summary>VhdlTemplates: the VHDL templates that will be used for analysis.</summary>
         public List<VhdlTemplateBase> VhdlTemplates;
 
-        public VhdlOp(VhdlExpressionBase vhdlExpression, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes, 
+        public VhdlOp(VhdlExpressionBase vhdlExpression, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes,
             OutputDataTypeDelegate outputDataTypeFunction, List<VhdlTemplateBase> vhdlTemplates)
         {
             this.VhdlExpression = vhdlExpression;
