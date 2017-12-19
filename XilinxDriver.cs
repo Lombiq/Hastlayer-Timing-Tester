@@ -12,7 +12,7 @@ namespace HastlayerTimingTester
         public override bool CanStaAfterSynthesize { get { return true; } }
         public override bool CanStaAfterImplementation { get { return true; } }
 
-        public XilinxDriver(TimingTestConfigBase t, string vivadoPath) : base(t)
+        public XilinxDriver(TimingTestConfigBase testConfig, string vivadoPath) : base(testConfig)
         {
             _vivadoPath = vivadoPath;
         }
@@ -21,7 +21,7 @@ namespace HastlayerTimingTester
         /// This template is filled with data during the test, and then opened and ran by Vivado.
         /// It synthesizes the project, generates reports and a schematic diagram.
         /// </summary>
-        const string TclTemplate = @"
+        private const string _tclTemplate = @"
 set_param general.maxThreads %NUMTHREADS%
 read_vhdl UUT.vhd
 read_xdc Constraints.xdc
@@ -40,44 +40,44 @@ report_timing_summary -check_timing_verbose -file ImplTimingSummary.txt
 quit
 ";
 
-        const string XdcTemplate = "create_clock -period %CLKPERIOD% -name clk [get_ports {clk}]";
+        private const string _xdcTemplate = "create_clock -period %CLKPERIOD% -name clk [get_ports {clk}]";
 
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
-            if (testConfig.VivadoBatchMode)
+            if (_testConfig.VivadoBatchMode)
                 batchWriter.FormattedWriteLine("echo \"Vivado cannot generate Schematic.pdf for designs in batch mode.\"");
             File.WriteAllText(
                 BaseDir + "\\Generate.tcl",
-                TclTemplate
-                    .Replace("%NUMTHREADS%", testConfig.NumberOfThreads.ToString())
-                    .Replace("%PART%", testConfig.Part)
-                    .Replace("%IMPLEMENT%", (Convert.ToInt32(testConfig.ImplementDesign)).ToString())
+                _tclTemplate
+                    .Replace("%NUMTHREADS%", _testConfig.NumberOfThreads.ToString())
+                    .Replace("%PART%", _testConfig.Part)
+                    .Replace("%IMPLEMENT%", (Convert.ToInt32(_testConfig.ImplementDesign)).ToString())
             );
         }
 
         public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
         {
-            string uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
-            string xdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.xdc";
+            var uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
+            var xdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.xdc";
             File.WriteAllText(uutPath, vhdl);
             File.WriteAllText(
                 xdcPath,
                 (vhdlTemplate.HasTimingConstraints) ?
-                    XdcTemplate.Replace("%CLKPERIOD%",
-                    ((1.0m / testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture)) : ""
+                    _xdcTemplate.Replace("%CLKPERIOD%",
+                    ((1.0m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture)) : ""
             );
 
-            batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
-            batchWriter.FormattedWriteLine("cmd /c \"{0} {1} -source ../Generate.tcl\"",
-                _vivadoPath, (testConfig.VivadoBatchMode) ? "-mode batch" : "");
-            batchWriter.FormattedWriteLine("cd ..");
+            _batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
+            _batchWriter.FormattedWriteLine("cmd /c \"{0} {1} -source ../Generate.tcl\"",
+                _vivadoPath, (_testConfig.VivadoBatchMode) ? "-mode batch" : "");
+            _batchWriter.FormattedWriteLine("cd ..");
 
         }
 
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
-            var parser = new XilinxParser(testConfig.Frequency);
+            var parser = new XilinxParser(_testConfig.Frequency);
             var synthTimingReportOutputPath =
                 TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingReport.txt";
             var synthTimingSummaryOutputPath =
@@ -87,7 +87,7 @@ quit
             var implTimingSummaryOutputPath =
                 TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingSummary.txt";
 
-            if (phase == StaPhase.Implementation && !testConfig.ImplementDesign)
+            if (phase == StaPhase.Implementation && !_testConfig.ImplementDesign)
                 throw new Exception("Can't analyze for implementation if ImplementDesign is false in the config.");
 
             if (phase == StaPhase.Implementation)

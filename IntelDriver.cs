@@ -14,7 +14,7 @@ namespace HastlayerTimingTester
         public override bool CanStaAfterSynthesize { get { return false; } }
         public override bool CanStaAfterImplementation { get { return true; } }
 
-        public IntelDriver(TimingTestConfigBase t, string quartusPath) : base(t)
+        public IntelDriver(TimingTestConfigBase testConfig, string quartusPath) : base(testConfig)
         {
             _quartusPath = quartusPath;
         }
@@ -23,7 +23,7 @@ namespace HastlayerTimingTester
         /// This template is filled with data during the test, and then opened and ran by Quartus.
         /// It synthesizes and optionally implements the project.
         /// </summary>
-        const string QuartusTclTemplate = @"
+        private const string _quartusTclTemplate = @"
 # Quartus Prime: Generate Tcl File for Project
 # Load Quartus Prime Tcl Project package
 package require ::quartus::project
@@ -59,7 +59,7 @@ execute_flow -compile
 project_close
 ";
 
-        const string TimeQuestTclTemplate = @"
+        private const string _timeQuestTclTemplate = @"
 project_open -force ""tf_sample.qpf"" -revision tf_sample
 create_timing_netlist -model slow
 read_sdc
@@ -71,7 +71,7 @@ create_timing_summary -hold -multi_corner -append -file TimingSummary.txt
 create_timing_summary -mpw -multi_corner -append -file TimingSummary.txt
 ";
 
-        const string SdcTemplate = @"
+        private const string _sdcTemplate = @"
 # Time Information
 set_time_format -unit ns -decimal_places 3
 
@@ -88,7 +88,7 @@ set_clock_uncertainty -fall_from [get_clocks {clk}] -rise_to [get_clocks {clk}] 
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -setup 0.070  
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060  
 ";
-        const string CleanupScriptTemplate = @"
+        private const string _cleanupScriptTemplate = @"
 import os, shutil
 subdirs=filter(lambda x:os.path.isdir(x), os.listdir("".""))
 for subdir in subdirs:
@@ -103,39 +103,39 @@ for subdir in subdirs:
             os.unlink(path)
 ";
 
-        const string CleanupScriptName = "Cleanup.py";
+        private const string _cleanupScriptName = "Cleanup.py";
 
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
-            File.WriteAllText(BaseDir + "\\Quartus.tcl", QuartusTclTemplate);
-            File.WriteAllText(BaseDir + "\\TimeQuest.tcl", TimeQuestTclTemplate);
-            File.WriteAllText(BaseDir + "\\" + CleanupScriptName, CleanupScriptTemplate);
+            File.WriteAllText(BaseDir + "\\Quartus.tcl", _quartusTclTemplate);
+            File.WriteAllText(BaseDir + "\\TimeQuest.tcl", _timeQuestTclTemplate);
+            File.WriteAllText(BaseDir + "\\" + _cleanupScriptName, _cleanupScriptTemplate);
         }
 
         public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
         {
-            string uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
-            string sdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.sdc";
+            var uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
+            var sdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.sdc";
             File.WriteAllText(uutPath, vhdl);
-            var SdcContent = SdcTemplate
-                .Replace("%CLKPERIOD%", ((1.0m / testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture))
-                .Replace("%CLKHALFPERIOD%", ((0.5m / testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture));
-            File.WriteAllText(sdcPath, (vhdlTemplate.HasTimingConstraints) ? SdcContent : "");
+            var sdcContent = _sdcTemplate
+                .Replace("%CLKPERIOD%", ((1.0m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture))
+                .Replace("%CLKHALFPERIOD%", ((0.5m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture));
+            File.WriteAllText(sdcPath, (vhdlTemplate.HasTimingConstraints) ? sdcContent : "");
 
-            batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
-            batchWriter.FormattedWriteLine("{0}\\quartus_sh.exe -t ../Quartus.tcl", _quartusPath);
-            batchWriter.FormattedWriteLine("{0}\\quartus_sta.exe -t ../TimeQuest.tcl", _quartusPath);
-            batchWriter.FormattedWriteLine("cd ..");
+            _batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
+            _batchWriter.FormattedWriteLine("{0}\\quartus_sh.exe -t ../Quartus.tcl", _quartusPath);
+            _batchWriter.FormattedWriteLine("{0}\\quartus_sta.exe -t ../TimeQuest.tcl", _quartusPath);
+            _batchWriter.FormattedWriteLine("cd ..");
 
         }
 
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
-            var parser = new IntelParser(testConfig.Frequency);
-            var SetupReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SetupReport.txt";
-            var TimingSummaryOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\TimingSummary.txt";
-            //var MinimumPulseWidthReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\MinimumPulseWidthReport.txt";
+            var parser = new IntelParser(_testConfig.Frequency);
+            var setupReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SetupReport.txt";
+            var timingSummaryOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\TimingSummary.txt";
+            //var minimumPulseWidthReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\MinimumPulseWidthReport.txt";
 
             if (phase != StaPhase.Implementation)
             {
@@ -143,19 +143,19 @@ for subdir in subdirs:
                     "although ImplementDesign is true in the config.");
             }
 
-            var ImplementationSuccessful =
-                File.Exists(SetupReportOutputPath) && File.Exists(TimingSummaryOutputPath);
+            var implementationSuccessful =
+                File.Exists(setupReportOutputPath) && File.Exists(timingSummaryOutputPath);
 
-            if (!ImplementationSuccessful)
+            if (!implementationSuccessful)
             {
                 Logger.Log("STA failed!");
                 return null;
             }
 
             var result = new QuartusResult();
-            result.SetupReport = File.ReadAllText(SetupReportOutputPath);
-            result.TimingSummary = File.ReadAllText(TimingSummaryOutputPath);
-            //result.MinimumPulseWidthReport = File.ReadAllText(MinimumPulseWidthReportOutputPath);
+            result.SetupReport = File.ReadAllText(setupReportOutputPath);
+            result.TimingSummary = File.ReadAllText(timingSummaryOutputPath);
+            //result.MinimumPulseWidthReport = File.ReadAllText(minimumPulseWidthReportOutputPath);
             parser.Parse(result);
             return parser;
         }

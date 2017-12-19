@@ -23,7 +23,7 @@ namespace HastlayerTimingTester
 
         void PrepareAnalyze(TaskChoice taskChoice)
         {
-            string taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
+            var taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
             Logger.LogStageHeader(taskChoiceString);
             //var currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + _testConfig.Name;
 

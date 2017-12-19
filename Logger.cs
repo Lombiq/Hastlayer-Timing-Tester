@@ -19,10 +19,10 @@ namespace HastlayerTimingTester
         /// This function initializes the Logger, to open the file given in LogFilePath.
         /// (Logger already works before initialization, but it only writes to the console.)
         /// </summary>
-        static public void Init(string LogFilePath, bool CreateFile = true)
+        static public void Init(string logFilePath, bool createFile = true)
         {
-            _logStreamWriter = new StreamWriter(File.Open(LogFilePath,
-                (CreateFile) ? FileMode.Create : FileMode.Append));
+            _logStreamWriter = new StreamWriter(File.Open(logFilePath,
+                (createFile) ? FileMode.Create : FileMode.Append));
             _logStreamWriter.AutoFlush = true;
             _initialized = true;
         }
@@ -30,43 +30,43 @@ namespace HastlayerTimingTester
         /// Log writes a formatted string to both a log file (if already initialized) and the console, ending
         /// with a line break.
         /// </summary>
-        static public void Log(string Format, params object[] Objs)
+        static public void Log(string format, params object[] objs)
         {
-            LogInternal(Format, false, Objs);
+            LogInternal(format, false, objs);
         }
         /// <summary>
         /// LogInline writes a formatted string to both a log file (if already initialized) and the console.
         /// It does not end with a line break.
         /// </summary>
-        static public void LogInline(string Format, params object[] Objs)
+        static public void LogInline(string format, params object[] objs)
         {
-            LogInternal(Format, true, Objs);
+            LogInternal(format, true, objs);
         }
         /// <summary>
         /// LogInternal implements the functionality described for <see cref="Logger.Log"/> and
         /// <see cref="Logger.LogInline"/>.
         /// </summary>
-        /// <param name="Inline">It ends the line with a line break based on the Inline parameter.</param>
-        static private void LogInternal(string Format, bool Inline, params object[] Objs)
+        /// <param name="inline">It ends the line with a line break based on the Inline parameter.</param>
+        static private void LogInternal(string format, bool inline, params object[] objs)
         {
-            for (var i = 0; i < Objs.Length; i++)
+            for (var i = 0; i < objs.Length; i++)
             {
-                if (Objs[i].GetType() == typeof(decimal))
+                if (objs[i].GetType() == typeof(decimal))
                 {
-                    Objs[i] = ((decimal)Objs[i]).ToString("0.###", CultureInfo.InvariantCulture);
+                    objs[i] = ((decimal)objs[i]).ToString("0.###", CultureInfo.InvariantCulture);
                 }
             }
             if (_initialized)
             {
-                if (Inline)
+                if (inline)
                 {
-                    _logStreamWriter.Write(Format, Objs);
-                    Console.Write(Format, Objs);
+                    _logStreamWriter.Write(format, objs);
+                    Console.Write(format, objs);
                 }
                 else
                 {
-                    _logStreamWriter.WriteLine(Format, Objs);
-                    Console.WriteLine(Format, Objs);
+                    _logStreamWriter.WriteLine(format, objs);
+                    Console.WriteLine(format, objs);
                 }
             }
         }

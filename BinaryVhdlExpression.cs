@@ -8,16 +8,16 @@ namespace HastlayerTimingTester
 {
     public class BinaryOperatorVhdlExpression : VhdlExpressionBase
     {
-        string vhdlOperator;
+        private string _vhdlOperator;
 
         public BinaryOperatorVhdlExpression(string vhdlOperator)
         {
-            this.vhdlOperator = vhdlOperator;
+            this._vhdlOperator = vhdlOperator;
         }
 
         public override string GetVhdlCode(string[] inputs)
         {
-            return String.Format("{0} {1} {2}", inputs[0], vhdlOperator, inputs[1]);
+            return String.Format("{0} {1} {2}", inputs[0], _vhdlOperator, inputs[1]);
         }
     }
 }

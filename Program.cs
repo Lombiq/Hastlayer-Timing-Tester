@@ -43,9 +43,6 @@ namespace HastlayerTimingTester
 
     class Program
     {
-
-
-
         // Consume them
         static void Main(string[] args)
         {

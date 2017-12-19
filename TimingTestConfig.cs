@@ -20,7 +20,7 @@ namespace HastlayerTimingTester
             // For example, for an input size of 32, we should get "unsigned(31 downto 0)" to be pasted into the VHDL
             // template. However, if a friendly name is requested instead, "unsigned32" is returned, which can be safely
             // used in directory names.
-            List<VhdlOp.DataTypeFromSizeDelegate> SUNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate> {
+            var suNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate> {
                 (size, getFriendlyName) =>
                 {
                     return (getFriendlyName) ?
@@ -34,7 +34,7 @@ namespace HastlayerTimingTester
                         string.Format("signed({0} downto 0)", size-1);
                 }
             };
-            List<VhdlOp.DataTypeFromSizeDelegate> StdLogicVectorDataType = new List<VhdlOp.DataTypeFromSizeDelegate> {
+            var stdLogicVectorDataType = new List<VhdlOp.DataTypeFromSizeDelegate> {
                 (size, getFriendlyName) =>
                 {
                     return (getFriendlyName) ?
@@ -45,7 +45,7 @@ namespace HastlayerTimingTester
 
             // There are lists of VHDL templates below. Any of them can be used as a parameter to VhdlOp constructor.
             // (It is advised to start with the Operators variable when looking at this file.)
-            List<VhdlTemplateBase> DefaultVhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync() };
+            var defaultVhdlTemplates = new List<VhdlTemplateBase> { new VhdlTemplateSync() };
 
             // Operators is the list of operators where VhdlOp is like:
             //  new VhdlOp(string vhdlString, string friendlyName, OutputDataTypeDelegate outputDataTypeFunction)
@@ -62,26 +62,26 @@ namespace HastlayerTimingTester
             //          unsigned(63 downto 0) output if the operands are unsigned(31 downto 0).
             Operators = new List<VhdlOp>
             {
-                new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, 1), "shift_left",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, 1), "shift_right",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new UnaryOperatorVhdlExpression("not"),    "not",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("and"),   "and",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("nand"),  "nand", StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("or"),    "or",   StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("nor"),   "nor",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("xor"),   "xor",  StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("xnor"),  "xnor", StdLogicVectorDataType, VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("+"),     "add",  SUNumericDataTypes,     VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression(">"),     "gt",   SUNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("<"),     "lt",   SUNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression(">="),    "ge",   SUNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("<="),    "le",   SUNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("="),     "eq",   SUNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("/="),    "neq",  SUNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("-"),     "sub",  SUNumericDataTypes,     VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("/"),     "div",  SUNumericDataTypes,     VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("*"),     "mul",  SUNumericDataTypes,     VhdlOp.DoubleSizedOutput,         DefaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("mod"),   "mod",  SUNumericDataTypes,     VhdlOp.SameOutputDataType,        DefaultVhdlTemplates),
+                new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, 1), "shift_left",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, 1), "shift_right",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new UnaryOperatorVhdlExpression("not"),    "not",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("and"),   "and",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("nand"),  "nand", stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("or"),    "or",   stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("nor"),   "nor",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("xor"),   "xor",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("xnor"),  "xnor", stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("+"),     "add",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression(">"),     "gt",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("<"),     "lt",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression(">="),    "ge",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("<="),    "le",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("="),     "eq",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("/="),    "neq",  suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("-"),     "sub",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("/"),     "div",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("*"),     "mul",  suNumericDataTypes,     VhdlOp.DoubleSizedOutput,         defaultVhdlTemplates),
+                new VhdlOp(new BinaryOperatorVhdlExpression("mod"),   "mod",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
             };
 
             // InputSizes is the list of input sizes for the data type that we want to test

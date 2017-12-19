@@ -7,15 +7,15 @@ namespace HastlayerTimingTester
     public abstract class FpgaVendorDriver
     {
 
-        protected TimingTestConfigBase testConfig;
-        protected StreamWriter batchWriter;
+        protected TimingTestConfigBase _testConfig;
+        protected StreamWriter _batchWriter;
         public string BaseDir;
         public abstract bool CanStaAfterSynthesize { get; }
         public abstract bool CanStaAfterImplementation { get; }
 
         public FpgaVendorDriver(TimingTestConfigBase testConfig)
         {
-            this.testConfig = testConfig;
+            _testConfig = testConfig;
         }
 
         public abstract void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate);
@@ -23,7 +23,7 @@ namespace HastlayerTimingTester
 
         public virtual void InitPrepare(StreamWriter batchWriter)
         {
-            this.batchWriter = batchWriter;
+            _batchWriter = batchWriter;
         }
     }
     public static class StreamWriterExtension

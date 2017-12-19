@@ -52,7 +52,7 @@ namespace HastlayerTimingTester
         public decimal NanosecondToClockPeriod(decimal ns) { return (ns * 1.0e-9m) / (1.0m / ClockFrequency); }
         public decimal InMHz(decimal fHz) { return fHz / 1e6m; } // Hz to MHz
 
-        public void PrintParsedTimingReport(string Marker = "")
+        public void PrintParsedTimingReport(string marker = "")
         {
             Logger.Log("Timing Report:");
             if (DataPathDelayAvailable)
@@ -61,7 +61,7 @@ namespace HastlayerTimingTester
                     DataPathDelay,
                     NanosecondToClockPeriod(DataPathDelay),
                     InMHz(ClockFrequency),
-                    Marker
+                    marker
                 );
             if (ExtendedSyncParametersAvailable)
             {
@@ -80,7 +80,7 @@ namespace HastlayerTimingTester
                     NanosecondToClockPeriod(TimingWindowDiffFromRequirement),
                     InMHz(ClockFrequency),
                     InMHz(MaxClockFrequency),
-                    Marker
+                    marker
                     );
             }
         }
