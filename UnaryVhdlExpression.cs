@@ -15,9 +15,6 @@ namespace HastlayerTimingTester
             this.vhdlOperator = vhdlOperator;
         }
 
-        public override string GetVhdlCode(string[] inputs)
-        {
-            return String.Format("{0} {1}", vhdlOperator, inputs[0]);
-        }
+        public override string GetVhdlCode(string[] inputs) => String.Format("{0} {1}", vhdlOperator, inputs[0]);
     }
 }

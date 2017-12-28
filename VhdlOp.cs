@@ -60,10 +60,7 @@ namespace HastlayerTimingTester
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName
-        )
-        {
-            return inputDataTypeFunction(inputSize, getFriendlyName);
-        }
+        ) => inputDataTypeFunction(inputSize, getFriendlyName);
 
         /// <summary>
         /// ComparisonWithBoolOutput is used for operators that strictly have boolean as their output data type
@@ -73,10 +70,7 @@ namespace HastlayerTimingTester
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName
-        )
-        {
-            return "boolean";
-        }
+        ) => "boolean";
 
         /// <summary>
         /// DoubleSizedOutput is used for operators whose output is the same type as their input, but with
@@ -86,10 +80,7 @@ namespace HastlayerTimingTester
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName
-        )
-        {
-            return inputDataTypeFunction(inputSize * 2, getFriendlyName);
-        }
+        ) => inputDataTypeFunction(inputSize * 2, getFriendlyName);
     }
 
 }

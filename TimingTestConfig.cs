@@ -86,7 +86,6 @@ namespace HastlayerTimingTester
 
             // InputSizes is the list of input sizes for the data type that we want to test
             InputSizes = new List<int> { 1, 8, 16, 32, 64, 128 };
-            //InputSizes = new List<int> { 8, 16, 32 };
 
             Part = "xc7a100tcsg324-1"; // The FPGA part number (only used for Xilinx devices)
 
@@ -100,7 +99,7 @@ namespace HastlayerTimingTester
 
             // This selects for which FPGA vendor do we want to run the timing test. 
             // XilinxDriver supports Vivado.
-            //Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
+            // Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
 
             // IntelDriver supports Quartus and TimeQuest.
             Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
@@ -117,8 +116,8 @@ namespace HastlayerTimingTester
             // If it is false, Vivado will only do synthesis + STA, and skip implementation + STA.
             ImplementDesign = true;
 
-            //It sets the number of threads used during simulation, if the FPGA vendor tools supports it. 
-            //(Currently only Vivado supports multithreading.)
+            // It sets the number of threads used during simulation, if the FPGA vendor tools supports it. 
+            // (Currently only Vivado supports multithreading.)
             NumberOfThreads = 8;
         }
     }

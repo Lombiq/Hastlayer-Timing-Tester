@@ -35,6 +35,6 @@ end imp;";
             HasTimingConstraints = false;
         }
 
-        override public string Name { get { return "comb"; } }
+        override public string Name { get => "comb"; }
     }
 }

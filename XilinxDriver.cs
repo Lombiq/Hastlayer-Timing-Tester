@@ -9,8 +9,8 @@ namespace HastlayerTimingTester
     public class XilinxDriver : FpgaVendorDriver
     {
         private string _vivadoPath;
-        public override bool CanStaAfterSynthesize { get { return true; } }
-        public override bool CanStaAfterImplementation { get { return true; } }
+        public override bool CanStaAfterSynthesize { get => true; }
+        public override bool CanStaAfterImplementation { get => true; }
 
         public XilinxDriver(TimingTestConfigBase testConfig, string vivadoPath) : base(testConfig)
         {

@@ -31,26 +31,21 @@ namespace HastlayerTimingTester
         public decimal TotalPulseWidthSlack { get; protected set; }
         public bool DesignMetTimingRequirements
         {
-            get
-            {
-                return TimingSummaryAvailable && TotalSetupSlack == 0 &&
-                    TotalHoldSlack == 0 &&
-                    TotalPulseWidthSlack == 0;
-            }
+            get => TimingSummaryAvailable && TotalSetupSlack == 0 && TotalHoldSlack == 0 && TotalPulseWidthSlack == 0;
         }
         public decimal RequirementPlusDelays { get; protected set; }
         public decimal Requirement { get; protected set; }
         public decimal SourceClockDelay { get; protected set; }
         protected int _extendedSyncParametersCount;
-        private bool ExtendedSyncParametersAvailable { get { return _extendedSyncParametersCount == 3; } }
-        public decimal TimingWindowAvailable { get { return RequirementPlusDelays - SourceClockDelay; } }
-        public decimal TimingWindowDiffFromRequirement { get { return TimingWindowAvailable - Requirement; } }
+        private bool ExtendedSyncParametersAvailable { get => _extendedSyncParametersCount == 3; }
+        public decimal TimingWindowAvailable { get => RequirementPlusDelays - SourceClockDelay; }
+        public decimal TimingWindowDiffFromRequirement { get => TimingWindowAvailable - Requirement; }
         public decimal MaxClockFrequency
         {
-            get { return 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m); }
+            get => 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m); 
         }
-        public decimal NanosecondToClockPeriod(decimal ns) { return (ns * 1.0e-9m) / (1.0m / ClockFrequency); }
-        public decimal InMHz(decimal fHz) { return fHz / 1e6m; } // Hz to MHz
+        public decimal NanosecondToClockPeriod(decimal ns) => (ns * 1.0e-9m) / (1.0m / ClockFrequency);
+        public decimal InMHz(decimal fHz) => fHz / 1e6m; // Hz to MHz
 
         public void PrintParsedTimingReport(string marker = "")
         {

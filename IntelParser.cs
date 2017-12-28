@@ -13,7 +13,6 @@ namespace HastlayerTimingTester
     {
         public string SetupReport;
         public string TimingSummary;
-        //public string MinimumPulseWidthReport;
     }
 
     /// <summary>

@@ -11,8 +11,8 @@ namespace HastlayerTimingTester
     public class IntelDriver : FpgaVendorDriver
     {
         private string _quartusPath;
-        public override bool CanStaAfterSynthesize { get { return false; } }
-        public override bool CanStaAfterImplementation { get { return true; } }
+        public override bool CanStaAfterSynthesize { get => false; }
+        public override bool CanStaAfterImplementation { get => true; }
 
         public IntelDriver(TimingTestConfigBase testConfig, string quartusPath) : base(testConfig)
         {
@@ -135,7 +135,6 @@ for subdir in subdirs:
             var parser = new IntelParser(_testConfig.Frequency);
             var setupReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SetupReport.txt";
             var timingSummaryOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\TimingSummary.txt";
-            //var minimumPulseWidthReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\MinimumPulseWidthReport.txt";
 
             if (phase != StaPhase.Implementation)
             {
@@ -155,7 +154,6 @@ for subdir in subdirs:
             var result = new QuartusResult();
             result.SetupReport = File.ReadAllText(setupReportOutputPath);
             result.TimingSummary = File.ReadAllText(timingSummaryOutputPath);
-            //result.MinimumPulseWidthReport = File.ReadAllText(minimumPulseWidthReportOutputPath);
             parser.Parse(result);
             return parser;
         }

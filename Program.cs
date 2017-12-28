@@ -34,11 +34,8 @@ namespace HastlayerTimingTester
         public IParserState LastParserState { get; set; }
 
         [HelpOption]
-        public string GetUsage()
-        {
-            return HelpText.AutoBuild(this,
-              (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
-        }
+        public string GetUsage() =>
+             HelpText.AutoBuild(this, (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
     }
 
     class Program
