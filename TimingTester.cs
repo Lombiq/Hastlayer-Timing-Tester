@@ -25,7 +25,6 @@ namespace HastlayerTimingTester
         {
             var taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
             Logger.LogStageHeader(taskChoiceString);
-            //var currentTestDirectoryName = DateTime.Now.ToString("yyyy-MM-dd__HH-mm-ss") + "__" + _testConfig.Name;
 
             StreamWriter batchWriter = null, resultsWriter = null;
             if (taskChoice == TaskChoice.Prepare)
@@ -78,7 +77,7 @@ namespace HastlayerTimingTester
                                             op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs));
                                     _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
                                 }
-                                else //taskChoice == TaskChoice.Analyze
+                                else // if taskChoice == TaskChoice.Analyze
                                 {
                                     decimal? dataPathDelay = null, timingWindowDiffFromRequirement = null;
                                     var useImplementationResults = false;
@@ -173,7 +172,7 @@ namespace HastlayerTimingTester
         /// </summary>
         public void DoTest(TimingTestConfigBase testConfig, ProgramOptions options)
         {
-            //Commandline options
+            // Command-line options
             if (options.All) options.Analyze = options.ExecSta = options.Prepare = true;
             if (options.AllRemoteSta)
             {
@@ -227,14 +226,5 @@ namespace HastlayerTimingTester
         }
 
     }
-
-
-    /// <summary>Copies the given file from VivadoFiles to the output directory of the current test.</summary>
-    /*
-    void CopyFileToOutputDir(string inputPath)
-    {
-        File.Copy(inputPath, CurrentTestOutputDirectory + "\\" + Path.GetFileName(inputPath));
-    }
-    */
 
 }
