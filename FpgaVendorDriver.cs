@@ -30,7 +30,7 @@ namespace HastlayerTimingTester
     {
         public static void FormattedWriteLine(this StreamWriter writer, string format, params Object[] args)
         {
-            writer.WriteLine(String.Format(format, args));
+            writer.WriteLine(string.Format(format, args));
         }
     }
 }

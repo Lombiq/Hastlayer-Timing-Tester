@@ -197,7 +197,7 @@ namespace HastlayerTimingTester
             if (options.ExecSta) ExecSta();
             if (options.AllRemoteSta)
             {
-                Console.WriteLine(String.Format("\r\nWaiting for user to run tests and overwrite the result in {0}\r\n",
+                Console.WriteLine(string.Format("\r\nWaiting for user to run tests and overwrite the result in {0}\r\n",
                     CurrentTestBaseDirectory));
                 Console.ReadKey();
             }

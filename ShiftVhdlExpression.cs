@@ -22,10 +22,8 @@ namespace HastlayerTimingTester
             _amount = amount;
         }
 
-        public override string GetVhdlCode(string[] inputs)
-        {
-            return String.Format("std_logic_vector(shift_{0}(unsigned({1}),{2}))",
+        public override string GetVhdlCode(string[] inputs) =>
+            string.Format("std_logic_vector(shift_{0}(unsigned({1}),{2}))",
                 (_direction == Direction.Left) ? "left" : "right", inputs[0], _amount);
-        }
     }
 }

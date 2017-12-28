@@ -22,25 +22,20 @@ namespace HastlayerTimingTester
             // used in directory names.
             var suNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate> {
                 (size, getFriendlyName) =>
-                {
-                    return (getFriendlyName) ?
+                    (getFriendlyName) ?
                         string.Format("unsigned{0}", size) :
-                        string.Format("unsigned({0} downto 0)", size-1);
-                },
+                        string.Format("unsigned({0} downto 0)", size-1)
+                ,
                 (size, getFriendlyName) =>
-                {
-                    return (getFriendlyName) ?
+                    (getFriendlyName) ?
                         string.Format("signed{0}", size) :
-                        string.Format("signed({0} downto 0)", size-1);
-                }
+                        string.Format("signed({0} downto 0)", size-1)
             };
             var stdLogicVectorDataType = new List<VhdlOp.DataTypeFromSizeDelegate> {
                 (size, getFriendlyName) =>
-                {
-                    return (getFriendlyName) ?
-                    string.Format("std_logic_vector{0}", size) :
-                    string.Format("std_logic_vector({0} downto 0)", size-1);
-                }
+                    (getFriendlyName) ?
+                        string.Format("std_logic_vector{0}", size) :
+                        string.Format("std_logic_vector({0} downto 0)", size-1)
             };
 
             // There are lists of VHDL templates below. Any of them can be used as a parameter to VhdlOp constructor.

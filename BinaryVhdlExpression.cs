@@ -16,6 +16,6 @@ namespace HastlayerTimingTester
         }
 
         public override string GetVhdlCode(string[] inputs) =>
-            String.Format("{0} {1} {2}", inputs[0], _vhdlOperator, inputs[1]);
+            string.Format("{0} {1} {2}", inputs[0], _vhdlOperator, inputs[1]);
     }
 }
