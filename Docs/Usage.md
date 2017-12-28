@@ -144,7 +144,7 @@ However, it raises even more questions:
 * **Q:** Is it valid to add up Data Path Delays this way? A Data Path Delays for each operation correspond to their critical paths. Nothing ensures that using multiple operations after each other will connect the critical paths together.
 * **A:** Yes, but it is not likely that multiple operations after each other will have a longer critical path than the sum of the lengths of their separate critical paths.
 
-bq. **Note:** the TWDFR value in `Results.tsv` is normally a negative number. It is used just opposite to the value shown on the images above. We need to add this negative number to the clock cycle duration (also called *Requirement*) to get the duration of the *Timing Window*, in which the sum of the DPD of all operations in a given cycle need to fit into.
+> **Note:** the TWDFR value in `Results.tsv` is normally a negative number. It is used just opposite to the value shown on the images above. We need to add this negative number to the clock cycle duration (also called *Requirement*) to get the duration of the *Timing Window*, in which the sum of the DPD of all operations in a given cycle need to fit into.
 
 ## Limitations of the analysis
 
