@@ -40,7 +40,7 @@ namespace HastlayerTimingTester
             {
                 resultsWriter = new StreamWriter(File.Open(CurrentTestBaseDirectory + "\\Results.tsv", FileMode.Create));
                 resultsWriter.AutoFlush = true;
-                resultsWriter.Write("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWD\r\n");
+                resultsWriter.Write("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWDFR\r\n");
             }
 
             foreach (var op in _testConfig.Operators)
