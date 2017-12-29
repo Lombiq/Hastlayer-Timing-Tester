@@ -1,9 +1,3 @@
-using System;
-using System.Globalization;
-using System.Linq;
-using System.Text.RegularExpressions;
-
-
 namespace HastlayerTimingTester
 {
     /// <summary>This is a VHDL template using the operator in a sequential, synchronous logic design.</summary>
