@@ -1,5 +1,7 @@
 # Usage
 
+
+
 ## What you will need
 
 Hastlayer Timing Tester requires **Visual Studio Community Edition 2017 (Version 15.4.4)** to run. (You will need to recompile the project from sources if you edit the configuration.)
@@ -10,6 +12,7 @@ On Microsoft Catapult, you will need **Altera (Intel) Quartus Prime and TimeQues
 
 > While cloning the repository or unpacking the project, make sure that there are no special characters in the path (as Vivado cannot handle them, e.g. it can fail with: `TclStackFree: incorrect freePtr. Call out of sequence?`).
 
+
 ## How to configure
 
 To configure Hastlayer Timing Tester, you will have to edit the source file `TimingTestConfig.cs`, the options of which are detailed in comments.
@@ -18,7 +21,8 @@ To configure Hastlayer Timing Tester, you will have to edit the source file `Tim
 
 > You can generate different configurations by adding new classes that have `TimingTestConfigBase` as their parent. However, the class to be used is specified in `Main()` in `Program.cs`.
 
-# How to run
+# How t
+o run
 
 After building the project, you can run `HastlayerTimingTester.exe`, which is a console application that has some command line parameters, as detailed below. 
 
@@ -34,6 +38,7 @@ The `--all` or `-x` switch runs all the steps above (1-3).
 
 The `--all-remote-sta` or `-r` switch runs step 1, then waits for the user to run the script manually on the local or remote machine, then runs step 3.
 
+
 # Operation
 
 Hastlayer Timing Tester will go through:
@@ -44,6 +49,7 @@ Hastlayer Timing Tester will go through:
 * each VHDL template,
 
 ...and generates, runs, then analyzes tests for all combinations of them.
+
 
 ## Output
 
@@ -100,6 +106,7 @@ Timing Summary:
 
 The important values that the Transformer can make use of are prefixed with `>>`.
 
+
 ## What does this mean at all?
 
 Some of these values are explained in the [introduction](Introduction.md), make sure to read it first.
@@ -146,6 +153,7 @@ However, it raises even more questions:
 
 > **Note:** the TWDFR value in `Results.tsv` is normally a negative number. It is used just opposite to the value shown on the images above. We need to add this negative number to the clock cycle duration (also called *Requirement*) to get the duration of the *Timing Window*, in which the sum of the DPD of all operations in a given cycle need to fit into.
 
+
 ## Limitations of the analysis
 
 When the synthesis ends, we know how many hardware resources will be used (e.g. LUT, FDRE, DSP48E, etc.) and how they will be connected together. However, mapping these resources to real hardware has not been done yet.
@@ -160,7 +168,7 @@ In this case, the negative setup slack is ~20ns worse in the implemented design.
 
 Sometimes the critical path will change to a different one after implementation, because it turns out that other path happens to be worse after place and route.
 
-The Haslayer Timing Tester tool gets the generated test code synhesized and implemented with Vivado, and checks STA at both stages. It uses the results acquired from the implementation stage unless Vivado failed to implement the design, or if `DPD + TWDFR` is higher for synthesis. The source of the results is clearly visible in `Results.tsv`. 
+The Haslayer Timing Tester tool gets the generated test code synthesized and implemented with Vivado, and checks STA at both stages. It uses the results acquired from the implementation stage unless Vivado failed to implement the design, or if `DPD + TWDFR` is higher for synthesis. The source of the results is clearly visible in `Results.tsv`. 
 
 However, if the project size increases (e.g. by adding the Microblaze soft CPU and other IP cores that are required to run Hastlayer), it will make the compiler think harder to get everything routed, and often it will use more net resources, thus include more delays in the design. This behaviour can not be easily tested or approximated yet, because it depends very much on all the other logic used in the project.
 
@@ -171,6 +179,7 @@ However, if the project size increases (e.g. by adding the Microblaze soft CPU a
 Another limitation of this tool is not doing any further analysis on hold time and minimum pulse width violations (although these are reported). However, we have not had problems related to these in Hastlayer yet.
 
 Additional research has been carried out about hold violations, the result of which can be found on the [Lombiq Wiki (Timing on Catapult)](https://lombiq.atlassian.net/wiki/spaces/HAST/pages/186744859/Timing+on+Catapult).
+
 
 ## The meaning of other parameters
 

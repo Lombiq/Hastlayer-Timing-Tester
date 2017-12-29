@@ -1,5 +1,7 @@
 # Introduction
 
+
+
 ## What does Hastlayer Timing Tester do?
 
 Hastlayer Timing Tester is for automatically determining how certain VHDL operators will behave with regards to timing.  
@@ -8,6 +10,7 @@ Hastlayer Timing Tester is for automatically determining how certain VHDL operat
 * It uses the Static Timing Analysis (STA) engine in Vivado to get the timing information.  
 * It helps us to avoid setup time violations in the generated Hastlayer hardware design.
 
+
 ## What problem does it solve?
 
 To understand the basic concepts, read [this guide](https://embeddedmicro.com/tutorials/mojo/timing).
@@ -15,6 +18,7 @@ To understand the basic concepts, read [this guide](https://embeddedmicro.com/tu
 In very short, the compiler maps the VHDL/Verilog code to hardware resources in the FPGA. These resources (including CLBs, BRAMs, DSP slices, etc.) consist of transistors at the very low level.
 
 **Transistors need some time to switch on/off** because the parasitic capacitances in the electronic circuit on silicon need to charge or discharge. This has always been one of the limiting factors of the maximum computing speed.  
+
 
 ## Why is timing important?
 
@@ -93,13 +97,13 @@ Okay, so we see that the signal arrives on time to the D input of the second fli
 
 ----
 
-Now let's see what happens if we subsitute the `+` operation with `mod`?
+Now let's see what happens if we substitute the `+` operation with `mod`?
 
     c <= a mod b; -- all operands are unsigned(31 downto 0)
 
 The given part of the system will look like this:
 
-![Schematic of mod operation for unsiged 32-bit operands](Images/SchematicOfModUnsigned32.png)
+![Schematic of mod operation for unsigned 32-bit operands](Images/SchematicOfModUnsigned32.png)
 
 Wow, that's quite complex. And it takes more that 80 ns for the signal to propagate through it.
 
@@ -115,6 +119,7 @@ It is likely that `c` will contain an incorrect value. Or it might not.
 It can also happen the output is incorrect for some inputs, but it isn't for others.
 
 This type of error is called a **setup time violation**. (In FPGA designs, there are other possible timing errors in general, but this is the type of error that Hastlayer Timing Tester helps to fix.)
+
 
 ## How do we know that we have such an error in our design?
 
