@@ -22,8 +22,7 @@ namespace HastlayerTimingTester
                 (size, getFriendlyName) =>
                     (getFriendlyName) ?
                         string.Format("unsigned{0}", size) :
-                        string.Format("unsigned({0} downto 0)", size-1)
-                ,
+                        string.Format("unsigned({0} downto 0)", size-1),
                 (size, getFriendlyName) =>
                     (getFriendlyName) ?
                         string.Format("signed{0}", size) :

@@ -21,5 +21,4 @@ namespace HastlayerTimingTester
         public int NumberOfThreads;
         public FpgaVendorDriver Driver;
     }
-
 }

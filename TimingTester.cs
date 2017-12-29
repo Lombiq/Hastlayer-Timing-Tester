@@ -211,7 +211,7 @@ namespace HastlayerTimingTester
             Logger.LogStageHeader("execute-sta");
             var cp = new Process();
             cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                "\\" + TimingTester.CurrentTestBaseDirectory;
+                "\\" + CurrentTestBaseDirectory;
             cp.StartInfo.FileName = cp.StartInfo.WorkingDirectory + "\\Run.bat";
             cp.StartInfo.UseShellExecute = false;
             cp.StartInfo.CreateNoWindow = false;
@@ -219,7 +219,5 @@ namespace HastlayerTimingTester
             cp.Start();
             cp.WaitForExit();
         }
-
     }
-
 }
