@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Lombiq Technologies Ltd.")]
 [assembly: AssemblyProduct("HastlayerTimingTester")]
-[assembly: AssemblyCopyright("Copyright © Lombiq Technologies Ltd. 2016")]
+[assembly: AssemblyCopyright("Copyright © Lombiq Technologies Ltd. 2018")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
