@@ -14,7 +14,7 @@
         }
 
         /// <summary>
-        /// It returns VHDL code for the binary operator.
+        /// Returns VHDL code for the binary operator.
         /// </summary>
         /// <param name="inputs">are the two operands for the operator.</param>
         public override string GetVhdlCode(string[] inputs) =>

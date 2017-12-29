@@ -4,8 +4,7 @@ namespace HastlayerTimingTester
 {
 
     /// <summary>
-    /// This is the base class for configuration. For more information, check the
-    /// <see cref="TimingTestConfig" /> subclass.
+    /// Base class for configuration. For more information, check the <see cref="TimingTestConfig" /> subclass.
     /// </summary>
     public abstract class TimingTestConfigBase
     {

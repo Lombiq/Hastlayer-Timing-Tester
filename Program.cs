@@ -3,9 +3,7 @@ using CommandLine.Text;
 
 namespace HastlayerTimingTester
 {
-    /// <summary>
-    /// These are the options for the command-line argument parser (CommandLine). 
-    /// </summary>
+    /// <summary>Options for the command-line argument parser (CommandLine).</summary>
     class ProgramOptions
     {
         [Option('p', "prepare", Required = false, DefaultValue = false,
@@ -47,7 +45,7 @@ namespace HastlayerTimingTester
             var options = new ProgramOptions();
             // This is a hack but I couldn't find an easy way to display the help if no parameters are present:
             if (args.Length == 0) args = new string[] { "--help" };
-            if (CommandLine.Parser.Default.ParseArguments(args, options))
+            if (Parser.Default.ParseArguments(args, options))
             {
                 var timingTester = new TimingTester();
                 var test = new TimingTestConfig();

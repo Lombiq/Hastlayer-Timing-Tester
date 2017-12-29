@@ -5,7 +5,7 @@ using System.IO;
 namespace HastlayerTimingTester
 {
     /// <summary>
-    /// This is a driver for the Xilinx FPGA tools (Vivado).
+    /// Driver for the Xilinx FPGA tools (Vivado).
     /// For example, it contains templates for files to be generated for these tools.
     /// </summary>
     public class XilinxDriver : FpgaVendorDriver
@@ -29,7 +29,7 @@ namespace HastlayerTimingTester
         }
 
         /// <summary>
-        /// This template is filled with data, and then later opened and ran by Vivado.
+        /// To be filled with data, and then later opened and ran by Vivado.
         /// It synthesizes and optionally implements the project, generates reports and a schematic diagram.
         /// </summary>
         private const string _tclTemplate = @"
@@ -51,7 +51,7 @@ report_timing_summary -check_timing_verbose -file ImplTimingSummary.txt
 quit
 ";
         /// <summary>
-        /// This is a template for the constraints file.
+        /// Template for the constraints file.
         /// </summary>
         private const string _xdcTemplate = "create_clock -period %CLKPERIOD% -name clk [get_ports {clk}]";
 

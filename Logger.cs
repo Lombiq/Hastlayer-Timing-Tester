@@ -18,7 +18,7 @@ namespace HastlayerTimingTester
 
 
         /// <summary>
-        /// This function initializes the Logger, to open the file given in LogFilePath.
+        /// Initializes the Logger, to open the file given in LogFilePath.
         /// (Logger already works before initialization, but it only writes to the console.)
         /// </summary>
         public static void Init(string logFilePath, bool createFile = true)
@@ -30,7 +30,7 @@ namespace HastlayerTimingTester
         }
 
         /// <summary>
-        /// Log writes a formatted string to both a log file (if already initialized) and the console, ending
+        /// Writes a formatted string to both a log file (if already initialized) and the console, ending
         /// with a line break.
         /// </summary>
         public static void Log(string format, params object[] objs)
@@ -39,7 +39,7 @@ namespace HastlayerTimingTester
         }
 
         /// <summary>
-        /// LogInline writes a formatted string to both a log file (if already initialized) and the console.
+        /// Writes a formatted string to both a log file (if already initialized) and the console.
         /// It does not end with a line break.
         /// </summary>
         public static void LogInline(string format, params object[] objs)
@@ -48,7 +48,7 @@ namespace HastlayerTimingTester
         }
 
         /// <summary>
-        /// It writes a header to the log and screen for a given processing stage of Hastlayer Timing Tester, 
+        /// Writes a header to the log and screen for a given processing stage of Hastlayer Timing Tester, 
         /// which can be specified as an input parameter (stage).
         /// </summary>
         public static void LogStageHeader(string stage)
@@ -59,10 +59,9 @@ namespace HastlayerTimingTester
 
 
         /// <summary>
-        /// LogInternal implements the functionality described for <see cref="Logger.Log"/> and
-        /// <see cref="Logger.LogInline"/>.
+        /// Implements the functionality described for <see cref="Logger.Log"/> and <see cref="Logger.LogInline"/>.
         /// </summary>
-        /// <param name="inline">It ends the line with a line break based on the Inline parameter.</param>
+        /// <param name="inline">ends the line with a line break based on the Inline parameter.</param>
         private static void LogInternal(string format, bool inline, params object[] objs)
         {
             for (var i = 0; i < objs.Length; i++)

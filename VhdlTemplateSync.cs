@@ -1,7 +1,7 @@
 namespace HastlayerTimingTester
 {
     /// <summary>
-    /// This is a VHDL template using the expression to test in a sequential, synchronous logic design.
+    /// A VHDL template using the expression to test in a sequential, synchronous logic design.
     /// </summary>
     class VhdlTemplateSync : VhdlTemplateBase
     {

@@ -5,7 +5,7 @@ using System.IO;
 namespace HastlayerTimingTester
 {
     /// <summary>
-    /// This is a driver for the Intel/Altera FPGA tools. 
+    /// A driver for the Intel/Altera FPGA tools. 
     /// For example, it contains templates for files to be generated for these tools.
     /// </summary>
     public class IntelDriver : FpgaVendorDriver
@@ -29,8 +29,8 @@ namespace HastlayerTimingTester
         }
 
         /// <summary>
-        /// This template is filled with data, to be later opened and ran by Quartus.
-        /// It synthesizes and implements the project.
+        /// Template to be filled with data, to be later opened and ran by Quartus.
+        /// Synthesizes and implements the project.
         /// </summary>
         private const string _quartusTclTemplate = @"
 # Quartus Prime: Generate Tcl File for Project
@@ -69,7 +69,7 @@ project_close
 ";
 
         /// <summary>
-        /// This template is filled with data to be opened and ran by TimeQuest later.
+        /// Template to be filled with data, to be opened and ran by TimeQuest later.
         /// </summary>
         private const string _timeQuestTclTemplate = @"
 project_open -force ""tf_sample.qpf"" -revision tf_sample
@@ -84,7 +84,7 @@ create_timing_summary -mpw -multi_corner -append -file TimingSummary.txt
 ";
 
         /// <summary>
-        /// This is a template for the constraints file.
+        /// Template for the constraints file.
         /// </summary>
         private const string _sdcTemplate = @"
 # Time Information
@@ -104,7 +104,7 @@ set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] 
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060  
 ";
         /// <summary>
-        /// This is a cleanup script that can remove unnecessary files generated during compilation/STA 
+        /// Cleanup script that can remove unnecessary files generated during compilation/STA 
         /// from each test subdirectory. Only files needed for Timing Tester remain. 
         /// It is useful to run it before transferring the test results from a remote machine, because Quartus
         /// generates a few gigabytes of data we don't need.

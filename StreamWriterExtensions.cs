@@ -4,7 +4,7 @@ using System.IO;
 namespace HastlayerTimingTester
 {
     /// <summary>
-    /// This is for easily printing formatted strings to log / screen.
+    /// For easily printing formatted strings to log / screen.
     /// </summary>
     internal static class StreamWriterExtension
     {

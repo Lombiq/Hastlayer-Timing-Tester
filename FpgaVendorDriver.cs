@@ -4,7 +4,7 @@ using System.IO;
 namespace HastlayerTimingTester
 {
     /// <summary>
-    /// This is the base class of drivers for FPGA vendor tools (compilation, STA).
+    /// The base class of drivers for FPGA vendor tools (compilation, STA).
     /// </summary>
     public abstract class FpgaVendorDriver
     {
@@ -14,10 +14,10 @@ namespace HastlayerTimingTester
         /// <summary>The current test base directory.</summary>
         public string BaseDir;
 
-        /// <summary>It tells whether the tool can run STA after synthesis.</summary>
+        /// <summary>Tells whether the tool can run STA after synthesis.</summary>
         public abstract bool CanStaAfterSynthesize { get; }
 
-        /// <summary>It tells whether the tool can run STA after implementation.</summary>
+        /// <summary>Tells whether the tool can run STA after implementation.</summary>
         public abstract bool CanStaAfterImplementation { get; }
 
 

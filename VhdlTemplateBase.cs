@@ -12,12 +12,12 @@ namespace HastlayerTimingTester
         public bool HasTimingConstraints { get; protected set; }
 
         /// <summary>
-        /// The name of the VHDL template, which will be used in e.g. the results and the test directory names.
+        /// Name of the VHDL template, which will be used in e.g. the results and the test directory names.
         /// </summary>
         abstract public string Name { get; }
 
         /// <summary>
-        /// These are the names of the input signals/variables in the template for the <see cref="VhdlOp"/>.
+        /// Names of the input signals/variables in the template for the <see cref="VhdlOp"/>.
         /// </summary>
         public string[] ExpressionInputs { get; protected set; }
     }

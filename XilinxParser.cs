@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace HastlayerTimingTester
 {
-    /// <summary>This is for passing the data output by Vivado into TimingOutputParser.</summary>
+    /// <summary>For passing the data output by Vivado into TimingOutputParser.</summary>
     public struct VivadoResult
     {
         public string TimingReport;
@@ -13,7 +13,7 @@ namespace HastlayerTimingTester
     }
 
     /// <summary>
-    /// This is a parser for Vivado static timing analysis output. 
+    /// Parser for Vivado static timing analysis output. 
     /// </summary>
     class XilinxParser : TimingOutputParser
     {
@@ -21,7 +21,7 @@ namespace HastlayerTimingTester
         public XilinxParser(decimal clockFrequency) : base(clockFrequency) { }
 
         /// <summary>
-        /// It parses the STA output of Vivado. 
+        /// Parses the STA output of Vivado. 
         /// </summary>
         public void Parse(VivadoResult result)
         {

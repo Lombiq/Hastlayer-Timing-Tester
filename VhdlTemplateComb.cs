@@ -1,7 +1,7 @@
 namespace HastlayerTimingTester
 {
     /// <summary>
-    /// This is a VHDL template using the expression to test in an combinatorial logic design. This means that 
+    /// A VHDL template using the expression to test in an combinatorial logic design. This means that 
     /// there is no clock signal or flip-flops in the design, and the output is never fed back to the input.
     /// </summary>
     class VhdlTemplateComb : VhdlTemplateBase

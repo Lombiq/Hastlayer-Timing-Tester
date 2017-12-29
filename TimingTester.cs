@@ -6,7 +6,7 @@ using System.Reflection;
 namespace HastlayerTimingTester
 {
 
-    /// <summary>This class implements the core functionality of the Hastlayer Timing Tester application.</summary>
+    /// <summary>Implements the core functionality of the Hastlayer Timing Tester application.</summary>
     class TimingTester
     {
         private TimingTestConfigBase _testConfig;
@@ -21,9 +21,9 @@ namespace HastlayerTimingTester
         enum TaskChoice { Prepare, Analyze }
 
         /// <summary>
-        /// This function implements the --prepare and the --analyze stages of processing.
+        /// Implements the --prepare and the --analyze stages of processing.
         /// </summary>
-        /// <param name="taskChoice">Allows us to choose which stage to do.</param>
+        /// <param name="taskChoice">allows us to choose which stage to do.</param>
         void PrepareAnalyze(TaskChoice taskChoice)
         {
             var taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
@@ -167,7 +167,7 @@ namespace HastlayerTimingTester
         }
 
         /// <summary>
-        /// This function gets things ready before the test, then runs the test.
+        /// Gets things ready before the test, then runs the test.
         /// </summary>
         public void DoTests(TimingTestConfigBase testConfig, ProgramOptions options)
         {
