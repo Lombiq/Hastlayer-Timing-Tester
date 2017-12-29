@@ -8,7 +8,6 @@ namespace HastlayerTimingTester
     /// </summary>
     public abstract class FpgaVendorDriver
     {
-
         protected TimingTestConfigBase _testConfig;
         protected StreamWriter _batchWriter;
 
@@ -21,10 +20,12 @@ namespace HastlayerTimingTester
         /// <summary>It tells whether the tool can run STA after implementation.</summary>
         public abstract bool CanStaAfterImplementation { get; }
 
+
         public FpgaVendorDriver(TimingTestConfigBase testConfig)
         {
             _testConfig = testConfig;
         }
+
 
         /// <summary>Prepare stage, ran for each test. Usually generates the batch file Run.bat.</summary>
         public abstract void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate);
