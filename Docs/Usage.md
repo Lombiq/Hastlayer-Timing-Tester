@@ -21,8 +21,7 @@ To configure Hastlayer Timing Tester, you will have to edit the source file `Tim
 
 > You can generate different configurations by adding new classes that have `TimingTestConfigBase` as their parent. However, the class to be used is specified in `Main()` in `Program.cs`.
 
-# How t
-o run
+# How to run
 
 After building the project, you can run `HastlayerTimingTester.exe`, which is a console application that has some command line parameters, as detailed below. 
 
@@ -78,28 +77,28 @@ The following part is a sample analysis output for a test:
 Started at 2017-12-03 22:46:11
 
 Current test item: shift_left, 8, std_logic_vector(7 downto 0) to std_logic_vector(7 downto 0)
-	Dir name: shift_left_std_logic_vector8_to_std_logic_vector8_sync
+    Dir name: shift_left_std_logic_vector8_to_std_logic_vector8_sync
 
 Synthesis:
 ----------
 Timing Report:
-	S>> Data path delay = 0.812 ns  (0.081 cycle at 100 MHz clock)
-	Source clock delay = 2.372 ns
-	Requirement for arrival = 10 ns
-	Requirement plus delays = 11.971 ns
-	Timing window available = 9.599 ns
-	S>> Timing window diff from requirement = -0.401 ns  (-0.04 cycle at 100 MHz clock)
-	Max clock frequency = 824.402 MHz 
+    S>> Data path delay = 0.812 ns  (0.081 cycle at 100 MHz clock)
+    Source clock delay = 2.372 ns
+    Requirement for arrival = 10 ns
+    Requirement plus delays = 11.971 ns
+    Timing window available = 9.599 ns
+    S>> Timing window diff from requirement = -0.401 ns  (-0.04 cycle at 100 MHz clock)
+    Max clock frequency = 824.402 MHz 
 Timing Summary:
-	Design PASSED meeting timing requirements
-	Worst Setup Slack = 8.788 ns
-	Total Setup Slack = 0 ns
-	Worst Hold Slack = 0.152 ns
-	Total Hold Slack = 0 ns
-	Worst Pulse Width Slack = 4.5 ns
-	Total Pulse Width Slack = 0 ns
-	(Any "worst slack" is okay if positive,
-		any "total slack" is okay if zero.)
+    Design PASSED meeting timing requirements
+    Worst Setup Slack = 8.788 ns
+    Total Setup Slack = 0 ns
+    Worst Hold Slack = 0.152 ns
+    Total Hold Slack = 0 ns
+    Worst Pulse Width Slack = 4.5 ns
+    Total Pulse Width Slack = 0 ns
+    (Any "worst slack" is okay if positive,
+        any "total slack" is okay if zero.)
 
 (...)
 ```

@@ -18,7 +18,7 @@ The following two ideas were considered to make the approximation results more a
 
 The problems with (1.) are as follows:
 * The STA only shows the critical paths by default. For certain single operations, the path corresponding to the operator is not the critical one, but we still need to know its timing parameters.
-*That is difficult to do automatically because we need to know the names of the exact cells in the implemented design. Vivado generattes these names from the names of signals/variables.
+*That is difficult to do automatically because we need to know the names of the exact cells in the implemented design. Vivado generates these names from the names of signals/variables.
 * In addition, you simply can not find the cells for many signals/variables. This can be fixed by turning off optimizations for these signals (with KEEP and other similar attributes), however, this also modifies the topology of the implementation result, thus the paths and the data path delay as well.
 
 Idea (2.) has actually been implemented. The issues with it are as follows:
