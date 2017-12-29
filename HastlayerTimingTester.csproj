@@ -55,6 +55,7 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ShiftVhdlExpression.cs" />
+    <Compile Include="StreamWriterExtensions.cs" />
     <Compile Include="TimingOutputParser.cs" />
     <Compile Include="TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigBase.cs" />

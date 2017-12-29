@@ -4,20 +4,33 @@ using System.IO;
 
 namespace HastlayerTimingTester
 {
+    /// <summary>
+    /// This is a driver for the Xilinx FPGA tools (Vivado).
+    /// For example, it contains templates for files to be generated for these tools.
+    /// </summary>
     public class XilinxDriver : FpgaVendorDriver
     {
         private string _vivadoPath;
+
+        /// <summary>
+        /// Xilinx tools support STA both after synthesis and implementation. 
+        /// </summary>
         public override bool CanStaAfterSynthesize { get => true; }
+
+        /// <summary>
+        /// Xilinx tools support STA both after synthesis and implementation. 
+        /// </summary>
         public override bool CanStaAfterImplementation { get => true; }
 
+        /// <param name="vivadoPath">is the path for the Vivado executable.</param>
         public XilinxDriver(TimingTestConfigBase testConfig, string vivadoPath) : base(testConfig)
         {
             _vivadoPath = vivadoPath;
         }
 
         /// <summary>
-        /// This template is filled with data during the test, and then opened and ran by Vivado.
-        /// It synthesizes the project, generates reports and a schematic diagram.
+        /// This template is filled with data, and then later opened and ran by Vivado.
+        /// It synthesizes and optionally implements the project, generates reports and a schematic diagram.
         /// </summary>
         private const string _tclTemplate = @"
 set_param general.maxThreads %NUMTHREADS%
@@ -37,9 +50,12 @@ report_timing -file ImplTimingReport.txt
 report_timing_summary -check_timing_verbose -file ImplTimingSummary.txt
 quit
 ";
-
+        /// <summary>
+        /// This is a template for the constraints file.
+        /// </summary>
         private const string _xdcTemplate = "create_clock -period %CLKPERIOD% -name clk [get_ports {clk}]";
 
+        /// <summary>Initialization of Prepare stage, generates scripts common for all tests.</summary>
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
@@ -54,6 +70,7 @@ quit
             );
         }
 
+        /// <summary>Prepare stage, ran for each test. Generates the batch file Run.bat.</summary>
         public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
         {
             var uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
@@ -73,6 +90,7 @@ quit
 
         }
 
+        /// <summary>Analyze stage, ran for each test.</summary>
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
             var parser = new XilinxParser(_testConfig.Frequency);

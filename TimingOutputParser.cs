@@ -39,8 +39,12 @@ namespace HastlayerTimingTester
             get => 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m); 
         }
         public decimal NanosecondToClockPeriod(decimal ns) => (ns * 1.0e-9m) / (1.0m / ClockFrequency);
-        public decimal InMHz(decimal fHz) => fHz / 1e6m; // Hz to MHz
+        /// <summary>Converts Hz to Mhz.</summary>
+        public decimal InMHz(decimal fHz) => fHz / 1e6m; 
 
+        /// <summary>Prints the parsed timing report.</summary>
+        /// <param name="marker">is shown in the printed output, to differentiate between 
+        /// synthesis ("S") and implementation ("I").</param>
         public void PrintParsedTimingReport(string marker = "")
         {
             Logger.Log("Timing Report:");
@@ -73,6 +77,8 @@ namespace HastlayerTimingTester
                     );
             }
         }
+
+        /// <summary>Prints the parsed timing summary.</summary>
         public void PrintParsedTimingSummary()
         {
             if (TimingSummaryAvailable)

@@ -12,11 +12,17 @@ namespace HastlayerTimingTester
         public string TimingSummary;
     }
 
+    /// <summary>
+    /// This is a parser for Vivado static timing analysis output. 
+    /// </summary>
     class XilinxParser : TimingOutputParser
     {
 
         public XilinxParser(decimal clockFrequency) : base(clockFrequency) { }
 
+        /// <summary>
+        /// It parses the STA output of Vivado. 
+        /// </summary>
         public void Parse(VivadoResult result)
         {
             // Data Path Delay

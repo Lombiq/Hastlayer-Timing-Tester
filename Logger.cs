@@ -71,6 +71,10 @@ namespace HastlayerTimingTester
             }
         }
 
+        /// <summary>
+        /// It writes a header to the log and screen for a given processing stage of Hastlayer Timing Tester, 
+        /// which can be specified as an input parameter (stage).
+        /// </summary>
         public static void LogStageHeader(string stage)
         {
             Logger.Log("\r\n=== HastlayerTimingTester {0} stage ===", stage);

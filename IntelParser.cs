@@ -11,6 +11,7 @@ namespace HastlayerTimingTester
     }
 
     /// <summary>
+    /// This is a parser for Intel/Altera Quartus Prime Standard Edition 15.1 static timing analysis output. 
     /// See the following Confluence page for more information:
     /// https://lombiq.atlassian.net/wiki/spaces/HAST/pages/186744859/Timing+on+Catapult
     /// </summary>
@@ -18,6 +19,9 @@ namespace HastlayerTimingTester
     {
         public IntelParser(decimal clockFrequency) : base(clockFrequency) { }
 
+        /// <summary>
+        /// It parses the STA output of Quartus. 
+        /// </summary>
         public void Parse(QuartusResult result)
         {
             // Data Path Delay

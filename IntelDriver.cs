@@ -4,20 +4,33 @@ using System.IO;
 
 namespace HastlayerTimingTester
 {
+    /// <summary>
+    /// This is a driver for the Intel/Altera FPGA tools. 
+    /// For example, it contains templates for files to be generated for these tools.
+    /// </summary>
     public class IntelDriver : FpgaVendorDriver
     {
         private string _quartusPath;
+
+        /// <summary>
+        /// Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
+        /// </summary>
         public override bool CanStaAfterSynthesize { get => false; }
+
+        /// <summary>
+        /// Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
+        /// </summary>
         public override bool CanStaAfterImplementation { get => true; }
 
+        /// <param name="quartusPath">is the bin directory of Quartus Prime.</param>
         public IntelDriver(TimingTestConfigBase testConfig, string quartusPath) : base(testConfig)
         {
             _quartusPath = quartusPath;
         }
 
         /// <summary>
-        /// This template is filled with data during the test, and then opened and ran by Quartus.
-        /// It synthesizes and optionally implements the project.
+        /// This template is filled with data, to be later opened and ran by Quartus.
+        /// It synthesizes and implements the project.
         /// </summary>
         private const string _quartusTclTemplate = @"
 # Quartus Prime: Generate Tcl File for Project
@@ -55,6 +68,9 @@ execute_flow -compile
 project_close
 ";
 
+        /// <summary>
+        /// This template is filled with data to be opened and ran by TimeQuest later.
+        /// </summary>
         private const string _timeQuestTclTemplate = @"
 project_open -force ""tf_sample.qpf"" -revision tf_sample
 create_timing_netlist -model slow
@@ -67,6 +83,9 @@ create_timing_summary -hold -multi_corner -append -file TimingSummary.txt
 create_timing_summary -mpw -multi_corner -append -file TimingSummary.txt
 ";
 
+        /// <summary>
+        /// This is a template for the constraints file.
+        /// </summary>
         private const string _sdcTemplate = @"
 # Time Information
 set_time_format -unit ns -decimal_places 3
@@ -84,6 +103,12 @@ set_clock_uncertainty -fall_from [get_clocks {clk}] -rise_to [get_clocks {clk}] 
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -setup 0.070  
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060  
 ";
+        /// <summary>
+        /// This is a cleanup script that can remove unnecessary files generated during compilation/STA 
+        /// from each test subdirectory. Only files needed for Timing Tester remain. 
+        /// It is useful to run it before transferring the test results from a remote machine, because Quartus
+        /// generates a few gigabytes of data we don't need.
+        /// </summary>
         private const string _cleanupScriptTemplate = @"
 import os, shutil
 subdirs=filter(lambda x:os.path.isdir(x), os.listdir("".""))
@@ -101,6 +126,7 @@ for subdir in subdirs:
 
         private const string _cleanupScriptName = "Cleanup.py";
 
+        /// <summary>Initialization of Prepare stage, generates scripts common for all tests.</summary>
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
@@ -109,6 +135,7 @@ for subdir in subdirs:
             File.WriteAllText(BaseDir + "\\" + _cleanupScriptName, _cleanupScriptTemplate);
         }
 
+        /// <summary>Prepare stage, ran for each test. Generates the batch file Run.bat.</summary>
         public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
         {
             var uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
@@ -126,6 +153,7 @@ for subdir in subdirs:
 
         }
 
+        /// <summary>Analyze stage, ran for each test.</summary>
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
             var parser = new IntelParser(_testConfig.Frequency);

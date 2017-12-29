@@ -3,6 +3,9 @@ using CommandLine.Text;
 
 namespace HastlayerTimingTester
 {
+    /// <summary>
+    /// These are the options for the command-line argument parser (CommandLine). 
+    /// </summary>
     class ProgramOptions
     {
         [Option('p', "prepare", Required = false, DefaultValue = false,
@@ -39,7 +42,6 @@ namespace HastlayerTimingTester
 
     class Program
     {
-        // Consume them
         static void Main(string[] args)
         {
             var options = new ProgramOptions();
@@ -49,7 +51,7 @@ namespace HastlayerTimingTester
             {
                 var timingTester = new TimingTester();
                 var test = new TimingTestConfig();
-                timingTester.DoTest(test, options);
+                timingTester.DoTests(test, options);
             }
         }
     }

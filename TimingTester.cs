@@ -11,15 +11,19 @@ namespace HastlayerTimingTester
     {
         private TimingTestConfigBase _testConfig;
 
-        /// <summary>This is like: @"TestResults\2016-09-15__10-52-19__default"</summary>
+        /// <summary>The output directory of all tests to be done when running the Timing Tester.</summary>
         public const string CurrentTestBaseDirectory = "CurrentTest";
 
-        /// <summary>This is like: @"TestResults\2016-09-15__10-52-19__default\gt_unsigned32_to_boolean_comb"</summary>
+        /// <summary>The output directory of the actual test being done when running the Timing Tester.
+        /// This is like: @"CurrentTests\gt_unsigned32_to_boolean_comb"</summary>
         string CurrentTestOutputDirectory;
 
         enum TaskChoice { Prepare, Analyze }
 
-
+        /// <summary>
+        /// This function implements the --prepare and the --analyze stages of processing.
+        /// </summary>
+        /// <param name="taskChoice">allows us to choose which stage to do.</param>
         void PrepareAnalyze(TaskChoice taskChoice)
         {
             var taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
@@ -162,14 +166,10 @@ namespace HastlayerTimingTester
             if (resultsWriter != null) resultsWriter.Close();
         }
 
-
-
         /// <summary>
         /// This function gets things ready before the test, then runs the test.
-        /// It creates the necessary directory structure, cleans up VivadoFiles and generates
-        /// a Tcl script for Vivado.
         /// </summary>
-        public void DoTest(TimingTestConfigBase testConfig, ProgramOptions options)
+        public void DoTests(TimingTestConfigBase testConfig, ProgramOptions options)
         {
             // Command-line options
             if (options.All) options.Analyze = options.ExecSta = options.Prepare = true;
@@ -203,8 +203,12 @@ namespace HastlayerTimingTester
             if (options.Analyze) PrepareAnalyze(TaskChoice.Analyze);
         }
 
-        public void RunBatchFile(string path)
+        /// <summary>
+        /// Runs the Run.bat in CurrentTest to apply STA.
+        /// </summary>
+        public void ExecSta()
         {
+            Logger.LogStageHeader("execute-sta");
             var cp = new Process();
             cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
                 "\\" + TimingTester.CurrentTestBaseDirectory;
@@ -214,14 +218,6 @@ namespace HastlayerTimingTester
             cp.StartInfo.RedirectStandardOutput = false;
             cp.Start();
             cp.WaitForExit();
-            return;
-        }
-
-
-        public void ExecSta()
-        {
-            Logger.LogStageHeader("execute-sta");
-            RunBatchFile(TimingTester.CurrentTestBaseDirectory + "\\Run.bat");
         }
 
     }

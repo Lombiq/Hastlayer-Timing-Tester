@@ -3,13 +3,22 @@ using System.IO;
 
 namespace HastlayerTimingTester
 {
+    /// <summary>
+    /// This is the base class of drivers for FPGA vendor tools (compilation, STA).
+    /// </summary>
     public abstract class FpgaVendorDriver
     {
 
         protected TimingTestConfigBase _testConfig;
         protected StreamWriter _batchWriter;
+
+        /// <summary>The current test base directory.</summary>
         public string BaseDir;
+
+        /// <summary>It tells whether the tool can run STA after synthesis.</summary>
         public abstract bool CanStaAfterSynthesize { get; }
+
+        /// <summary>It tells whether the tool can run STA after implementation.</summary>
         public abstract bool CanStaAfterImplementation { get; }
 
         public FpgaVendorDriver(TimingTestConfigBase testConfig)
@@ -17,19 +26,16 @@ namespace HastlayerTimingTester
             _testConfig = testConfig;
         }
 
+        /// <summary>Prepare stage, ran for each test. Usually generates the batch file Run.bat.</summary>
         public abstract void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate);
+
+        /// <summary>Analyze stage, ran for each test.</summary>
         public abstract TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase);
 
+        /// <summary>Initialization of Prepare stage, generates scripts common for all tests.</summary>
         public virtual void InitPrepare(StreamWriter batchWriter)
         {
             _batchWriter = batchWriter;
-        }
-    }
-    public static class StreamWriterExtension
-    {
-        public static void FormattedWriteLine(this StreamWriter writer, string format, params Object[] args)
-        {
-            writer.WriteLine(string.Format(format, args));
         }
     }
 }
