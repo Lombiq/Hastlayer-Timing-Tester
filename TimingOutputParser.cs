@@ -24,20 +24,15 @@ namespace HastlayerTimingTester
         public decimal WorstPulseWidthSlack { get; protected set; }
         public decimal TotalPulseWidthSlack { get; protected set; }
         public bool DesignMetTimingRequirements
-        {
-            get => TimingSummaryAvailable && TotalSetupSlack == 0 && TotalHoldSlack == 0 && TotalPulseWidthSlack == 0;
-        }
+            => TimingSummaryAvailable && TotalSetupSlack == 0 && TotalHoldSlack == 0 && TotalPulseWidthSlack == 0;
         public decimal RequirementPlusDelays { get; protected set; }
         public decimal Requirement { get; protected set; }
         public decimal SourceClockDelay { get; protected set; }
         protected int _extendedSyncParametersCount;
-        private bool ExtendedSyncParametersAvailable { get => _extendedSyncParametersCount == 3; }
-        public decimal TimingWindowAvailable { get => RequirementPlusDelays - SourceClockDelay; }
-        public decimal TimingWindowDiffFromRequirement { get => TimingWindowAvailable - Requirement; }
-        public decimal MaxClockFrequency
-        {
-            get => 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m); 
-        }
+        private bool ExtendedSyncParametersAvailable => _extendedSyncParametersCount == 3;
+        public decimal TimingWindowAvailable => RequirementPlusDelays - SourceClockDelay;
+        public decimal TimingWindowDiffFromRequirement => TimingWindowAvailable - Requirement;
+        public decimal MaxClockFrequency => 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m); 
         public decimal NanosecondToClockPeriod(decimal ns) => (ns * 1.0e-9m) / (1.0m / ClockFrequency);
         /// <summary>Converts Hz to Mhz.</summary>
         public decimal InMHz(decimal fHz) => fHz / 1e6m; 

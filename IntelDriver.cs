@@ -15,12 +15,12 @@ namespace HastlayerTimingTester
         /// <summary>
         /// Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
         /// </summary>
-        public override bool CanStaAfterSynthesize { get => false; }
+        public override bool CanStaAfterSynthesize => false;
 
         /// <summary>
         /// Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
         /// </summary>
-        public override bool CanStaAfterImplementation { get => true; }
+        public override bool CanStaAfterImplementation => true;
 
         /// <param name="quartusPath">is the bin directory of Quartus Prime.</param>
         public IntelDriver(TimingTestConfigBase testConfig, string quartusPath) : base(testConfig)

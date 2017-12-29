@@ -40,6 +40,6 @@ end imp;";
             ExpressionInputs = new[] { "a1_reg", "a2_reg" };
         }
 
-        override public string Name { get => "sync"; }
+        override public string Name => "sync";
     }
 }

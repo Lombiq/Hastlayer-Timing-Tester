@@ -15,12 +15,12 @@ namespace HastlayerTimingTester
         /// <summary>
         /// Xilinx tools support STA both after synthesis and implementation. 
         /// </summary>
-        public override bool CanStaAfterSynthesize { get => true; }
+        public override bool CanStaAfterSynthesize => true;
 
         /// <summary>
         /// Xilinx tools support STA both after synthesis and implementation. 
         /// </summary>
-        public override bool CanStaAfterImplementation { get => true; }
+        public override bool CanStaAfterImplementation => true;
 
         /// <param name="vivadoPath">is the path for the Vivado executable.</param>
         public XilinxDriver(TimingTestConfigBase testConfig, string vivadoPath) : base(testConfig)
