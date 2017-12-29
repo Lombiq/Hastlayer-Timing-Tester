@@ -42,11 +42,11 @@ namespace HastlayerTimingTester
         public VhdlOp(VhdlExpressionBase vhdlExpression, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes,
             OutputDataTypeDelegate outputDataTypeFunction, List<VhdlTemplateBase> vhdlTemplates)
         {
-            this.VhdlExpression = vhdlExpression;
-            this.FriendlyName = friendlyName;
-            this.OutputDataTypeFunction = outputDataTypeFunction;
-            this.DataTypes = dataTypes;
-            this.VhdlTemplates = vhdlTemplates;
+            VhdlExpression = vhdlExpression;
+            FriendlyName = friendlyName;
+            OutputDataTypeFunction = outputDataTypeFunction;
+            DataTypes = dataTypes;
+            VhdlTemplates = vhdlTemplates;
         }
 
         /// <summary>

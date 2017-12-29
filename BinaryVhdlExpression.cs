@@ -10,7 +10,7 @@
         /// <param name="vhdlOperator">is the operator symbol/string (e.g. "+", "-", "*", etc.)</param>
         public BinaryOperatorVhdlExpression(string vhdlOperator)
         {
-            this._vhdlOperator = vhdlOperator;
+            _vhdlOperator = vhdlOperator;
         }
 
         /// <summary>
