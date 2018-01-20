@@ -27,5 +27,13 @@
         public override string GetVhdlCode(string[] inputs) =>
             string.Format("std_logic_vector(shift_{0}(unsigned({1}),{2}))",
                 (_direction == Direction.Left) ? "left" : "right", inputs[0], _amount);
+
+        /// <summary>
+        /// See <see cref="VhdlExpressionBase.IsValid"/>. Testing a shifting with an equal or greater amount of bits 
+        /// than the input size makes no sense, so we impose a restriction on this. 
+        /// </summary>
+        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction, 
+            VhdlTemplateBase vhdlTemplate)
+        { return inputSize > _amount; }
     }
 }

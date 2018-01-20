@@ -18,5 +18,13 @@
         /// </summary>
         /// <param name="inputs">is the single operand for the operator.</param>
         public override string GetVhdlCode(string[] inputs) => string.Format("{0} {1}", _vhdlOperator, inputs[0]);
+
+        /// <summary>
+        /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we don't want to make any restriction on valid test 
+        /// cases, as this class might generate test cases for a wide range of operators.
+        /// </summary>
+        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction, 
+            VhdlTemplateBase vhdlTemplate)
+        { return true; }
     }
 }

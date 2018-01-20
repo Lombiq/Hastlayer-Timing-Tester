@@ -54,8 +54,6 @@ namespace HastlayerTimingTester
             //          unsigned(63 downto 0) output if the operands are unsigned(31 downto 0).
             Operators = new List<VhdlOp>
             {
-                new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, 1), "shift_left",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, 1), "shift_right",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new UnaryOperatorVhdlExpression("not"),    "not",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("and"),   "and",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("nand"),  "nand", stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
@@ -75,6 +73,19 @@ namespace HastlayerTimingTester
                 new VhdlOp(new BinaryOperatorVhdlExpression("*"),     "mul",  suNumericDataTypes,     VhdlOp.DoubleSizedOutput,         defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("mod"),   "mod",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
             };
+
+            //We test shifting by the amount of bits below. 
+            //Multiplying by a constant 2^N is the same operation and is expected to compile to the same structure, so 
+            //we test that here, too. As we expect the FPGA compiler to implement this by wiring, multiplying by 2^N is
+            //expected to be faster than multiplying by another constant or another variable (where it would use DSP
+            //blocks).
+            foreach (int i in new int[]{1, 2, 3, 7, 8, 15, 16, 31, 32, 63, 64, 127}) //<-- bit shift amounts to test
+            {
+                Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
+                    "shift_left_by_"+i.ToString(), stdLogicVectorDataType, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
+                    "shift_right_by_"+i.ToString(), stdLogicVectorDataType, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            }
 
             // InputSizes is the list of input sizes for the data type that we want to test
             InputSizes = new List<int> { 1, 8, 16, 32, 64, 128 };

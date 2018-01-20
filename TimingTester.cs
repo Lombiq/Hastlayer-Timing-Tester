@@ -64,11 +64,18 @@ namespace HastlayerTimingTester
                                     inputDataTypeFunction(inputSize, true),
                                     op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
                                     vhdlTemplate.Name);
-                                CurrentTestOutputDirectory = CurrentTestBaseDirectory + "\\" + testFriendlyName;
-                                Directory.CreateDirectory(CurrentTestOutputDirectory);
+
 
                                 Logger.Log("\r\nCurrent test item: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize,
                                     inputDataType, outputDataType);
+                                if (!op.VhdlExpression.IsValid(inputSize, inputDataTypeFunction, vhdlTemplate))
+                                {
+                                    Logger.Log("This test item was skipped due to not considered valid.");
+                                    continue;
+                                }
+
+                                CurrentTestOutputDirectory = CurrentTestBaseDirectory + "\\" + testFriendlyName;
+                                Directory.CreateDirectory(CurrentTestOutputDirectory);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
                                 if (taskChoice == TaskChoice.Prepare)
