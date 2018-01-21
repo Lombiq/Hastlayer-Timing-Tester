@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System;
 
 namespace HastlayerTimingTester
 {
@@ -82,9 +83,18 @@ namespace HastlayerTimingTester
             foreach (int i in new int[]{1, 2, 3, 7, 8, 15, 16, 31, 32, 63, 64, 127}) //<-- bit shift amounts to test
             {
                 Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
-                    "shift_left_by_"+i.ToString(), stdLogicVectorDataType, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
-                    "shift_right_by_"+i.ToString(), stdLogicVectorDataType, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "shift_right_by_"+i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, i, 32),
+                    "dotnet_shift_left_32_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, i, 32),
+                    "dotnet_shift_right_32_by_"+i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                double powTwoOfI = Math.Pow(2, i);
+                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Multiply),
+                    "mul_by_" + powTwoOfI.ToString("0"), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Divide),
+                    "div_by_"+powTwoOfI.ToString("0"), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
             }
 
             // InputSizes is the list of input sizes for the data type that we want to test

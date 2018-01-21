@@ -25,7 +25,7 @@
         /// </summary>
         /// <param name="inputs">is the input to the shift.</param>
         public override string GetVhdlCode(string[] inputs) =>
-            string.Format("std_logic_vector(shift_{0}(unsigned({1}),{2}))",
+            string.Format("shift_{0}({1},{2})",
                 (_direction == Direction.Left) ? "left" : "right", inputs[0], _amount);
 
         /// <summary>
