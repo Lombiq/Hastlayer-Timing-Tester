@@ -80,7 +80,7 @@ namespace HastlayerTimingTester
 
                                 if (taskChoice == TaskChoice.Prepare)
                                 {
-                                    var vhdl = vhdlTemplate.VhdlTemplate
+                                    var vhdl = AdditionalVhdlIncludes.Content + vhdlTemplate.VhdlTemplate
                                         .Replace("%INTYPE%", inputDataType)
                                         .Replace("%OUTTYPE%", outputDataType)
                                         .Replace("%EXPRESSION%",

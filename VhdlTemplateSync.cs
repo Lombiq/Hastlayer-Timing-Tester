@@ -8,11 +8,7 @@ namespace HastlayerTimingTester
         public VhdlTemplateSync()
         {
             VhdlTemplate =
-@"library ieee;
-use ieee.std_logic_1164.all;
-use ieee.numeric_std.all;
-
-entity tf_sample is
+@"entity tf_sample is
 port (
     clk     : in std_logic;
     a1      : in %INTYPE%;
