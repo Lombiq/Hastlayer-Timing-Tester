@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System;
+using System.Numerics;
 
 namespace HastlayerTimingTester
 {
@@ -90,11 +91,11 @@ namespace HastlayerTimingTester
                     "dotnet_shift_left_32_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, i, 32),
                     "dotnet_shift_right_32_by_"+i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                double powTwoOfI = Math.Pow(2, i);
+                var powTwoOfI = BigInteger.Pow(2, i);
                 Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Multiply),
-                    "mul_by_" + powTwoOfI.ToString("0"), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Divide),
-                    "div_by_"+powTwoOfI.ToString("0"), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "div_by_"+powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
             }
 
             // InputSizes is the list of input sizes for the data type that we want to test
