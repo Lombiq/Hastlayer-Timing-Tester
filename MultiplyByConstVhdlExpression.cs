@@ -18,8 +18,9 @@ namespace HastlayerTimingTester
             _mode = mode;
         }
 
-        public override string GetVhdlCode(string[] inputs) =>
-            string.Format("{0} {1} {2}", inputs[0], (_mode==Mode.Multiply)?"*":"/", _constant.ToString());
+        public override string GetVhdlCode(string[] inputs, int inputSize) =>
+            string.Format("SmartResize({0} {1} {2}, {3})", 
+                inputs[0], (_mode==Mode.Multiply)?"*":"/", _constant.ToString(), inputSize);
 
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)

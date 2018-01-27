@@ -84,7 +84,7 @@ namespace HastlayerTimingTester
                                         .Replace("%INTYPE%", inputDataType)
                                         .Replace("%OUTTYPE%", outputDataType)
                                         .Replace("%EXPRESSION%",
-                                            op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs));
+                                            op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize));
                                     _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
                                 }
                                 else // if taskChoice == TaskChoice.Analyze

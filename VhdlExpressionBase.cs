@@ -8,7 +8,7 @@
         /// <summary>
         /// Returns VHDL code.
         /// </summary>
-        public abstract string GetVhdlCode(string[] inputs);
+        public abstract string GetVhdlCode(string[] inputs, int inputSize);
 
         /// <summary>
         /// Returns if the given expression is valid for the test case. This is useful e.g. for shift and 
