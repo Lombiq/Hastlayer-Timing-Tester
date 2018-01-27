@@ -42,7 +42,7 @@ namespace HastlayerTimingTester
         /// It returns the VHDL code.
         /// </summary>
         /// <param name="inputs">is the input to the shift.</param>
-        public override string GetVhdlCode(string[] inputs) =>
+        public override string GetVhdlCode(string[] inputs, int inputSize) =>
             //Real-life example from KPZ Hast_IP:
             //shift_right(num4, to_integer(unsigned(SmartResize(to_signed(16, 32), 5) and "11111")));
             string.Format("shift_{0}({1},  to_integer(unsigned(SmartResize(to_signed({2}, {3}), {4}) and \"{5}\"))  )",

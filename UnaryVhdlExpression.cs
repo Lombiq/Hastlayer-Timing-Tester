@@ -17,7 +17,7 @@
         /// Returns VHDL code for the binary operator.
         /// </summary>
         /// <param name="inputs">is the single operand for the operator.</param>
-        public override string GetVhdlCode(string[] inputs) => string.Format("{0} {1}", _vhdlOperator, inputs[0]);
+        public override string GetVhdlCode(string[] inputs, int inputSize) => string.Format("{0} {1}", _vhdlOperator, inputs[0]);
 
         /// <summary>
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we don't want to make any restriction on valid test 

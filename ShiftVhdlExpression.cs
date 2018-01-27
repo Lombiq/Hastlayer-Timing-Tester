@@ -24,7 +24,7 @@
         /// It returns the VHDL code.
         /// </summary>
         /// <param name="inputs">is the input to the shift.</param>
-        public override string GetVhdlCode(string[] inputs) =>
+        public override string GetVhdlCode(string[] inputs, int inputSize) =>
             string.Format("shift_{0}({1},{2})",
                 (_direction == Direction.Left) ? "left" : "right", inputs[0], _amount);
 
