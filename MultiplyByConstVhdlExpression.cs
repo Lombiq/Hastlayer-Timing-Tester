@@ -18,9 +18,15 @@ namespace HastlayerTimingTester
             _mode = mode;
         }
 
+        private static string CutZerosFromBeginning(string input)
+        {
+            while(input.Length > 0 && input.StartsWith("0")) input = input.Substring(1);
+            return input;
+        }
+
         public override string GetVhdlCode(string[] inputs, int inputSize) =>
-            string.Format("SmartResize({0} {1} {2}, {3})", 
-                inputs[0], (_mode==Mode.Multiply)?"*":"/", _constant.ToString(), inputSize);
+            string.Format("SmartResize({0} {1} unsigned(x\"{2}\"), {3})", 
+                inputs[0], (_mode==Mode.Multiply)?"*":"/", CutZerosFromBeginning(_constant.ToString("x")), inputSize);
 
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
