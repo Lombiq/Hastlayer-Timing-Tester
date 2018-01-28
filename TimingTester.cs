@@ -169,7 +169,11 @@ namespace HastlayerTimingTester
                     }
                 }
             }
-            if (batchWriter != null) batchWriter.Close();
+            if (batchWriter != null)
+            {
+                batchWriter.WriteLine("echo ===== Finished =====");
+                batchWriter.Close();
+            }
             if (resultsWriter != null) resultsWriter.Close();
         }
 
