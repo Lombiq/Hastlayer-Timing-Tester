@@ -30,7 +30,10 @@ namespace HastlayerTimingTester
 
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
-        { return Math.Log((double)_constant, 2) + 1 <= inputSize; }
+        {
+            return Math.Log((double)_constant, 2) + 1 <= inputSize && 
+                inputDataTypeFunction(0, true).StartsWith("unsigned");
+        }
 
     }
 }
