@@ -20,22 +20,9 @@ namespace HastlayerTimingTester
             // For example, for an input size of 32, we should get "unsigned(31 downto 0)" to be pasted into the VHDL
             // template. However, if a friendly name is requested instead, "unsigned32" is returned, which can be safely
             // used in directory names.
-            var suNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate> {
-                (size, getFriendlyName) =>
-                    (getFriendlyName) ?
-                        string.Format("unsigned{0}", size) :
-                        string.Format("unsigned({0} downto 0)", size-1),
-                (size, getFriendlyName) =>
-                    (getFriendlyName) ?
-                        string.Format("signed{0}", size) :
-                        string.Format("signed({0} downto 0)", size-1)
-            };
-            var stdLogicVectorDataType = new List<VhdlOp.DataTypeFromSizeDelegate> {
-                (size, getFriendlyName) =>
-                    (getFriendlyName) ?
-                        string.Format("std_logic_vector{0}", size) :
-                        string.Format("std_logic_vector({0} downto 0)", size-1)
-            };
+
+            var suNumericDataTypes = new List<Type> { Type.GetType("DataTypes.Signed"), Type.GetType("DataTypes.Unsigned") };
+            var stdLogicVectorDataType = new List<Type> { DataTypes.StdLogicVector };
 
             // There are lists of VHDL templates below. Any of them can be used as a parameter to VhdlOp constructor.
             // (It is advised to start with the Operators variable when looking at this file.)

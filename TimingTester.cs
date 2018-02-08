@@ -47,28 +47,27 @@ namespace HastlayerTimingTester
             {
                 foreach (var inputSize in _testConfig.InputSizes)
                 {
-                    foreach (var inputDataTypeFunction in op.DataTypes)
+                    foreach (var inputDataType in op.DataTypesList)
                     {
                         foreach (var vhdlTemplate in op.VhdlTemplates)
                         {
                             try
                             {
-                                var inputDataType = inputDataTypeFunction(inputSize, false);
                                 var outputDataType = op.OutputDataTypeFunction(
                                     inputSize,
-                                    inputDataTypeFunction,
+                                    inputDataType,
                                     false);
 
                                 var testFriendlyName = string.Format("{0}_{1}_to_{2}_{3}",
                                     op.FriendlyName,
-                                    inputDataTypeFunction(inputSize, true),
-                                    op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
+                                    inputDataType.GetFriendlyName(inputSize),
+                                    op.OutputDataTypeFunction(inputSize, inputDataType, true),
                                     vhdlTemplate.Name);
 
 
                                 Logger.Log("\r\nCurrent test item: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize,
                                     inputDataType, outputDataType);
-                                if (!op.VhdlExpression.IsValid(inputSize, inputDataTypeFunction, vhdlTemplate))
+                                if (!op.VhdlExpression.IsValid(inputSize, inputDataType, vhdlTemplate))
                                 {
                                     Logger.Log("This test item was skipped due to not considered valid.");
                                     continue;
@@ -81,7 +80,7 @@ namespace HastlayerTimingTester
                                 if (taskChoice == TaskChoice.Prepare)
                                 {
                                     var vhdl = AdditionalVhdlIncludes.Content + vhdlTemplate.VhdlTemplate
-                                        .Replace("%INTYPE%", inputDataType)
+                                        .Replace("%INTYPE%", inputDataType.DataTypeFromSize(inputSize))
                                         .Replace("%OUTTYPE%", outputDataType)
                                         .Replace("%EXPRESSION%",
                                             op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize));
@@ -150,8 +149,8 @@ namespace HastlayerTimingTester
 
                                     resultsWriter.FormattedWriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
                                         op.FriendlyName,
-                                        inputDataTypeFunction(inputSize, true),
-                                        op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
+                                        inputDataType.GetFriendlyName(inputSize),
+                                        op.OutputDataTypeFunction(inputSize, inputDataType, true),
                                         vhdlTemplate.Name,
                                         (useImplementationResults) ? "impl" : "synth",
                                         dataPathDelay,

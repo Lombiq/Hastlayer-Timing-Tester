@@ -32,7 +32,7 @@
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Testing a shifting with an equal or greater amount of bits 
         /// than the input size makes no sense, so we impose a restriction on this. 
         /// </summary>
-        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction, 
+        public override bool IsValid(int inputSize, DataTypes.Base inputDataType, 
             VhdlTemplateBase vhdlTemplate)
         { return inputSize > _amount; }
     }

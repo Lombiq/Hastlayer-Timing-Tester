@@ -50,11 +50,12 @@
   <ItemGroup>
     <Compile Include="AdditionalVhdlIncludes.cs" />
     <Compile Include="BinaryVhdlExpression.cs" />
+    <Compile Include="DataTypes.cs" />
     <Compile Include="IntelDriver.cs" />
     <Compile Include="FpgaVendorDriver.cs" />
     <Compile Include="IntelParser.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="MultiplyByConstVhdlExpression.cs" />
+    <Compile Include="MutiplyDivideByConstantVhdlExpression.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DotnetShiftVhdlExpression.cs" />

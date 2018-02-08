@@ -28,7 +28,7 @@ namespace HastlayerTimingTester
             string.Format("SmartResize({0} {1} unsigned'(x\"{2}\"), {3})", 
                 inputs[0], (_mode==Mode.Multiply)?"*":"/", CutZerosFromBeginning(_constant.ToString("x")), inputSize);
 
-        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
+        public override bool IsValid(int inputSize, DataTypes.Base inputDataType,
             VhdlTemplateBase vhdlTemplate)
         { return Math.Log((double)_constant, 2) + 1 <= inputSize; }
 
