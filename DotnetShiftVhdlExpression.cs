@@ -3,7 +3,7 @@
 namespace HastlayerTimingTester
 {
     /// <summary>
-    /// Generates a VHDL expression for shift_left or shift_right.
+    /// Generates a VHDL expression for shifting left or right, but the expression it generates conforms 
     /// </summary>
     public class DotnetShiftVhdlExpression : VhdlExpressionBase
     {
@@ -15,7 +15,16 @@ namespace HastlayerTimingTester
         private Direction _direction;
         private int _outputSize;
 
+        /// <summary>
+        /// Used in <see cref="ShiftBitsMask"/>.
+        /// </summary>
         private int ShiftBits => (int)Math.Log(_outputSize, 2);
+
+        /// <summary>
+        /// Used to generate a part of the expression in <see cref="GetVhdlCode"/>. 
+        /// It will generate a series of "1" in a string, the amount of which is log2(output bits).
+        /// It helps to achieve the dotnet way of shifting (e.g. shifting a 32-bit number by 33 will result in an 1-shift).  
+        /// </summary>
         private string ShiftBitsMask
         {
             get
@@ -58,6 +67,8 @@ namespace HastlayerTimingTester
         /// <summary>
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Testing a shifting with an equal or greater amount of bits 
         /// than the input size makes no sense, so we impose a restriction on this. 
+        /// We only work on test cases where input size and output size is the same, because of the complicated
+        /// expression (including SmartResizes) in <see cref="GetVhdlCode"/>. 
         /// </summary>
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
