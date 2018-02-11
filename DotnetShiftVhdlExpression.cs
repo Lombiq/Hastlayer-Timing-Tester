@@ -44,15 +44,15 @@ namespace HastlayerTimingTester
         /// </summary>
         /// <param name="inputs">is the input to the shift.</param>
         public override string GetVhdlCode(string[] inputs, int inputSize) =>
-            //Real-life example from KPZ Hast_IP:
-            //shift_right(num4, to_integer(unsigned(SmartResize(to_signed(16, 32), 5) and "11111")));
+            // Real-life example from KPZ Hast_IP:
+            // shift_right(num4, to_integer(unsigned(SmartResize(to_signed(16, 32), 5) and "11111")));
             string.Format("shift_{0}({1},  to_integer(unsigned(SmartResize(to_signed({2}, {3}), {4}) and \"{5}\"))  )",
-                (_direction == Direction.Left) ? "left" : "right",  //{0}
-                inputs[0],    //{1}
-                _amount,      //{2}
-                _outputSize,  //{3}
-                ShiftBits,    //{4}
-                ShiftBitsMask //{5}
+                (_direction == Direction.Left) ? "left" : "right",  // {0}
+                inputs[0],    // {1}
+                _amount,      // {2}
+                _outputSize,  // {3}
+                ShiftBits,    // {4}
+                ShiftBitsMask // {5}
                 );
 
         /// <summary>

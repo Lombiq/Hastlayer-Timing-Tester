@@ -76,12 +76,12 @@ namespace HastlayerTimingTester
                 new VhdlOp(new BinaryOperatorVhdlExpression("mod"),   "mod",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
             };
 
-            //We test shifting by the amount of bits below. 
-            //Multiplying by a constant 2^N is the same operation and is expected to compile to the same structure, so 
-            //we test that here, too. As we expect the FPGA compiler to implement this by wiring, multiplying by 2^N is
-            //expected to be faster than multiplying by another constant or another variable (where it would use DSP
-            //blocks).
-            foreach (int i in new int[] { 1, 2, 3, 7, 8, 15, 16, 31, 32, 63, 64, 127 }) //<-- bit shift amounts to test
+            // We test shifting by the amount of bits listed below. 
+            // Multiplying by a constant 2^N is also a shift operation, so 
+            // we test that here, too. As we expect the FPGA compiler to implement this by wiring, multiplying by 2^N is
+            // expected to be faster than multiplying by another constant or another variable (where it would use DSP
+            // blocks).
+            foreach (int i in new int[] { 1, 2, 3, 7, 8, 15, 16, 31, 32, 63, 64, 127 }) // <-- bit shift amounts to test
             {
                 Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
                     "shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
