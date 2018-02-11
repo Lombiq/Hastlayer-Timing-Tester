@@ -81,25 +81,25 @@ namespace HastlayerTimingTester
             //we test that here, too. As we expect the FPGA compiler to implement this by wiring, multiplying by 2^N is
             //expected to be faster than multiplying by another constant or another variable (where it would use DSP
             //blocks).
-            foreach (int i in new int[]{1, 2, 3, 7, 8, 15, 16, 31, 32, 63, 64, 127}) //<-- bit shift amounts to test
+            foreach (int i in new int[] { 1, 2, 3, 7, 8, 15, 16, 31, 32, 63, 64, 127 }) //<-- bit shift amounts to test
             {
                 Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
                     "shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
-                    "shift_right_by_"+i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, i, 64),
                     "dotnet_shift_left_64_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, i, 64),
-                    "dotnet_shift_right_64_by_"+i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "dotnet_shift_right_64_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, i, 32),
                     "dotnet_shift_left_32_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, i, 32),
-                    "dotnet_shift_right_32_by_"+i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "dotnet_shift_right_32_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 var powTwoOfI = BigInteger.Pow(2, i);
                 Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Multiply),
                     "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Divide),
-                    "div_by_"+powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
             }
 
             // InputSizes is the list of input sizes for the data type that we want to test

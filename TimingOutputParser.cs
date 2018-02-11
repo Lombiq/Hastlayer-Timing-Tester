@@ -32,10 +32,10 @@ namespace HastlayerTimingTester
         private bool ExtendedSyncParametersAvailable => _extendedSyncParametersCount == 3;
         public decimal TimingWindowAvailable => RequirementPlusDelays - SourceClockDelay;
         public decimal TimingWindowDiffFromRequirement => TimingWindowAvailable - Requirement;
-        public decimal MaxClockFrequency => 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m); 
+        public decimal MaxClockFrequency => 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m);
         public decimal NanosecondToClockPeriod(decimal ns) => (ns * 1.0e-9m) / (1.0m / ClockFrequency);
         /// <summary>Converts Hz to Mhz.</summary>
-        public decimal InMHz(decimal fHz) => fHz / 1e6m; 
+        public decimal InMHz(decimal fHz) => fHz / 1e6m;
 
         /// <summary>Prints the parsed timing report.</summary>
         /// <param name="marker">is shown in the printed output, to differentiate between 

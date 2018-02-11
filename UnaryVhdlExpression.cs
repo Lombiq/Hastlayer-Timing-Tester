@@ -1,5 +1,5 @@
 ﻿namespace HastlayerTimingTester
-{    
+{
     /// <summary>
     /// Generates a VHDL expression for a unary operator (e.g. not a)
     /// </summary>
@@ -23,7 +23,7 @@
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we don't want to make any restriction on valid test 
         /// cases, as this class might generate test cases for a wide range of operators.
         /// </summary>
-        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction, 
+        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
         { return true; }
     }

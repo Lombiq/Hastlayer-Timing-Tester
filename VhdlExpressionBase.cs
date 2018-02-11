@@ -15,7 +15,7 @@
         /// mul(a,pow(2,n)) where the test makes no sense if the shift amount is higher than the data type size.
         /// Its inputs are the variables that keep changing inside the for loop.
         /// </summary>
-        public abstract bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction, 
+        public abstract bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate);
     }
 }

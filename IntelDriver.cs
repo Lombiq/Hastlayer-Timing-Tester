@@ -157,8 +157,10 @@ for subdir in subdirs:
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
             var parser = new IntelParser(_testConfig.Frequency);
-            var setupReportOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SetupReport.txt";
-            var timingSummaryOutputPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\TimingSummary.txt";
+            var setupReportOutputPath =
+                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SetupReport.txt";
+            var timingSummaryOutputPath =
+                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\TimingSummary.txt";
 
             if (phase != StaPhase.Implementation)
             {

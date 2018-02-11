@@ -16,11 +16,12 @@ namespace HastlayerTimingTester
         private int _outputSize;
 
         private int ShiftBits => (int)Math.Log(_outputSize, 2);
-        private string ShiftBitsMask {
+        private string ShiftBitsMask
+        {
             get
             {
                 string mask = "";
-                for(int i=0; i<ShiftBits; i++)
+                for (int i = 0; i < ShiftBits; i++)
                 {
                     mask += "1";
                 }
@@ -58,7 +59,7 @@ namespace HastlayerTimingTester
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Testing a shifting with an equal or greater amount of bits 
         /// than the input size makes no sense, so we impose a restriction on this. 
         /// </summary>
-        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction, 
+        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
         { return inputSize == _outputSize && inputSize > _amount; }
     }
