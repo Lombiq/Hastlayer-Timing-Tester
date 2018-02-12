@@ -17,6 +17,7 @@
         /// Returns VHDL code for the binary operator.
         /// </summary>
         /// <param name="inputs">is the single operand for the operator.</param>
+        /// <param name="inputs">is the number of bits per input.</param>
         public override string GetVhdlCode(string[] inputs, int inputSize) => string.Format("{0} {1}", _vhdlOperator, inputs[0]);
 
         /// <summary>

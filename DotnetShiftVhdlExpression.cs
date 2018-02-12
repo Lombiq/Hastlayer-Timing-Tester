@@ -3,7 +3,15 @@
 namespace HastlayerTimingTester
 {
     /// <summary>
-    /// Generates a VHDL expression for shifting left or right, but the expression it generates conforms 
+    /// Generates a VHDL expression for shifting left or right, but the expression it generates conforms the 
+    /// specification of .NET shift operators. See this note from Hastlayer:
+    /// "Contrary to what happens in VHDL binary shifting in .NET will only use the lower 5 bits (for 32b
+    /// operands) or 6 bits (for 64b operands) of the shift count. So e.g. 1 &lt;&lt; 33 won't produce 0 (by
+    /// shifting out to the void) but 2, since only a shift by 1 happens (as 33 is 100001 in binary).
+    /// See: https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/left-shift-operator
+    /// So we need to truncate.
+    /// Furthermore right shifts will also do a bitwise AND with just 1s on the count, see:
+    /// https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/right-shift-operator"
     /// </summary>
     public class DotnetShiftVhdlExpression : VhdlExpressionBase
     {
@@ -23,7 +31,9 @@ namespace HastlayerTimingTester
         /// <summary>
         /// Used to generate a part of the expression in <see cref="GetVhdlCode"/>. 
         /// It will generate a series of "1" in a string, the amount of which is log2(output bits).
-        /// It helps to achieve the dotnet way of shifting (e.g. shifting a 32-bit number by 33 will result in an 1-shift).  
+        /// It helps to achieve the dotnet way of shifting 
+        /// (e.g. shifting a 32-bit number by 33 will result in an 1-shift, see <see cref="DotnetShiftVhdlExpression"/>
+        /// class definition docstring summary).
         /// </summary>
         private string ShiftBitsMask
         {
@@ -48,10 +58,9 @@ namespace HastlayerTimingTester
         }
 
 
-        /// <summary>
-        /// It returns the VHDL code.
-        /// </summary>
         /// <param name="inputs">is the input to the shift.</param>
+        /// <param name="inputSize">is the input size in bits.</param>
+        /// <returns>the VHDL code.</returns>
         public override string GetVhdlCode(string[] inputs, int inputSize) =>
             // Real-life example from KPZ Hast_IP:
             // shift_right(num4, to_integer(unsigned(SmartResize(to_signed(16, 32), 5) and "11111")));
