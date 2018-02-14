@@ -42,7 +42,8 @@ namespace HastlayerTimingTester
                 CutZerosFromBeginning(_constant.ToString("x")), inputSize);
 
         /// <summary>
-        /// This VHDL expression only makes sense if the constant fits into less bits than the input size
+        /// This VHDL expression only makes sense if the constant fits into less bits than the input size, as 
+        /// if it did not, the result would be 0 anyway.
         /// </summary>
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
