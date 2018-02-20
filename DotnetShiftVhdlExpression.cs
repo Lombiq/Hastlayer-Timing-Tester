@@ -12,6 +12,8 @@ namespace HastlayerTimingTester
     /// So we need to truncate.
     /// Furthermore right shifts will also do a bitwise AND with just 1s on the count, see:
     /// https://docs.microsoft.com/en-us/dotnet/csharp/language-reference/operators/right-shift-operator"
+    /// It has two modes of operation: shift by a constant or a variable number or bits, which can be set in the 
+    /// constructor.
     /// </summary>
     public class DotnetShiftVhdlExpression : VhdlExpressionBase
     {
@@ -33,7 +35,7 @@ namespace HastlayerTimingTester
 
         /// <summary>
         /// Used to generate a part of the expression in <see cref="GetVhdlCode"/>. 
-        /// It will generate a series of "1" in a string, the amount of which is log2(output bits).
+        /// It will generate a series of "1" in a string, the amount of which is log2(number of bits).
         /// It helps to achieve the dotnet way of shifting 
         /// (e.g. shifting a 32-bit number by 33 will result in an 1-shift, see <see cref="DotnetShiftVhdlExpression"/>
         /// class definition docstring summary).
@@ -50,6 +52,12 @@ namespace HastlayerTimingTester
 
         /// <param name="direction">is the direction of the shift (left or right).</param>
         /// <param name="amount">is the number of bits to shift.</param>
+        /// <param name="constantAmount">sets if the amount of bits to shift is constant or is also a variable.</param>
+        /// <param name="enableOnlyUnsigned">will ignore any signed test cases, if enabled.</param>
+        /// <param name="outputSize">
+        ///     will ignore any test cases where the number of output bits does not equal this
+        ///     parameter. This filter can be switched off by setting this parameter to <see cref="NoOutputSizeCheck"/>.
+        /// </param>
         public DotnetShiftVhdlExpression(Direction direction, int outputSize, bool constantAmount,
             bool enableOnlyUnsigned = false, int amount = 0)
         {
@@ -60,7 +68,10 @@ namespace HastlayerTimingTester
             _enableOnlyUnsigned = enableOnlyUnsigned;
         }
 
-        /// <param name="inputs">is the input to the shift.</param>
+        /// <param name="inputs">
+        ///     are the inputs to the shift. If <see cref="_constantAmount"/> was set to true, 
+        ///     only the first input is used.
+        /// </param>
         /// <param name="inputSize">is the input size in bits.</param>
         /// <returns>the VHDL code.</returns>
         public override string GetVhdlCode(string[] inputs, int inputSize)
@@ -91,7 +102,8 @@ namespace HastlayerTimingTester
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Testing a shifting with an equal or greater amount of bits 
         /// than the input size makes no sense, so we impose a restriction on this. 
         /// We only work on test cases where input size and output size is the same, because of the complicated
-        /// expression (including SmartResizes) in <see cref="GetVhdlCode"/>. 
+        /// expression (including SmartResizes) in <see cref="GetVhdlCode"/>.
+        /// This check can be however switched off, see <see cref="_outputSize"/> in the constructor.
         /// </summary>
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
