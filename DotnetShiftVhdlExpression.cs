@@ -22,11 +22,14 @@ namespace HastlayerTimingTester
         private int _amount;
         private Direction _direction;
         private int _outputSize;
+        private bool _constantAmount;
+        private bool _enableOnlyUnsigned;
+        public const int NoOutputSizeCheck = -1;
 
         /// <summary>
         /// Used in <see cref="ShiftBitsMask"/>.
         /// </summary>
-        private int ShiftBits => (int)Math.Log(_outputSize, 2);
+        private int ShiftBits(int size) => (int)Math.Log(size, 2);
 
         /// <summary>
         /// Used to generate a part of the expression in <see cref="GetVhdlCode"/>. 
@@ -35,43 +38,54 @@ namespace HastlayerTimingTester
         /// (e.g. shifting a 32-bit number by 33 will result in an 1-shift, see <see cref="DotnetShiftVhdlExpression"/>
         /// class definition docstring summary).
         /// </summary>
-        private string ShiftBitsMask
+        private string ShiftBitsMask(int size)
         {
-            get
+            string mask = "";
+            for (int i = 0; i < ShiftBits(size); i++)
             {
-                string mask = "";
-                for (int i = 0; i < ShiftBits; i++)
-                {
-                    mask += "1";
-                }
-                return mask;
+                mask += "1";
             }
+            return mask;
         }
 
         /// <param name="direction">is the direction of the shift (left or right).</param>
         /// <param name="amount">is the number of bits to shift.</param>
-        public DotnetShiftVhdlExpression(Direction direction, int amount, int outputSize)
+        public DotnetShiftVhdlExpression(Direction direction, int outputSize, bool constantAmount,
+            bool enableOnlyUnsigned = false, int amount = 0)
         {
             _direction = direction;
             _amount = amount;
+            _constantAmount = constantAmount;
             _outputSize = outputSize;
+            _enableOnlyUnsigned = enableOnlyUnsigned;
         }
-
 
         /// <param name="inputs">is the input to the shift.</param>
         /// <param name="inputSize">is the input size in bits.</param>
         /// <returns>the VHDL code.</returns>
-        public override string GetVhdlCode(string[] inputs, int inputSize) =>
+        public override string GetVhdlCode(string[] inputs, int inputSize)
+        {
             // Real-life example from KPZ Hast_IP:
             // shift_right(num4, to_integer(unsigned(SmartResize(to_signed(16, 32), 5) and "11111")));
-            string.Format("shift_{0}({1},  to_integer(unsigned(SmartResize(to_signed({2}, {3}), {4}) and \"{5}\"))  )",
-                (_direction == Direction.Left) ? "left" : "right",  // {0}
-                inputs[0],    // {1}
-                _amount,      // {2}
-                _outputSize,  // {3}
-                ShiftBits,    // {4}
-                ShiftBitsMask // {5}
-                );
+            int size = (_outputSize == NoOutputSizeCheck) ? inputSize : _outputSize;
+            return (!_constantAmount) ?
+                string.Format(
+                    "shift_{0}({1},  to_integer(unsigned(SmartResize({2}, {3}) and \"{4}\"))  )",
+                    (_direction == Direction.Left) ? "left" : "right",   // {0}
+                    inputs[0],                                           // {1}
+                    inputs[1],                                           // {2}
+                    ShiftBits(size),                                     // {3}
+                    ShiftBitsMask(size)                                  // {4}
+                    ) :
+                string.Format("shift_{0}({1},  to_integer(unsigned(SmartResize(to_signed({2}, {3}), {4}) and \"{5}\"))  )",
+                   (_direction == Direction.Left) ? "left" : "right",  // {0}
+                   inputs[0],                                          // {1}
+                   _amount,                                            // {2}
+                   size,                                               // {3}
+                   ShiftBits(size),                                    // {4}
+                   ShiftBitsMask(size)                                 // {5}
+                   );
+        }
 
         /// <summary>
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Testing a shifting with an equal or greater amount of bits 
@@ -81,6 +95,11 @@ namespace HastlayerTimingTester
         /// </summary>
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
-        { return inputSize == _outputSize && inputSize > _amount; }
+        {
+            return (_outputSize == NoOutputSizeCheck) ? true : inputSize == _outputSize &&
+                (_constantAmount) ? inputSize > _amount : true &&
+                (_enableOnlyUnsigned) ? inputDataTypeFunction(0, true).StartsWith("unsigned") : true;
+        }
+
     }
 }
