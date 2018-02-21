@@ -55,7 +55,6 @@ namespace HastlayerTimingTester
             //          unsigned(63 downto 0) output if the operands are unsigned(31 downto 0).
             Operators = new List<VhdlOp>
             {
-                /*
                 new VhdlOp(new UnaryOperatorVhdlExpression("not"),    "not",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("and"),   "and",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("nand"),  "nand", stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
@@ -74,7 +73,6 @@ namespace HastlayerTimingTester
                 new VhdlOp(new BinaryOperatorVhdlExpression("/"),     "div",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("*"),     "mul",  suNumericDataTypes,     VhdlOp.DoubleSizedOutput,         defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("mod"),   "mod",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                */
             };
 
             // We test shifting by the amount of bits listed below. 
@@ -82,13 +80,14 @@ namespace HastlayerTimingTester
             // we test that here, too. As we expect the FPGA compiler to implement this by wiring, multiplying by 2^N is
             // expected to be faster than multiplying by another constant or another variable (where it would use DSP
             // blocks).
-            /*
-            foreach (int i in new int[] { 1, 2, 3, 7, 8, 15, 16, 31, 32, 63, 64, 127 }) // <-- bit shift amounts to test
+            for(int i=0;i<64;i++) // <-- bit shift amounts to test
             {
+                /*
                 Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
                     "shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
                     "shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                */
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 64, true, false, i),
                     "dotnet_shift_left_64_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 64, true, false, i),
@@ -97,13 +96,14 @@ namespace HastlayerTimingTester
                     "dotnet_shift_left_32_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 32, true, false, i),
                     "dotnet_shift_right_32_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                /* 
                 var powTwoOfI = BigInteger.Pow(2, i);
                 Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Multiply),
                     "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Divide),
                     "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                */
             }
-            */
             
             Operators.Add(new VhdlOp(
                     new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 
@@ -127,6 +127,7 @@ namespace HastlayerTimingTester
 
 
             Frequency = 100e6m; // System clock frequency in Hz
+            //Frequency = 150e6m; // System clock frequency in Hz
             Name = "default"; // Name of the configuration, will be used in the name of the output directory
 
             // If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
