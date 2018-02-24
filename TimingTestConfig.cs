@@ -82,39 +82,41 @@ namespace HastlayerTimingTester
             // blocks).
             for(int i=0;i<64;i++) // <-- bit shift amounts to test
             {
-                /*
-                Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
-                    "shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
-                    "shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                */
+                // These are the original shift test cases, however the DotnetShiftVhdlExpression implements the
+                // expression that Hastlayer really uses:
+                // Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
+                //     "shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                // Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
+                //     "shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 64, true, false, i),
-                    "dotnet_shift_left_64_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "dotnet_shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 64, true, false, i),
-                    "dotnet_shift_right_64_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "dotnet_shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 32, true, false, i),
-                    "dotnet_shift_left_32_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                    "dotnet_shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 32, true, false, i),
-                    "dotnet_shift_right_32_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                /* 
-                var powTwoOfI = BigInteger.Pow(2, i);
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Multiply),
-                    "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Divide),
-                    "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                */
+                    "dotnet_shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                
+                // These are test cases for /(2^n) or *(2^n) which is practically just a shift:
+                // var powTwoOfI = BigInteger.Pow(2, i);
+                // Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Multiply),
+                //      "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                // Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, MutiplyDivideByConstantVhdlExpression.Mode.Divide),
+                //      "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
             }
             
+            //These are DotnetShiftExpression with a<<b where both are variables:
             Operators.Add(new VhdlOp(
                     new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 
                         DotnetShiftVhdlExpression.NoOutputSizeCheck, false, false),
-                    "dotnet_shift_left_noconst", suNumericDataTypes, 
+                    "dotnet_shift_left", suNumericDataTypes, 
                     VhdlOp.SameOutputDataType, defaultVhdlTemplates
                 ));
             Operators.Add(new VhdlOp(
                     new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 
                         DotnetShiftVhdlExpression.NoOutputSizeCheck, false, false),
-                    "dotnet_shift_right_noconst", suNumericDataTypes, 
+                    "dotnet_shift_right", suNumericDataTypes, 
                     VhdlOp.SameOutputDataType, defaultVhdlTemplates
                 ));
 
