@@ -58,9 +58,11 @@ namespace HastlayerTimingTester
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
         {
-            return (Math.Log((double)_constant, 2) + 1 <= inputSize  || _constant < 0) && 
-                inputDataTypeFunction(0, true).StartsWith(
-                    (_validationMode == ValidationMode.UnsignedOnly) ? "unsigned" : "signed");
+            var signedMode = inputDataTypeFunction(0, true).StartsWith("signed");
+            var unsignedMode = inputDataTypeFunction(0, true).StartsWith("unsigned");
+            return (Math.Log((double)_constant, 2) + 1 + ((signedMode) ? 1 : 0) <= inputSize || _constant < 0) &&
+                    ((_validationMode == ValidationMode.UnsignedOnly) ? unsignedMode : true) &&
+                    ((_validationMode == ValidationMode.SignedOnly) ? signedMode : true);
         }
 
     }

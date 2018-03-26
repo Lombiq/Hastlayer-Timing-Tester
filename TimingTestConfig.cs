@@ -155,7 +155,7 @@ namespace HastlayerTimingTester
 
             // If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
             // If it is false, the exceptions are logged and the program continues with the next test.
-            DebugMode = true;
+            DebugMode = false;
 
             // This selects for which FPGA vendor do we want to run the timing test. 
             // XilinxDriver supports Vivado.
