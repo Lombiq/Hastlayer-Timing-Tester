@@ -138,7 +138,7 @@ namespace HastlayerTimingTester
             Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(-2, 
                  MutiplyDivideByConstantVhdlExpression.Mode.Multiply, 
                  MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
-                 "mul_by_minus_2", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                 "mul_by_-2", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
             Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(0, 
                  MutiplyDivideByConstantVhdlExpression.Mode.Multiply, 
                  MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
