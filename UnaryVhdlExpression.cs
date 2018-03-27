@@ -6,11 +6,18 @@
     class UnaryOperatorVhdlExpression : VhdlExpressionBase
     {
         private string _vhdlOperator;
+        private ValidationMode _validationMode;
+
+        public enum ValidationMode
+        {
+            SignedOnly, NoFilter
+        }
 
         /// <param name="vhdlOperator">is the operator symbol/string (e.g. "not")</param>
-        public UnaryOperatorVhdlExpression(string vhdlOperator)
+        public UnaryOperatorVhdlExpression(string vhdlOperator, ValidationMode validationMode = ValidationMode.NoFilter)
         {
             _vhdlOperator = vhdlOperator;
+            _validationMode = validationMode;
         }
 
         /// <summary>
@@ -26,6 +33,6 @@
         /// </summary>
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
-        { return true; }
+        { return true && ((_validationMode == ValidationMode.SignedOnly)?inputDataTypeFunction(0,true).StartsWith("signed") : true); }
     }
 }
