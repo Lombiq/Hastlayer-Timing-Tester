@@ -70,6 +70,7 @@
     <Compile Include="VhdlTemplateBase.cs" />
     <Compile Include="VhdlTemplateComb.cs" />
     <Compile Include="VhdlTemplateSync.cs" />
+    <Compile Include="WrapSmartResizeVhdlExpression.cs" />
     <Compile Include="XilinxDriver.cs" />
     <Compile Include="XilinxParser.cs" />
   </ItemGroup>

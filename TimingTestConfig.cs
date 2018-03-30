@@ -69,13 +69,15 @@ namespace HastlayerTimingTester
                 new VhdlOp(new BinaryOperatorVhdlExpression("="),     "eq",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("/="),    "neq",  suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("-"),     "sub",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("/"),     "div",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("*"),     "mul",  suNumericDataTypes,     VhdlOp.DoubleSizedOutput,         defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("mod"),   "mod",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("rem"),   "rem",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new UnaryOperatorVhdlExpression("not"),    "not",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new UnaryOperatorVhdlExpression("-", UnaryOperatorVhdlExpression.ValidationMode.SignedOnly),    
-                                                                      "opposite",  suNumericDataTypes, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                                                                      "opposite",  suNumericDataTypes, VhdlOp.SameOutputDataType,       defaultVhdlTemplates),
+                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("/")),     
+                                                                      "div",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("*")),     
+                                                                      "mul",  suNumericDataTypes,     VhdlOp.SameOutputDataType,         defaultVhdlTemplates),
             };
 
             // We test shifting by the amount of bits listed below. 
