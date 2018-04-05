@@ -10,11 +10,11 @@
 
         public enum ValidationMode
         {
-            SignedOnly, NoFilter
+            SignedOnly, AnyDataType
         }
 
         /// <param name="vhdlOperator">is the operator symbol/string (e.g. "not")</param>
-        public UnaryOperatorVhdlExpression(string vhdlOperator, ValidationMode validationMode = ValidationMode.NoFilter)
+        public UnaryOperatorVhdlExpression(string vhdlOperator, ValidationMode validationMode = ValidationMode.AnyDataType)
         {
             _vhdlOperator = vhdlOperator;
             _validationMode = validationMode;
