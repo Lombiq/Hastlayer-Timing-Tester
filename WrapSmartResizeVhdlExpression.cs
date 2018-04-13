@@ -1,5 +1,11 @@
 ﻿namespace HastlayerTimingTester
 {
+    /// <summary>
+    /// Wraps another VHDL expression in SmartResize(), which is defined in <see cref="AdditionalVhdlIncludes"/>. 
+    /// The size parameter of SmartResize will be set to the input size. 
+    /// For example, those operators that normally required <see cref="VhdlOp.DoubleSizedOutput"/> 
+    /// can now work with <see cref="VhdlOp.SameOutputDataType"/> using WeapSmartResizeVhdlExpression.
+    /// </summary>
     public class WrapSmartResizeVhdlExpression : VhdlExpressionBase
     {
 
@@ -12,9 +18,9 @@
 
         public override string GetVhdlCode(string[] inputs, int inputSize) =>
             "SmartResize(" + _innerExpression.GetVhdlCode(inputs, inputSize) + ", " + inputSize.ToString() + ")";
+
         /// <summary>
-        /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we don't want to make any restriction on valid test 
-        /// cases, as this class might generate test cases for a wide range of operators.
+        /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we'll make the same restrictions as the wrapped expression.
         /// </summary>
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate) =>
