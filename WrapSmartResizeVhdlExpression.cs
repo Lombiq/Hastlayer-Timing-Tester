@@ -17,8 +17,8 @@
         /// cases, as this class might generate test cases for a wide range of operators.
         /// </summary>
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
-            VhdlTemplateBase vhdlTemplate) => 
-            _innerExpression.IsValid(inputSize, inputDataTypeFunction, vhdlTemplate); 
+            VhdlTemplateBase vhdlTemplate) =>
+            _innerExpression.IsValid(inputSize, inputDataTypeFunction, vhdlTemplate);
 
     }
 }

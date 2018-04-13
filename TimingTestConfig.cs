@@ -72,13 +72,13 @@ namespace HastlayerTimingTester
                 new VhdlOp(new BinaryOperatorVhdlExpression("mod"),   "mod",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("rem"),   "rem",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new UnaryOperatorVhdlExpression("not"),    "not",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new UnaryOperatorVhdlExpression("+", UnaryOperatorVhdlExpression.ValidationMode.AnyDataType),    
+                new VhdlOp(new UnaryOperatorVhdlExpression("+", UnaryOperatorVhdlExpression.ValidationMode.AnyDataType),
                                                                       "unary_plus",  suNumericDataTypes, VhdlOp.SameOutputDataType,       defaultVhdlTemplates),
-                new VhdlOp(new UnaryOperatorVhdlExpression("-", UnaryOperatorVhdlExpression.ValidationMode.SignedOnly),    
+                new VhdlOp(new UnaryOperatorVhdlExpression("-", UnaryOperatorVhdlExpression.ValidationMode.SignedOnly),
                                                                       "unary_minus",  suNumericDataTypes, VhdlOp.SameOutputDataType,       defaultVhdlTemplates),
-                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("/")),     
+                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("/")),
                                                                       "div",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("*")),     
+                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("*")),
                                                                       "mul",  suNumericDataTypes,     VhdlOp.SameOutputDataType,         defaultVhdlTemplates),
             };
 
@@ -107,19 +107,19 @@ namespace HastlayerTimingTester
 
                 // These are test cases for /(2^n) or *(2^n) which is practically just a shift:
                 var powTwoOfI = BigInteger.Pow(2, i);
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, 
-                     MutiplyDivideByConstantVhdlExpression.Mode.Multiply, 
+                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
+                     MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
                      MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
                      "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, 
-                     MutiplyDivideByConstantVhdlExpression.Mode.Multiply, 
+                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
+                     MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
                      MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
                      "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, 
+                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
                     MutiplyDivideByConstantVhdlExpression.Mode.Divide,
                     MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
                      "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI, 
+                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
                     MutiplyDivideByConstantVhdlExpression.Mode.Divide,
                     MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
                      "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
@@ -139,12 +139,12 @@ namespace HastlayerTimingTester
             }
 
             //Just to test MultiplyDivideByConstantVhdlExpression behaviour on constant 0 or negative numbers:
-            Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(-2, 
-                 MutiplyDivideByConstantVhdlExpression.Mode.Multiply, 
+            Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(-2,
+                 MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
                  MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
                  "mul_by_-2", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-            Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(0, 
-                 MutiplyDivideByConstantVhdlExpression.Mode.Multiply, 
+            Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(0,
+                 MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
                  MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
                  "mul_by_0", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
 

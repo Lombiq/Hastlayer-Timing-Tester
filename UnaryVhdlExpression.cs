@@ -33,6 +33,6 @@
         /// </summary>
         public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
-        { return true && ((_validationMode == ValidationMode.SignedOnly)?inputDataTypeFunction(0,true).StartsWith("signed") : true); }
+        { return true && ((_validationMode == ValidationMode.SignedOnly) ? inputDataTypeFunction(0, true).StartsWith("signed") : true); }
     }
 }

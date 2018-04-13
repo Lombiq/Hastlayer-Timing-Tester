@@ -46,7 +46,7 @@ namespace HastlayerTimingTester
             string.Format("SmartResize({0} {1} {4}signed'(x\"{2}\"), {3})",
                 inputs[0],
                 (_mode == Mode.Multiply) ? "*" : "/",
-                (_constant == 0) ? "0" :_constant.ToString("x"+(inputSize/4).ToString()),
+                (_constant == 0) ? "0" : _constant.ToString("x" + (inputSize / 4).ToString()),
                 inputSize,
                 (_validationMode == ValidationMode.UnsignedOnly) ? "un" : ""
                 );
