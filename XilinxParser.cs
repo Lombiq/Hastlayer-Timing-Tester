@@ -17,8 +17,8 @@ namespace HastlayerTimingTester
     /// </summary>
     class XilinxParser : TimingOutputParser
     {
-
         public XilinxParser(decimal clockFrequency) : base(clockFrequency) { }
+
 
         /// <summary>
         /// Parses the STA output of Vivado. 
@@ -90,7 +90,6 @@ namespace HastlayerTimingTester
                     break;
                 }
             }
-
         }
     }
 }

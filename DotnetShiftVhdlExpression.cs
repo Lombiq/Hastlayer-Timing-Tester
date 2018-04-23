@@ -21,34 +21,15 @@ namespace HastlayerTimingTester
         {
             Left, Right
         }
+
+        public const int NoOutputSizeCheck = -1;
+
         private int _amount;
         private Direction _direction;
         private int _outputSize;
         private bool _constantAmount;
         private bool _enableOnlyUnsigned;
-        public const int NoOutputSizeCheck = -1;
 
-        /// <summary>
-        /// Used in <see cref="ShiftBitsMask"/>.
-        /// </summary>
-        private int ShiftBits(int size) => (int)Math.Log(size, 2);
-
-        /// <summary>
-        /// Used to generate a part of the expression in <see cref="GetVhdlCode"/>. 
-        /// It will generate a series of "1" in a string, the amount of which is log2(number of bits).
-        /// It helps to achieve the dotnet way of shifting 
-        /// (e.g. shifting a 32-bit number by 33 will result in an 1-shift, see <see cref="DotnetShiftVhdlExpression"/>
-        /// class definition docstring summary).
-        /// </summary>
-        private string ShiftBitsMask(int size)
-        {
-            string mask = "";
-            for (int i = 0; i < ShiftBits(size); i++)
-            {
-                mask += "1";
-            }
-            return mask;
-        }
 
         /// <param name="direction">is the direction of the shift (left or right).</param>
         /// <param name="amount">is the number of bits to shift.</param>
@@ -105,13 +86,35 @@ namespace HastlayerTimingTester
         /// expression (including SmartResizes) in <see cref="GetVhdlCode"/>.
         /// This check can be however switched off, see <see cref="_outputSize"/> in the constructor.
         /// </summary>
-        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
-            VhdlTemplateBase vhdlTemplate)
-        {
-            return ((_outputSize == NoOutputSizeCheck) ? true : inputSize == _outputSize) &&
-                ((_constantAmount) ? inputSize > _amount : true) &&
-                ((_enableOnlyUnsigned) ? inputDataTypeFunction(0, true).StartsWith("unsigned") : true);
-        }
+        public override bool IsValid(
+            int inputSize,
+            VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
+            VhdlTemplateBase vhdlTemplate) =>
+            (_outputSize == NoOutputSizeCheck ? true : inputSize == _outputSize) &&
+                (_constantAmount ? inputSize > _amount : true) &&
+                (_enableOnlyUnsigned ? inputDataTypeFunction(0, true).StartsWith("unsigned") : true);
 
+
+        /// <summary>
+        /// Used in <see cref="ShiftBitsMask"/>.
+        /// </summary>
+        private int ShiftBits(int size) => (int)Math.Log(size, 2);
+
+        /// <summary>
+        /// Used to generate a part of the expression in <see cref="GetVhdlCode"/>. 
+        /// It will generate a series of "1" in a string, the amount of which is log2(number of bits).
+        /// It helps to achieve the dotnet way of shifting 
+        /// (e.g. shifting a 32-bit number by 33 will result in an 1-shift, see <see cref="DotnetShiftVhdlExpression"/>
+        /// class definition docstring summary).
+        /// </summary>
+        private string ShiftBitsMask(int size)
+        {
+            string mask = "";
+            for (int i = 0; i < ShiftBits(size); i++)
+            {
+                mask += "1";
+            }
+            return mask;
+        }
     }
 }

@@ -22,11 +22,13 @@ namespace HastlayerTimingTester
         /// </summary>
         public override bool CanStaAfterImplementation => true;
 
+
         /// <param name="vivadoPath">is the path for the Vivado executable.</param>
         public XilinxDriver(TimingTestConfigBase testConfig, string vivadoPath) : base(testConfig)
         {
             _vivadoPath = vivadoPath;
         }
+
 
         /// <summary>
         /// To be filled with data, and then later opened and ran by Vivado.

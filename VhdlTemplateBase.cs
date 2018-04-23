@@ -1,6 +1,5 @@
 namespace HastlayerTimingTester
 {
-
     /// <summary>
     /// VHDL templates contain the hardware project to be compiled after filling it with the required data. 
     /// </summary>
@@ -21,5 +20,4 @@ namespace HastlayerTimingTester
         /// </summary>
         public string[] ExpressionInputs { get; protected set; }
     }
-
 }

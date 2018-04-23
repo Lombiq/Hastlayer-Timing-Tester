@@ -10,7 +10,7 @@ namespace HastlayerTimingTester
     public class VhdlOp
     {
         /// <summary>
-        /// Generates the VHDL code that will be subsituted into the VHDL template.
+        /// Generates the VHDL code that will be substituted into the VHDL template.
         /// </summary>
         public VhdlExpressionBase VhdlExpression;
 
@@ -38,8 +38,13 @@ namespace HastlayerTimingTester
         /// <summary>The VHDL templates that will be used for analysis.</summary>
         public List<VhdlTemplateBase> VhdlTemplates;
 
-        public VhdlOp(VhdlExpressionBase vhdlExpression, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes,
-            OutputDataTypeDelegate outputDataTypeFunction, List<VhdlTemplateBase> vhdlTemplates)
+
+        public VhdlOp(
+            VhdlExpressionBase vhdlExpression,
+            string friendlyName,
+            List<DataTypeFromSizeDelegate> dataTypes,
+            OutputDataTypeDelegate outputDataTypeFunction,
+            List<VhdlTemplateBase> vhdlTemplates)
         {
             VhdlExpression = vhdlExpression;
             FriendlyName = friendlyName;
@@ -47,6 +52,7 @@ namespace HastlayerTimingTester
             DataTypes = dataTypes;
             VhdlTemplates = vhdlTemplates;
         }
+
 
         /// <summary>
         /// Used for generating the output data type based on template strings embedded in the function.
@@ -63,8 +69,7 @@ namespace HastlayerTimingTester
         public static string SameOutputDataType(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
-            bool getFriendlyName
-        ) => inputDataTypeFunction(inputSize, getFriendlyName);
+            bool getFriendlyName) => inputDataTypeFunction(inputSize, getFriendlyName);
 
         /// <summary>
         /// Used for operators that strictly have boolean as their output data type (like all comparison operators).
@@ -72,8 +77,7 @@ namespace HastlayerTimingTester
         public static string ComparisonWithBoolOutput(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
-            bool getFriendlyName
-        ) => "boolean";
+            bool getFriendlyName) => "boolean";
 
         /// <summary>
         /// Used for operators whose output is the same type as their input, but with
@@ -82,8 +86,6 @@ namespace HastlayerTimingTester
         public static string DoubleSizedOutput(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
-            bool getFriendlyName
-        ) => inputDataTypeFunction(inputSize * 2, getFriendlyName);
+            bool getFriendlyName) => inputDataTypeFunction(inputSize * 2, getFriendlyName);
     }
-
 }

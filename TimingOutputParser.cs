@@ -99,7 +99,5 @@ namespace HastlayerTimingTester
             }
             else Logger.Log("Timing summary did not contain slack values (or could not be parsed).");
         }
-
     }
-
 }

@@ -22,11 +22,13 @@ namespace HastlayerTimingTester
         /// </summary>
         public override bool CanStaAfterImplementation => true;
 
+
         /// <param name="quartusPath">is the bin directory of Quartus Prime.</param>
         public IntelDriver(TimingTestConfigBase testConfig, string quartusPath) : base(testConfig)
         {
             _quartusPath = quartusPath;
         }
+
 
         /// <summary>
         /// Template to be filled with data, to be later opened and ran by Quartus.
@@ -150,7 +152,6 @@ for subdir in subdirs:
             _batchWriter.FormattedWriteLine("{0}\\quartus_sh.exe -t ../Quartus.tcl", _quartusPath);
             _batchWriter.FormattedWriteLine("{0}\\quartus_sta.exe -t ../TimeQuest.tcl", _quartusPath);
             _batchWriter.FormattedWriteLine("cd ..");
-
         }
 
         /// <summary>Analyze stage, ran for each test.</summary>
@@ -177,9 +178,11 @@ for subdir in subdirs:
                 return null;
             }
 
-            var result = new QuartusResult();
-            result.SetupReport = File.ReadAllText(setupReportOutputPath);
-            result.TimingSummary = File.ReadAllText(timingSummaryOutputPath);
+            var result = new QuartusResult
+            {
+                SetupReport = File.ReadAllText(setupReportOutputPath),
+                TimingSummary = File.ReadAllText(timingSummaryOutputPath)
+            };
             parser.Parse(result);
             return parser;
         }

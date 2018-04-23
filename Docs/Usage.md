@@ -4,7 +4,7 @@
 
 ## What you will need
 
-Hastlayer Timing Tester requires **Visual Studio Community Edition 2017 (Version 15.4.4)** to run. (You will need to recompile the project from sources if you edit the configuration.)
+Hastlayer Timing Tester requires **Visual Studio Community Edition 2017 (Version 15.4.4) or greater** to run. (You will need to recompile the project from source if you edit the configuration.)
 
 In case you are using Hastlayer on Xilinx platform, you will need **Xilinx Vivado 2016.4**.
 

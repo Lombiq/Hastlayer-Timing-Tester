@@ -125,7 +125,7 @@ namespace HastlayerTimingTester
                      "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
             }
 
-            //These are DotnetShiftExpression with a<<b where both are variables:
+            // These are DotnetShiftExpression with a<<b where both are variables:
             foreach (int outputSize in new List<int> { 32, 64 })
             {
                 Operators.Add(new VhdlOp(
@@ -138,7 +138,7 @@ namespace HastlayerTimingTester
                     ));
             }
 
-            //Just to test MultiplyDivideByConstantVhdlExpression behaviour on constant 0 or negative numbers:
+            // Just to test MultiplyDivideByConstantVhdlExpression behaviour on constant 0 or negative numbers:
             Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(-2,
                  MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
                  MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
@@ -183,7 +183,7 @@ namespace HastlayerTimingTester
             ImplementDesign = true;
 
             // It sets the number of threads used during simulation, if the FPGA vendor tools supports it. 
-            // (Currently only Vivado supports multithreading.)
+            // (Currently only Vivado supports multi threading.)
             NumberOfThreads = 8;
         }
     }

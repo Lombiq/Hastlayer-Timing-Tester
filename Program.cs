@@ -12,7 +12,7 @@ namespace HastlayerTimingTester
 
         [Option('e', "exec-sta", DefaultValue = false,
           HelpText = "Run vendor-provided compiler toolchain and static timing analysis software. " +
-            "Note that you can do this manually by running the batch file." +
+            "Note that you can do this manually by running the batch file. " +
             "This even allows you to run this step on another computer, although you have to give the paths " +
             "correctly in the configuration.")]
         public bool ExecSta { get; set; }

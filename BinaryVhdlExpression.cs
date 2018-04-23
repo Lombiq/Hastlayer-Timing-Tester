@@ -7,11 +7,13 @@
     {
         private string _vhdlOperator;
 
+
         /// <param name="vhdlOperator">is the operator symbol/string (e.g. "+", "-", "*", etc.)</param>
         public BinaryOperatorVhdlExpression(string vhdlOperator)
         {
             _vhdlOperator = vhdlOperator;
         }
+
 
         /// <summary>
         /// Returns VHDL code for the binary operator.
@@ -25,9 +27,9 @@
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we don't want to make any restriction on valid test 
         /// cases, as this class might generate test cases for a wide range of operators.
         /// </summary>
-        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
-            VhdlTemplateBase vhdlTemplate)
-        { return true; }
-
+        public override bool IsValid(
+            int inputSize, 
+            VhdlOp.DataTypeFromSizeDelegate 
+            inputDataTypeFunction, VhdlTemplateBase vhdlTemplate) => true;
     }
 }

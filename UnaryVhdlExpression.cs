@@ -13,12 +13,14 @@
             SignedOnly, AnyDataType
         }
 
+
         /// <param name="vhdlOperator">is the operator symbol/string (e.g. "not")</param>
         public UnaryOperatorVhdlExpression(string vhdlOperator, ValidationMode validationMode = ValidationMode.AnyDataType)
         {
             _vhdlOperator = vhdlOperator;
             _validationMode = validationMode;
         }
+
 
         /// <summary>
         /// Returns VHDL code for the binary operator.
@@ -31,8 +33,12 @@
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we don't want to make any restriction on valid test 
         /// cases, as this class might generate test cases for a wide range of operators.
         /// </summary>
-        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
+        public override bool IsValid(
+            int inputSize,
+            VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate)
-        { return true && ((_validationMode == ValidationMode.SignedOnly) ? inputDataTypeFunction(0, true).StartsWith("signed") : true); }
+        {
+            return true && ((_validationMode == ValidationMode.SignedOnly) ? inputDataTypeFunction(0, true).StartsWith("signed") : true);
+        }
     }
 }

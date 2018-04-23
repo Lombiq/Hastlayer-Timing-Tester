@@ -13,13 +13,16 @@ namespace HastlayerTimingTester
         {
             Multiply, Divide
         }
+
         public enum ValidationMode
         {
             SignedOnly, UnsignedOnly
         }
+
         private BigInteger _constant;
         private Mode _mode;
         private ValidationMode _validationMode;
+
 
         /// <param name="constant">is the constant to multiply/divide with.</param>
         /// <param name="mode">selects whether we want to multiply or divide.</param>
@@ -30,14 +33,6 @@ namespace HastlayerTimingTester
             _validationMode = validationMode;
         }
 
-        /// <summary>
-        /// Cuts any "0" characters from the beginning of an input string, and returns the trimmed string.
-        /// </summary>
-        private static string CutZerosFromBeginning(string input, int maxLength = 0)
-        {
-            while (input.Length > maxLength && input.StartsWith("0")) input = input.Substring(1);
-            return input;
-        }
 
         /// <param name="inputs">is the input to the shift.</param>
         /// <param name="inputSize">is the input size in bits.</param>
@@ -65,5 +60,14 @@ namespace HastlayerTimingTester
                     ((_validationMode == ValidationMode.SignedOnly) ? signedMode : true);
         }
 
+
+        /// <summary>
+        /// Cuts any "0" characters from the beginning of an input string, and returns the trimmed string.
+        /// </summary>
+        private static string CutZerosFromBeginning(string input, int maxLength = 0)
+        {
+            while (input.Length > maxLength && input.StartsWith("0")) input = input.Substring(1);
+            return input;
+        }
     }
 }

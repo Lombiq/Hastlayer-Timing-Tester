@@ -9,8 +9,10 @@
         {
             Left, Right
         }
+
         private int _amount;
         private Direction _direction;
+
 
         /// <param name="direction">is the direction of the shift (left or right).</param>
         /// <param name="amount">is the number of bits to shift.</param>
@@ -19,6 +21,7 @@
             _direction = direction;
             _amount = amount;
         }
+
 
         /// <summary>
         /// It returns the VHDL code.
@@ -32,8 +35,9 @@
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Testing a shifting with an equal or greater amount of bits 
         /// than the input size makes no sense, so we impose a restriction on this. 
         /// </summary>
-        public override bool IsValid(int inputSize, VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
-            VhdlTemplateBase vhdlTemplate)
-        { return inputSize > _amount; }
+        public override bool IsValid(
+            int inputSize,
+            VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
+            VhdlTemplateBase vhdlTemplate) => inputSize > _amount;
     }
 }
