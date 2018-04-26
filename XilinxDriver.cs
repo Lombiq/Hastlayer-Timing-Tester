@@ -62,7 +62,7 @@ quit
         {
             base.InitPrepare(batchWriter);
             if (_testConfig.VivadoBatchMode)
-                batchWriter.FormattedWriteLine("echo \"Vivado cannot generate Schematic.pdf for designs in batch mode.\"");
+                batchWriter.WriteLine("echo \"Vivado cannot generate Schematic.pdf for designs in batch mode.\"");
             File.WriteAllText(
                 BaseDir + "\\Generate.tcl",
                 _tclTemplate
@@ -85,10 +85,9 @@ quit
                     ((1.0m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture)) : ""
             );
 
-            _batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
-            _batchWriter.FormattedWriteLine("cmd /c \"{0} {1} -source ../Generate.tcl\"",
-                _vivadoPath, (_testConfig.VivadoBatchMode) ? "-mode batch" : "");
-            _batchWriter.FormattedWriteLine("cd ..");
+            _batchWriter.WriteLine($"cd {outputDirectoryName}");
+            _batchWriter.WriteLine($"cmd /c \"{_vivadoPath} {((_testConfig.VivadoBatchMode) ? "-mode batch" : "")} -source ../Generate.tcl\"");
+            _batchWriter.WriteLine("cd ..");
 
         }
 

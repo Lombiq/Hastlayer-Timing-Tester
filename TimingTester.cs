@@ -148,14 +148,21 @@ namespace HastlayerTimingTester
                                             "neither synthesis, nor implementation.");
                                     }
 
-                                    resultsWriter.FormattedWriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
-                                        op.FriendlyName,
-                                        inputDataTypeFunction(inputSize, true),
-                                        op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
-                                        vhdlTemplate.Name,
-                                        (useImplementationResults) ? "impl" : "synth",
-                                        dataPathDelay,
-                                        timingWindowDiffFromRequirement
+                                    resultsWriter.WriteLine($@"{
+                                            op.FriendlyName
+                                        }\t{
+                                            inputDataTypeFunction(inputSize, true)
+                                        }\t{
+                                            op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true)
+                                        }\t{
+                                            vhdlTemplate.Name
+                                        }\t{
+                                            ((useImplementationResults) ? "impl" : "synth")
+                                        }\t{
+                                            dataPathDelay
+                                        }\t{
+                                            timingWindowDiffFromRequirement
+                                        }"
                                     );
                                 }
                             }
