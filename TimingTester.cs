@@ -148,7 +148,7 @@ namespace HastlayerTimingTester
                                             "neither synthesis, nor implementation.");
                                     }
 
-                                    resultsWriter.FormattedWriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
+                                    resultsWriter.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
                                         op.FriendlyName,
                                         inputDataTypeFunction(inputSize, true),
                                         op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
