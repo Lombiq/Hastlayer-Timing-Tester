@@ -31,12 +31,12 @@ namespace HastlayerTimingTester
         private bool _enableOnlyUnsigned;
 
 
-        /// <param name="direction">is the direction of the shift (left or right).</param>
-        /// <param name="amount">is the number of bits to shift.</param>
-        /// <param name="constantAmount">sets if the amount of bits to shift is constant or is also a variable.</param>
-        /// <param name="enableOnlyUnsigned">will ignore any signed test cases, if enabled.</param>
+        /// <param name="direction">The direction of the shift (left or right).</param>
+        /// <param name="amount">The number of bits to shift.</param>
+        /// <param name="constantAmount">Sets if the amount of bits to shift is constant or is also a variable.</param>
+        /// <param name="enableOnlyUnsigned">Will ignore any signed test cases, if enabled.</param>
         /// <param name="outputSize">
-        ///     will ignore any test cases where the number of output bits does not equal this
+        ///     Will ignore any test cases where the number of output bits does not equal this
         ///     parameter. This filter can be switched off by setting this parameter to <see cref="NoOutputSizeCheck"/>.
         /// </param>
         public DotnetShiftVhdlExpression(Direction direction, int outputSize, bool constantAmount,
@@ -50,10 +50,10 @@ namespace HastlayerTimingTester
         }
 
         /// <param name="inputs">
-        ///     are the inputs to the shift. If <see cref="_constantAmount"/> was set to true, 
+        ///     The inputs to the shift. If <see cref="_constantAmount"/> was set to true, 
         ///     only the first input is used.
         /// </param>
-        /// <param name="inputSize">is the input size in bits.</param>
+        /// <param name="inputSize">The input size in bits.</param>
         /// <returns>the VHDL code.</returns>
         public override string GetVhdlCode(string[] inputs, int inputSize)
         {

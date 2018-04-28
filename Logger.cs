@@ -61,7 +61,7 @@ namespace HastlayerTimingTester
         /// <summary>
         /// Implements the functionality described for <see cref="Logger.Log"/> and <see cref="Logger.LogInline"/>.
         /// </summary>
-        /// <param name="inline">ends the line with a line break based on the Inline parameter.</param>
+        /// <param name="inline">It ends the line with a line break based on this parameter.</param>
         private static void LogInternal(string format, bool inline, params object[] objs)
         {
             for (var i = 0; i < objs.Length; i++)

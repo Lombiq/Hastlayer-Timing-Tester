@@ -14,7 +14,7 @@
         }
 
 
-        /// <param name="vhdlOperator">is the operator symbol/string (e.g. "not")</param>
+        /// <param name="vhdlOperator">The operator symbol/string (e.g. "not").</param>
         public UnaryOperatorVhdlExpression(string vhdlOperator, ValidationMode validationMode = ValidationMode.AnyDataType)
         {
             _vhdlOperator = vhdlOperator;
@@ -25,8 +25,8 @@
         /// <summary>
         /// Returns VHDL code for the binary operator.
         /// </summary>
-        /// <param name="inputs">is the single operand for the operator.</param>
-        /// <param name="inputs">is the number of bits per input.</param>
+        /// <param name="inputs">The single operand for the operator.</param>
+        /// <param name="inputs">The number of bits per input.</param>
         public override string GetVhdlCode(string[] inputs, int inputSize) => string.Format("{0} {1}", _vhdlOperator, inputs[0]);
 
         /// <summary>

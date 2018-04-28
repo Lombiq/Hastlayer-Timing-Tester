@@ -58,7 +58,6 @@ namespace HastlayerTimingTester
         /// Used for generating the output data type based on template strings embedded in the function.
         /// See <see cref="OutputDataTypeFunction"/>.
         /// </summary>
-        /// <returns></returns>
         public delegate string OutputDataTypeDelegate(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,

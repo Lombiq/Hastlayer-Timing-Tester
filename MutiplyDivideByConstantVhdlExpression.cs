@@ -24,8 +24,8 @@ namespace HastlayerTimingTester
         private ValidationMode _validationMode;
 
 
-        /// <param name="constant">is the constant to multiply/divide with.</param>
-        /// <param name="mode">selects whether we want to multiply or divide.</param>
+        /// <param name="constant">The constant to multiply/divide with.</param>
+        /// <param name="mode">It selects whether we want to multiply or divide.</param>
         public MutiplyDivideByConstantVhdlExpression(BigInteger constant, Mode mode, ValidationMode validationMode)
         {
             _constant = constant;
@@ -34,9 +34,9 @@ namespace HastlayerTimingTester
         }
 
 
-        /// <param name="inputs">is the input to the shift.</param>
-        /// <param name="inputSize">is the input size in bits.</param>
-        /// <returns>the VHDL code.</returns>
+        /// <param name="inputs">The input to the shift.</param>
+        /// <param name="inputSize">The input size in bits.</param>
+        /// <returns>The VHDL code.</returns>
         public override string GetVhdlCode(string[] inputs, int inputSize) =>
             string.Format("SmartResize({0} {1} {4}signed'(x\"{2}\"), {3})",
                 inputs[0],

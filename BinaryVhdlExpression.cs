@@ -8,7 +8,7 @@
         private string _vhdlOperator;
 
 
-        /// <param name="vhdlOperator">is the operator symbol/string (e.g. "+", "-", "*", etc.)</param>
+        /// <param name="vhdlOperator">The operator symbol/string (e.g. "+", "-", "*", etc.)</param>
         public BinaryOperatorVhdlExpression(string vhdlOperator)
         {
             _vhdlOperator = vhdlOperator;
@@ -18,8 +18,8 @@
         /// <summary>
         /// Returns VHDL code for the binary operator.
         /// </summary>
-        /// <param name="inputs">are the two operands for the operator.</param>
-        /// <param name="inputSize">is the number of bits per input.</param>
+        /// <param name="inputs">The two operands for the operator.</param>
+        /// <param name="inputSize">The number of bits per input.</param>
         public override string GetVhdlCode(string[] inputs, int inputSize) =>
             string.Format("{0} {1} {2}", inputs[0], _vhdlOperator, inputs[1]);
 

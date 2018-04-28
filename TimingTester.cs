@@ -23,7 +23,7 @@ namespace HastlayerTimingTester
         /// <summary>
         /// Implements the --prepare and the --analyze stages of processing.
         /// </summary>
-        /// <param name="taskChoice">allows us to choose which stage to do.</param>
+        /// <param name="taskChoice">This parameter allows us to choose which stage to do.</param>
         void PrepareAnalyze(TaskChoice taskChoice)
         {
             var taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";

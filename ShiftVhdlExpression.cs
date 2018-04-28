@@ -14,8 +14,8 @@
         private Direction _direction;
 
 
-        /// <param name="direction">is the direction of the shift (left or right).</param>
-        /// <param name="amount">is the number of bits to shift.</param>
+        /// <param name="direction">The direction of the shift (left or right).</param>
+        /// <param name="amount">The number of bits to shift.</param>
         public ShiftVhdlExpression(Direction direction, int amount)
         {
             _direction = direction;
@@ -26,7 +26,7 @@
         /// <summary>
         /// It returns the VHDL code.
         /// </summary>
-        /// <param name="inputs">is the input to the shift.</param>
+        /// <param name="inputs">The input to the shift.</param>
         public override string GetVhdlCode(string[] inputs, int inputSize) =>
             string.Format("shift_{0}({1},{2})",
                 (_direction == Direction.Left) ? "left" : "right", inputs[0], _amount);
