@@ -8,7 +8,7 @@ Hastlayer Timing Tester requires **Visual Studio Community Edition 2017 (Version
 
 In case you are using Hastlayer on Xilinx platform, you will need **Xilinx Vivado 2016.4**.
 
-On Microsoft Catapult, you will need **Altera (Intel) Quartus Prime and TimeQuest, version 15.1**
+On Microsoft Catapult, you will need **Altera (Intel) Quartus Prime and TimeQuest, version 15.1**, and optionally also [Python 2.7](https://www.python.org/downloads/) for running `Cleanup.py`.
 
 > While cloning the repository or unpacking the project, make sure that there are no special characters in the path (as Vivado cannot handle them, e.g. it can fail with: `TclStackFree: incorrect freePtr. Call out of sequence?`).
 
@@ -30,6 +30,8 @@ Hastlayer Timing Tester has three different processing stages:
 1. **Prepare** (`--prepare`, `-p`): generate VHDL and constraint files (XDC/SDC), and a batch file that will start Vivado or Quartus to run the next step.
 
 2. **Execute STA** (`--exec-sta`, `-e`): run the batch file generated in the first step. (The user can choose to do this manually.) In this step, Vivado/Quartus will synthesize the design, generate a timing summary and a timing report.
+
+> Note: For Quartus consider running `Cleanup.py` in the test directory after this stage. (See the "Output" section later this document.)
 
 3. **Analyze** (`--analyze`, `-a`): process the STA results (after running the batch file). In this step, Hastlayer Timing Tester will parse the timing summaries and the timing reports, and display the most important values. These are also saved into the `Results.tsv` file for later processing.
 
@@ -68,7 +70,8 @@ Hastlayer Timing Tester will generate a similar directory structure:
        ├─ Results.tsv   # This file contains the final results of all tests, in a format that can be easily imported into spreadsheet editors.
        ├─ Generate.tcl  # (Only for Vivado) A Tcl script ran inside Vivado, in order to compile the design to be tested and run the timing analysis on it.
        ├─ Quartus.tcl   # (Only for Quartus) A Tcl script ran inside Quartus, in order to compile the design to be tested.
-       └─ TimeQuest.tcl # (Only for Quartus) A Tcl script ran inside TimeQuest, in order to run the timing analysis on the design to be tested.
+       ├─ TimeQuest.tcl # (Only for Quartus) A Tcl script ran inside TimeQuest, in order to run the timing analysis on the design to be tested.
+       └─ Cleanup.py    # (Only for Quartus) A Python script that removes Quartus temporary files generated during compilation. These can take up several GiB-s of disk space, and are superfluous to be transferred if the script is ran at a remote machine.
 
 The following part is a sample analysis output for a test:
 
