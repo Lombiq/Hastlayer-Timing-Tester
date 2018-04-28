@@ -148,10 +148,10 @@ for subdir in subdirs:
                 .Replace("%CLKHALFPERIOD%", ((0.5m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture));
             File.WriteAllText(sdcPath, (vhdlTemplate.HasTimingConstraints) ? sdcContent : "");
 
-            _batchWriter.WriteLine($"cd {outputDirectoryName}");
-            _batchWriter.WriteLine($"{_quartusPath}\\quartus_sh.exe -t ../Quartus.tcl");
-            _batchWriter.WriteLine($"{_quartusPath}\\quartus_sta.exe -t ../TimeQuest.tcl");
-            _batchWriter.WriteLine("cd ..");
+            _batchWriter.FormattedWriteLine("cd {0}", outputDirectoryName);
+            _batchWriter.FormattedWriteLine("{0}\\quartus_sh.exe -t ../Quartus.tcl", _quartusPath);
+            _batchWriter.FormattedWriteLine("{0}\\quartus_sta.exe -t ../TimeQuest.tcl", _quartusPath);
+            _batchWriter.FormattedWriteLine("cd ..");
         }
 
         /// <summary>Analyze stage, ran for each test.</summary>
