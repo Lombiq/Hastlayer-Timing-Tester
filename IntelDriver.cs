@@ -23,7 +23,7 @@ namespace HastlayerTimingTester
         public override bool CanStaAfterImplementation => true;
 
 
-        /// <param name="quartusPath">is the bin directory of Quartus Prime.</param>
+        /// <param name="quartusPath">This is the bin directory of Quartus Prime.</param>
         public IntelDriver(TimingTestConfigBase testConfig, string quartusPath) : base(testConfig)
         {
             _quartusPath = quartusPath;

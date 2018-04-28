@@ -54,7 +54,7 @@ namespace HastlayerTimingTester
         ///     only the first input is used.
         /// </param>
         /// <param name="inputSize">The input size in bits.</param>
-        /// <returns>the VHDL code.</returns>
+        /// <returns>The VHDL code.</returns>
         public override string GetVhdlCode(string[] inputs, int inputSize)
         {
             // Real-life example from KPZ Hast_IP:

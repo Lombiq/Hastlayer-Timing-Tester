@@ -38,7 +38,7 @@ namespace HastlayerTimingTester
         public decimal InMHz(decimal fHz) => fHz / 1e6m;
 
         /// <summary>Prints the parsed timing report.</summary>
-        /// <param name="marker">is shown in the printed output, to differentiate between 
+        /// <param name="marker">It is shown in the printed output, to differentiate between 
         /// synthesis ("S") and implementation ("I").</param>
         public void PrintParsedTimingReport(string marker = "")
         {
