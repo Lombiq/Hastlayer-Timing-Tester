@@ -4,88 +4,87 @@ namespace HastlayerTimingTester
 {
 
     /// <summary>
-    /// VhdlOp provides data to fill a VHDL template with (see <see cref="VhdlString" /> and
+    /// Provides data to fill a VHDL template with (see <see cref="VhdlString" /> and
     /// <see cref="OutputDataTypeFunction" />).
     /// </summary>
-    class VhdlOp
+    public class VhdlOp
     {
         /// <summary>
-        /// VhdlString contains the actual operator (like "+", "-", "mod", etc.) that will be subsituted
-        /// into the VHDL template.
+        /// Generates the VHDL code that will be substituted into the VHDL template.
         /// </summary>
-        public string VhdlString;
+        public VhdlExpressionBase VhdlExpression;
 
         /// <summary>
-        /// FriendlyName will be used in directory names, where you cannot use special characters. E.g. for "+"
+        /// Will be used in directory names, where you cannot use special characters. E.g. for "+"
         /// a good FriendlyName is "add".
         /// </summary>
         public string FriendlyName;
 
         /// <summary>
-        /// OutputDataTypeFunction can generate the output data type from the input data type and size. It
+        /// Can generate the output data type from the input data type and size. It
         /// allows us to handle VHDL operators that have different input and output data types.
         /// </summary>
         public OutputDataTypeDelegate OutputDataTypeFunction;
 
-        /// <summary>DataTypes contain a list of functions that should be used for the data types the operation should be tested for.</summary>
+        /// <summary>
+        /// Contains a list of functions that should be used for the data types the operation 
+        /// should be tested for.
+        /// </summary>
         public List<DataTypeFromSizeDelegate> DataTypes;
 
-        /// <summary>This is used for <see cref="DataTypes" />.</summary>
+        /// <summary>Used for <see cref="DataTypes" />.</summary>
         public delegate string DataTypeFromSizeDelegate(int size, bool getFriendlyName);
 
-        /// <summary>VhdlTemplates: the VHDL templates that will be used for analysis.</summary>
+        /// <summary>The VHDL templates that will be used for analysis.</summary>
         public List<VhdlTemplateBase> VhdlTemplates;
 
-        public VhdlOp(string vhdlString, string friendlyName, List<DataTypeFromSizeDelegate> dataTypes, OutputDataTypeDelegate outputDataTypeFunction, List<VhdlTemplateBase> vhdlTemplates)
+
+        public VhdlOp(
+            VhdlExpressionBase vhdlExpression,
+            string friendlyName,
+            List<DataTypeFromSizeDelegate> dataTypes,
+            OutputDataTypeDelegate outputDataTypeFunction,
+            List<VhdlTemplateBase> vhdlTemplates)
         {
-            this.VhdlString = vhdlString;
-            this.FriendlyName = friendlyName;
-            this.OutputDataTypeFunction = outputDataTypeFunction;
-            this.DataTypes = dataTypes;
-            this.VhdlTemplates = vhdlTemplates;
+            VhdlExpression = vhdlExpression;
+            FriendlyName = friendlyName;
+            OutputDataTypeFunction = outputDataTypeFunction;
+            DataTypes = dataTypes;
+            VhdlTemplates = vhdlTemplates;
         }
 
+
+        /// <summary>
+        /// Used for generating the output data type based on template strings embedded in the function.
+        /// See <see cref="OutputDataTypeFunction"/>.
+        /// </summary>
         public delegate string OutputDataTypeDelegate(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName
         );
 
-        /// <summary>SameOutputDataType is used if the output data type is the same as the input data type.</summary>
+        /// <summary>Used if the output data type is the same as the input data type.</summary>
         public static string SameOutputDataType(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
-            bool getFriendlyName
-        )
-        {
-            return inputDataTypeFunction(inputSize, getFriendlyName);
-        }
+            bool getFriendlyName) => inputDataTypeFunction(inputSize, getFriendlyName);
 
         /// <summary>
-        /// ComparisonWithBoolOutput is used for operators that strictly have boolean as their output data type
-        /// (like all comparison operators).
+        /// Used for operators that strictly have boolean as their output data type (like all comparison operators).
         /// </summary>
         public static string ComparisonWithBoolOutput(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
-            bool getFriendlyName
-        )
-        {
-            return "boolean";
-        }
+            bool getFriendlyName) => "boolean";
 
         /// <summary>
-        /// DoubleSizedOutput is used for operators whose output is the same type as their input, but with
+        /// Used for operators whose output is the same type as their input, but with
         /// double data size (e.g. multiplication).
         /// </summary>
         public static string DoubleSizedOutput(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
-            bool getFriendlyName
-        )
-        {
-            return inputDataTypeFunction(inputSize * 2, getFriendlyName);
-        }
+            bool getFriendlyName) => inputDataTypeFunction(inputSize * 2, getFriendlyName);
     }
-
 }

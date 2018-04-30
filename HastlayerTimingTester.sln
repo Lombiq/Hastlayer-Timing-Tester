@@ -1,9 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2010
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HastlayerTimingTester", "HastlayerTimingTester.csproj", "{408751DC-709A-4BCE-A62A-361F0493A102}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1EA19568-041A-4B37-90B2-A9F24385E66A}"
+	ProjectSection(SolutionItems) = preProject
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{7B0CE9FC-3F65-46C0-A4E0-784872EDED3F}"
+	ProjectSection(SolutionItems) = preProject
+		Docs\Introduction.md = Docs\Introduction.md
+		Docs\Misc.md = Docs\Misc.md
+		Docs\Usage.md = Docs\Usage.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2FB60EA7-252B-4F30-AA5F-644F4FEF4A30}
 	EndGlobalSection
 EndGlobal

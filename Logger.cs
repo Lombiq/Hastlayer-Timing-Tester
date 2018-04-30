@@ -14,69 +14,76 @@ namespace HastlayerTimingTester
     static class Logger
     {
         private static StreamWriter _logStreamWriter;
-        private static StreamWriter _resultsStreamWriter;
         private static bool _initialized;
+
+
         /// <summary>
-        /// This function initializes the Logger, to open the file given in LogFilePath.
+        /// Initializes the Logger, to open the file given in LogFilePath.
         /// (Logger already works before initialization, but it only writes to the console.)
         /// </summary>
-        static public void Init(string LogFilePath, string ResultsFilePath)
+        public static void Init(string logFilePath, bool createFile = true)
         {
-            _logStreamWriter = new StreamWriter(File.Create(LogFilePath));
+            _logStreamWriter = new StreamWriter(File.Open(logFilePath,
+                (createFile) ? FileMode.Create : FileMode.Append));
             _logStreamWriter.AutoFlush = true;
-            _resultsStreamWriter = new StreamWriter(File.Create(ResultsFilePath));
-            _resultsStreamWriter.AutoFlush = true;
             _initialized = true;
         }
-        /// <summary>WriteResult writes a formatted string to the results file (if already initialized).</summary>
-        static public void WriteResult(string Format, params object[] Objs)
-        {
-            if (_initialized) _resultsStreamWriter.Write(Format, Objs);
-        }
+
         /// <summary>
-        /// Log writes a formatted string to both a log file (if already initialized) and the console, ending
+        /// Writes a formatted string to both a log file (if already initialized) and the console, ending
         /// with a line break.
         /// </summary>
-        static public void Log(string Format, params object[] Objs)
+        public static void Log(string format, params object[] objs)
         {
-            LogInternal(Format, false, Objs);
+            LogInternal(format, false, objs);
         }
+
         /// <summary>
-        /// LogInline writes a formatted string to both a log file (if already initialized) and the console.
+        /// Writes a formatted string to both a log file (if already initialized) and the console.
         /// It does not end with a line break.
         /// </summary>
-        static public void LogInline(string Format, params object[] Objs)
+        public static void LogInline(string format, params object[] objs)
         {
-            LogInternal(Format, true, Objs);
+            LogInternal(format, true, objs);
         }
+
         /// <summary>
-        /// LogInternal implements the functionality described for <see cref="Logger.Log"/> and
-        /// <see cref="Logger.LogInline"/>.
+        /// Writes a header to the log and screen for a given processing stage of Hastlayer Timing Tester, 
+        /// which can be specified as an input parameter (stage).
         /// </summary>
-        /// <param name="Inline">It ends the line with a line break based on the Inline parameter.</param>
-        static private void LogInternal(string Format, bool Inline, params object[] Objs)
+        public static void LogStageHeader(string stage)
         {
-            for (var i = 0; i < Objs.Length; i++)
+            Logger.Log("\r\n=== HastlayerTimingTester {0} stage ===", stage);
+            Logger.Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
+
+
+        /// <summary>
+        /// Implements the functionality described for <see cref="Logger.Log"/> and <see cref="Logger.LogInline"/>.
+        /// </summary>
+        /// <param name="inline">It ends the line with a line break based on this parameter.</param>
+        private static void LogInternal(string format, bool inline, params object[] objs)
+        {
+            for (var i = 0; i < objs.Length; i++)
             {
-                if (Objs[i].GetType() == typeof(decimal))
+                if (objs[i].GetType() == typeof(decimal))
                 {
-                    Objs[i] = ((decimal)Objs[i]).ToString("0.###", CultureInfo.InvariantCulture);
+                    objs[i] = ((decimal)objs[i]).ToString("0.###", CultureInfo.InvariantCulture);
                 }
             }
             if (_initialized)
             {
-                if (Inline)
+                if (inline)
                 {
-                    _logStreamWriter.Write(Format, Objs);
-                    Console.Write(Format, Objs);
+                    _logStreamWriter.Write(format, objs);
+                    Console.Write(format, objs);
                 }
                 else
                 {
-                    _logStreamWriter.WriteLine(Format, Objs);
-                    Console.WriteLine(Format, Objs);
+                    _logStreamWriter.WriteLine(format, objs);
+                    Console.WriteLine(format, objs);
                 }
             }
         }
     }
-
 }
