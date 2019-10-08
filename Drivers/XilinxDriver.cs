@@ -1,8 +1,9 @@
-﻿using System;
+﻿using HastlayerTimingTester.Parsers;
+using System;
 using System.Globalization;
 using System.IO;
 
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Drivers
 {
     /// <summary>
     /// Driver for the Xilinx FPGA tools (Vivado).

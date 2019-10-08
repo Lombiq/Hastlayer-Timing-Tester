@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Parsers
 {
     /// <summary>For passing the data output by Vivado into TimingOutputParser.</summary>
     public struct VivadoResult

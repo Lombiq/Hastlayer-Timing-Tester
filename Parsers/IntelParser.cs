@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text.RegularExpressions;
 
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Parsers
 {
     /// <summary>For passing the data output by Quartus into IntelParser.</summary>
     public struct QuartusResult

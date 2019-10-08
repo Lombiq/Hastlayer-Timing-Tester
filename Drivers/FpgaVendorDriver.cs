@@ -1,6 +1,7 @@
-﻿using System.IO;
+﻿using HastlayerTimingTester.Parsers;
+using System.IO;
 
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Drivers
 {
     /// <summary>
     /// The base class of drivers for FPGA vendor tools (compilation, STA).

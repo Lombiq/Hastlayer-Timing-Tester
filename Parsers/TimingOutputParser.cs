@@ -1,4 +1,4 @@
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Parsers
 {
     public enum StaPhase
     {

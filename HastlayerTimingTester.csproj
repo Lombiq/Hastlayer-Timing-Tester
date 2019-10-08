@@ -50,16 +50,16 @@
   <ItemGroup>
     <Compile Include="AdditionalVhdlIncludes.cs" />
     <Compile Include="BinaryVhdlExpression.cs" />
-    <Compile Include="IntelDriver.cs" />
-    <Compile Include="FpgaVendorDriver.cs" />
-    <Compile Include="IntelParser.cs" />
+    <Compile Include="Drivers\IntelDriver.cs" />
+    <Compile Include="Drivers\FpgaVendorDriver.cs" />
+    <Compile Include="Parsers\IntelParser.cs" />
     <Compile Include="Logger.cs" />
     <Compile Include="MutiplyDivideByConstantVhdlExpression.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="DotnetShiftVhdlExpression.cs" />
     <Compile Include="ShiftVhdlExpression.cs" />
-    <Compile Include="TimingOutputParser.cs" />
+    <Compile Include="Parsers\TimingOutputParser.cs" />
     <Compile Include="TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigBase.cs" />
     <Compile Include="TimingTester.cs" />
@@ -70,8 +70,8 @@
     <Compile Include="VhdlTemplateComb.cs" />
     <Compile Include="VhdlTemplateSync.cs" />
     <Compile Include="WrapSmartResizeVhdlExpression.cs" />
-    <Compile Include="XilinxDriver.cs" />
-    <Compile Include="XilinxParser.cs" />
+    <Compile Include="Drivers\XilinxDriver.cs" />
+    <Compile Include="Parsers\XilinxParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
