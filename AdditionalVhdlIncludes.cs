@@ -28,7 +28,7 @@ package body TypeConversion is
 
     function SmartResize(input: signed; size: natural) return signed is
     begin
-        if (size < input'LENGTH) then
+        if (size<input'LENGTH) then
             return input(size - 1 downto 0);
         else
             return resize(input, size);
