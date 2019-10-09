@@ -1,4 +1,4 @@
-﻿namespace HastlayerTimingTester
+﻿namespace HastlayerTimingTester.Vhdl.Expressions
 {
     /// <summary>
     /// Base class for generating VHDL expressions to test.

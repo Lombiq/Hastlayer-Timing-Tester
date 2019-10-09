@@ -1,4 +1,4 @@
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Vhdl
 {
     /// <summary>
     /// A VHDL template using the expression to test in a sequential, synchronous logic design.

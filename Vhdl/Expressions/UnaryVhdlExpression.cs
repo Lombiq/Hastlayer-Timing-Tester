@@ -1,4 +1,4 @@
-﻿namespace HastlayerTimingTester
+﻿namespace HastlayerTimingTester.Vhdl.Expressions
 {
     /// <summary>
     /// Generates a VHDL expression for a unary operator (e.g. not a)

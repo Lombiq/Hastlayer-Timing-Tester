@@ -1,4 +1,4 @@
-﻿namespace HastlayerTimingTester
+﻿namespace HastlayerTimingTester.Vhdl.Expressions
 {
     /// <summary>
     /// Wraps another VHDL expression in SmartResize(), which is defined in <see cref="AdditionalVhdlIncludes"/>. 

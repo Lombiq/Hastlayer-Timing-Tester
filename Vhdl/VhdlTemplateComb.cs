@@ -1,4 +1,4 @@
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Vhdl
 {
     /// <summary>
     /// A VHDL template using the expression to test in an combinatorial logic design. This means that 

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Vhdl.Expressions
 {
     /// <summary>
     /// Generates a VHDL expression for shifting left or right, but the expression it generates conforms the 

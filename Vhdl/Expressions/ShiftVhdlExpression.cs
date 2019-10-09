@@ -1,4 +1,4 @@
-﻿namespace HastlayerTimingTester
+﻿namespace HastlayerTimingTester.Vhdl.Expressions
 {
     /// <summary>
     /// Generates a VHDL expression for shift_left or shift_right.

@@ -1,4 +1,4 @@
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Vhdl
 {
     /// <summary>
     /// VHDL templates contain the hardware project to be compiled after filling it with the required data. 

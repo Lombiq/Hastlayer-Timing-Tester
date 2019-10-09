@@ -1,6 +1,7 @@
+using HastlayerTimingTester.Vhdl.Expressions;
 using System.Collections.Generic;
 
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Vhdl
 {
 
     /// <summary>

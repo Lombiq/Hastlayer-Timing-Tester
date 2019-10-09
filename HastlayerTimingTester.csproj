@@ -49,27 +49,27 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdditionalVhdlIncludes.cs" />
-    <Compile Include="BinaryVhdlExpression.cs" />
+    <Compile Include="Vhdl\Expressions\BinaryVhdlExpression.cs" />
     <Compile Include="Drivers\IntelDriver.cs" />
     <Compile Include="Drivers\FpgaVendorDriver.cs" />
     <Compile Include="Parsers\IntelParser.cs" />
     <Compile Include="Logger.cs" />
-    <Compile Include="MutiplyDivideByConstantVhdlExpression.cs" />
+    <Compile Include="Vhdl\Expressions\MutiplyDivideByConstantVhdlExpression.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="DotnetShiftVhdlExpression.cs" />
-    <Compile Include="ShiftVhdlExpression.cs" />
+    <Compile Include="Vhdl\Expressions\DotnetShiftVhdlExpression.cs" />
+    <Compile Include="Vhdl\Expressions\ShiftVhdlExpression.cs" />
     <Compile Include="Parsers\TimingOutputParser.cs" />
     <Compile Include="TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigBase.cs" />
     <Compile Include="TimingTester.cs" />
-    <Compile Include="UnaryVhdlExpression.cs" />
-    <Compile Include="VhdlExpressionBase.cs" />
-    <Compile Include="VhdlOp.cs" />
-    <Compile Include="VhdlTemplateBase.cs" />
-    <Compile Include="VhdlTemplateComb.cs" />
-    <Compile Include="VhdlTemplateSync.cs" />
-    <Compile Include="WrapSmartResizeVhdlExpression.cs" />
+    <Compile Include="Vhdl\Expressions\UnaryVhdlExpression.cs" />
+    <Compile Include="Vhdl\Expressions\VhdlExpressionBase.cs" />
+    <Compile Include="Vhdl\VhdlOp.cs" />
+    <Compile Include="Vhdl\VhdlTemplateBase.cs" />
+    <Compile Include="Vhdl\VhdlTemplateComb.cs" />
+    <Compile Include="Vhdl\VhdlTemplateSync.cs" />
+    <Compile Include="Vhdl\Expressions\WrapSmartResizeVhdlExpression.cs" />
     <Compile Include="Drivers\XilinxDriver.cs" />
     <Compile Include="Parsers\XilinxParser.cs" />
   </ItemGroup>

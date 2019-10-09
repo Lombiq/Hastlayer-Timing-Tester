@@ -1,4 +1,6 @@
 using HastlayerTimingTester.Drivers;
+using HastlayerTimingTester.Vhdl;
+using HastlayerTimingTester.Vhdl.Expressions;
 using System.Collections.Generic;
 using System.Numerics;
 

@@ -1,4 +1,5 @@
 ﻿using HastlayerTimingTester.Parsers;
+using HastlayerTimingTester.Vhdl;
 using System;
 using System.Globalization;
 using System.IO;

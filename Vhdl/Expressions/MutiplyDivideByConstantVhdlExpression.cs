@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Numerics;
 
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester.Vhdl.Expressions
 {
     /// <summary>
     /// Generates a VHDL expression for multiplying an input signal with a constant number. It uses SmartResize.

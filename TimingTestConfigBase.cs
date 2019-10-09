@@ -1,4 +1,5 @@
 using HastlayerTimingTester.Drivers;
+using HastlayerTimingTester.Vhdl;
 using System.Collections.Generic;
 
 namespace HastlayerTimingTester
