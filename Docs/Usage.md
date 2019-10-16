@@ -33,6 +33,8 @@ Hastlayer Timing Tester has three different processing stages:
 
 > Note: For Quartus consider running `Cleanup.py` in the test directory after this stage. (See the "Output" section later this document.)
 
+> This step can take a lot of time. For Quartus on Catapult it takes about 4 days.
+
 3. **Analyze** (`--analyze`, `-a`): process the STA results (after running the batch file). In this step, Hastlayer Timing Tester will parse the timing summaries and the timing reports, and display the most important values. These are also saved into the `Results.tsv` file for later processing.
 
 The `--all` or `-x` switch runs all the steps above (1-3). 
