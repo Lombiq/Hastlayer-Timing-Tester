@@ -109,8 +109,8 @@ set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] 
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060  
 ";
         /// <summary>
-        /// Cleanup script that can remove unnecessary files generated during compilation/STA 
-        /// from each test subdirectory. Only files needed for Timing Tester remain. 
+        /// Cleanup script that can remove unnecessary files generated during compilation/STA from each test
+        /// subdirectory. Only files needed for Timing Tester remain. 
         /// It is useful to run it before transferring the test results from a remote machine, because Quartus
         /// generates a few gigabytes of data we don't need.
         /// </summary>
@@ -135,16 +135,16 @@ for subdir in subdirs:
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
-            File.WriteAllText(BaseDir + "\\Quartus.tcl", _quartusTclTemplate);
-            File.WriteAllText(BaseDir + "\\TimeQuest.tcl", _timeQuestTclTemplate);
-            File.WriteAllText(BaseDir + "\\" + _cleanupScriptName, _cleanupScriptTemplate);
+            File.WriteAllText(CombineWithCurrentRootPath("Quartus.tcl"), _quartusTclTemplate);
+            File.WriteAllText(CombineWithCurrentRootPath("TimeQuest.tcl"), _timeQuestTclTemplate);
+            File.WriteAllText(CombineWithCurrentRootPath(_cleanupScriptName), _cleanupScriptTemplate);
         }
 
         /// <summary>Prepare stage, ran for each test. Generates the batch file Run.bat.</summary>
         public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
         {
-            var uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
-            var sdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.sdc";
+            var uutPath = CombineWithCurrentRootPath(outputDirectoryName, "UUT.vhd");
+            var sdcPath = CombineWithCurrentRootPath(outputDirectoryName, "Constraints.sdc");
             File.WriteAllText(uutPath, vhdl);
             var sdcContent = _sdcTemplate
                 .Replace("%CLKPERIOD%", ((1.0m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture))
@@ -161,10 +161,8 @@ for subdir in subdirs:
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
             var parser = new IntelParser(_testConfig.Frequency);
-            var setupReportOutputPath =
-                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SetupReport.txt";
-            var timingSummaryOutputPath =
-                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\TimingSummary.txt";
+            var setupReportOutputPath = CombineWithCurrentRootPath(outputDirectoryName, "SetupReport.txt");
+            var timingSummaryOutputPath = CombineWithCurrentRootPath(outputDirectoryName, "TimingSummary.txt");
 
             if (phase != StaPhase.Implementation)
             {
@@ -172,8 +170,7 @@ for subdir in subdirs:
                     "although ImplementDesign is true in the config.");
             }
 
-            var implementationSuccessful =
-                File.Exists(setupReportOutputPath) && File.Exists(timingSummaryOutputPath);
+            var implementationSuccessful = File.Exists(setupReportOutputPath) && File.Exists(timingSummaryOutputPath);
 
             if (!implementationSuccessful)
             {
@@ -187,6 +184,7 @@ for subdir in subdirs:
                 TimingSummary = File.ReadAllText(timingSummaryOutputPath)
             };
             parser.Parse(result);
+
             return parser;
         }
     }

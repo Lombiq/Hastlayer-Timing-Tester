@@ -1,6 +1,7 @@
 ﻿using HastlayerTimingTester.Parsers;
 using HastlayerTimingTester.Vhdl;
 using System.IO;
+using System.Linq;
 
 namespace HastlayerTimingTester.Drivers
 {
@@ -12,8 +13,8 @@ namespace HastlayerTimingTester.Drivers
         protected TimingTestConfigBase _testConfig;
         protected StreamWriter _batchWriter;
 
-        /// <summary>The current test base directory.</summary>
-        public string BaseDir;
+        /// <summary>The current test root directory.</summary>
+        public string CurrentRootDirectoryPath;
 
         /// <summary>Tells whether the tool can run STA after synthesis.</summary>
         public abstract bool CanStaAfterSynthesize { get; }
@@ -39,6 +40,10 @@ namespace HastlayerTimingTester.Drivers
         {
             _batchWriter = batchWriter;
         }
+
+
+        protected string CombineWithCurrentRootPath(params string[] subPaths) =>
+            Path.Combine(new[] { CurrentRootDirectoryPath }.Union(subPaths).ToArray());
     }
 }
 

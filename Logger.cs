@@ -6,10 +6,8 @@ namespace HastlayerTimingTester
 {
 
     /// <summary>
-    /// Logger writes a formatted string to both a log file
-    /// (Log.txt in CurrentTestOutputBaseDirectory) and the
-    /// console. It also handles writing to the results file
-    /// (Results.tsv in CurrentTestOutputBaseDirectory).
+    /// Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the
+    /// console. It also handles writing to the results file (Results.tsv in CurrentTestOutputBaseDirectory).
     /// </summary>
     static class Logger
     {
@@ -23,8 +21,7 @@ namespace HastlayerTimingTester
         /// </summary>
         public static void Init(string logFilePath, bool createFile = true)
         {
-            _logStreamWriter = new StreamWriter(File.Open(logFilePath,
-                (createFile) ? FileMode.Create : FileMode.Append));
+            _logStreamWriter = new StreamWriter(File.Open(logFilePath, (createFile) ? FileMode.Create : FileMode.Append));
             _logStreamWriter.AutoFlush = true;
             _initialized = true;
         }

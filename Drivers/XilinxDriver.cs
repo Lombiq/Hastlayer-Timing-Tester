@@ -66,7 +66,7 @@ quit
             if (_testConfig.VivadoBatchMode)
                 batchWriter.WriteLine("echo \"Vivado cannot generate Schematic.pdf for designs in batch mode.\"");
             File.WriteAllText(
-                BaseDir + "\\Generate.tcl",
+                Path.Combine(CurrentRootDirectoryPath, "Generate.tcl"),
                 _tclTemplate
                     .Replace("%NUMTHREADS%", _testConfig.NumberOfThreads.ToString())
                     .Replace("%PART%", _testConfig.Part)
@@ -77,8 +77,8 @@ quit
         /// <summary>Prepare stage, ran for each test. Generates the batch file Run.bat.</summary>
         public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
         {
-            var uutPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\UUT.vhd";
-            var xdcPath = TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\Constraints.xdc";
+            var uutPath = CombineWithCurrentRootPath(outputDirectoryName, "UUT.vhd");
+            var xdcPath = CombineWithCurrentRootPath(outputDirectoryName, "Constraints.xdc");
             File.WriteAllText(uutPath, vhdl);
             File.WriteAllText(
                 xdcPath,
@@ -99,13 +99,13 @@ quit
         {
             var parser = new XilinxParser(_testConfig.Frequency);
             var synthTimingReportOutputPath =
-                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingReport.txt";
+                CombineWithCurrentRootPath(outputDirectoryName, "SynthTimingReport.txt");
             var synthTimingSummaryOutputPath =
-                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\SynthTimingSummary.txt";
+                CombineWithCurrentRootPath(outputDirectoryName, "SynthTimingSummary.txt");
             var implTimingReportOutputPath =
-                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingReport.txt";
+                CombineWithCurrentRootPath(outputDirectoryName, "ImplTimingReport.txt");
             var implTimingSummaryOutputPath =
-                TimingTester.CurrentTestBaseDirectory + "\\" + outputDirectoryName + "\\ImplTimingSummary.txt";
+                CombineWithCurrentRootPath(outputDirectoryName, "ImplTimingSummary.txt");
 
             if (phase == StaPhase.Implementation && !_testConfig.ImplementDesign)
                 throw new Exception("Can't analyze for implementation if ImplementDesign is false in the config.");
@@ -119,12 +119,15 @@ quit
                     return null;
                 }
             }
-            var result = new VivadoResult();
-            result.TimingReport = File.ReadAllText(
-                (phase == StaPhase.Implementation) ? implTimingReportOutputPath : synthTimingReportOutputPath);
-            result.TimingSummary = File.ReadAllText(
-                (phase == StaPhase.Implementation) ? implTimingSummaryOutputPath : synthTimingSummaryOutputPath);
+            var result = new VivadoResult
+            {
+                TimingReport = File.ReadAllText(
+                    (phase == StaPhase.Implementation) ? implTimingReportOutputPath : synthTimingReportOutputPath),
+                TimingSummary = File.ReadAllText(
+                    (phase == StaPhase.Implementation) ? implTimingSummaryOutputPath : synthTimingSummaryOutputPath)
+            };
             parser.Parse(result);
+
             return parser;
         }
     }
