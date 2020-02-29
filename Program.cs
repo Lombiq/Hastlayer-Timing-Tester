@@ -3,8 +3,8 @@ using CommandLine.Text;
 
 namespace HastlayerTimingTester
 {
-    /// <summary>Options for the command-line argument parser (CommandLine).</summary>
-    class ProgramOptions
+    /// <summary>Parameters for the command-line argument parser (CommandLine).</summary>
+    internal class ProgramParameters
     {
         [Option('p', "prepare", Required = false, DefaultValue = false,
             HelpText = "Generate VHDL files and batch file for next step.")]
@@ -42,14 +42,12 @@ namespace HastlayerTimingTester
     {
         static void Main(string[] args)
         {
-            var options = new ProgramOptions();
+            var parameters = new ProgramParameters();
             // This is a hack but I couldn't find an easy way to display the help if no parameters are present:
             if (args.Length == 0) args = new string[] { "--help" };
-            if (Parser.Default.ParseArguments(args, options))
+            if (Parser.Default.ParseArguments(args, parameters))
             {
-                var timingTester = new TimingTester();
-                var test = new TimingTestConfig();
-                timingTester.DoTests(test, options);
+                new TimingTester().DoTests(new TimingTestConfig(), parameters);
             }
         }
     }

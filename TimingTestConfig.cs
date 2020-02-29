@@ -12,7 +12,7 @@ namespace HastlayerTimingTester
     /// See the comments in the source of this class for detailed description of the options.
     /// It is advised to check <see cref="Operators"> first.
     /// </summary>
-    class TimingTestConfig : TimingTestConfigBase
+    internal class TimingTestConfig : TimingTestConfigBase
     {
         public TimingTestConfig()
         {

@@ -6,26 +6,80 @@ using System.Reflection;
 
 namespace HastlayerTimingTester
 {
-
     /// <summary>Implements the core functionality of the Hastlayer Timing Tester application.</summary>
-    class TimingTester
+    internal class TimingTester
     {
         private TimingTestConfigBase _testConfig;
+
+        /// <summary>The output directory of the actual test being done when running the Timing Tester.
+        /// This is like: @"CurrentTests\gt_unsigned32_to_boolean_comb"</summary>
+        private string _currentTestOutputDirectory;
 
         /// <summary>The output directory of all tests to be done when running the Timing Tester.</summary>
         public const string CurrentTestBaseDirectory = "CurrentTest";
 
-        /// <summary>The output directory of the actual test being done when running the Timing Tester.
-        /// This is like: @"CurrentTests\gt_unsigned32_to_boolean_comb"</summary>
-        string CurrentTestOutputDirectory;
 
-        enum TaskChoice { Prepare, Analyze }
+        /// <summary>
+        /// Gets things ready before the test, then runs the test.
+        /// </summary>
+        public void DoTests(TimingTestConfigBase testConfig, ProgramParameters parameters)
+        {
+            // Command-line parameters.
+            if (parameters.All) parameters.Analyze = parameters.ExecSta = parameters.Prepare = true;
+            if (parameters.AllRemoteSta)
+            {
+                parameters.Analyze = parameters.Prepare = true;
+                parameters.ExecSta = false;
+            }
+
+            _testConfig = testConfig;
+            if (parameters.Prepare)
+            {
+                if (!Directory.Exists(CurrentTestBaseDirectory)) Directory.CreateDirectory(CurrentTestBaseDirectory);
+                else if (Directory.GetFileSystemEntries(CurrentTestBaseDirectory).Length > 0)
+                {
+                    Directory.Delete(CurrentTestBaseDirectory, true);
+                    Directory.CreateDirectory(CurrentTestBaseDirectory);
+                }
+            }
+            Logger.Init(CurrentTestBaseDirectory + "\\Log.txt", parameters.Prepare);
+            _testConfig.Driver.BaseDir = CurrentTestBaseDirectory;
+
+            if (parameters.Prepare) PrepareAnalyze(TaskChoice.Prepare);
+            if (parameters.ExecSta) ExecSta();
+            if (parameters.AllRemoteSta)
+            {
+                Console.WriteLine($"\r\nWaiting for user to run tests and overwrite the result in {CurrentTestBaseDirectory}\r\n");
+                Console.ReadKey();
+            }
+            if (parameters.Analyze) PrepareAnalyze(TaskChoice.Analyze);
+        }
+
+        /// <summary>
+        /// Runs the Run.bat in CurrentTest to apply STA.
+        /// </summary>
+        public void ExecSta()
+        {
+            Logger.LogStageHeader("execute-sta");
+            using (var process = new Process())
+            {
+                process.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
+                    "\\" + CurrentTestBaseDirectory;
+                process.StartInfo.FileName = process.StartInfo.WorkingDirectory + "\\Run.bat";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.CreateNoWindow = false;
+                process.StartInfo.RedirectStandardOutput = false;
+                process.Start();
+                process.WaitForExit();
+            }
+        }
+
 
         /// <summary>
         /// Implements the --prepare and the --analyze stages of processing.
         /// </summary>
         /// <param name="taskChoice">This parameter allows us to choose which stage to do.</param>
-        void PrepareAnalyze(TaskChoice taskChoice)
+        private void PrepareAnalyze(TaskChoice taskChoice)
         {
             var taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
             Logger.LogStageHeader(taskChoiceString);
@@ -33,8 +87,10 @@ namespace HastlayerTimingTester
             StreamWriter batchWriter = null, resultsWriter = null;
             if (taskChoice == TaskChoice.Prepare)
             {
-                batchWriter = new StreamWriter(File.Open(CurrentTestBaseDirectory + "\\Run.bat", FileMode.Create));
-                batchWriter.AutoFlush = true;
+                batchWriter = new StreamWriter(File.Open(CurrentTestBaseDirectory + "\\Run.bat", FileMode.Create))
+                {
+                    AutoFlush = true
+                };
                 _testConfig.Driver.InitPrepare(batchWriter);
             }
             else
@@ -75,8 +131,8 @@ namespace HastlayerTimingTester
                                     continue;
                                 }
 
-                                CurrentTestOutputDirectory = CurrentTestBaseDirectory + "\\" + testFriendlyName;
-                                Directory.CreateDirectory(CurrentTestOutputDirectory);
+                                _currentTestOutputDirectory = CurrentTestBaseDirectory + "\\" + testFriendlyName;
+                                Directory.CreateDirectory(_currentTestOutputDirectory);
                                 Logger.Log("\tDir name: {0}", testFriendlyName);
 
                                 if (taskChoice == TaskChoice.Prepare)
@@ -178,60 +234,7 @@ namespace HastlayerTimingTester
             if (resultsWriter != null) resultsWriter.Close();
         }
 
-        /// <summary>
-        /// Gets things ready before the test, then runs the test.
-        /// </summary>
-        public void DoTests(TimingTestConfigBase testConfig, ProgramOptions options)
-        {
-            // Command-line options
-            if (options.All) options.Analyze = options.ExecSta = options.Prepare = true;
-            if (options.AllRemoteSta)
-            {
-                options.Analyze = options.Prepare = true;
-                options.ExecSta = false;
-            }
 
-            _testConfig = testConfig;
-            if (options.Prepare)
-            {
-                if (!Directory.Exists(CurrentTestBaseDirectory)) Directory.CreateDirectory(CurrentTestBaseDirectory);
-                else if (Directory.GetFileSystemEntries(CurrentTestBaseDirectory).Length > 0)
-                {
-                    Directory.Delete(CurrentTestBaseDirectory, true);
-                    Directory.CreateDirectory(CurrentTestBaseDirectory);
-                }
-            }
-            Logger.Init(CurrentTestBaseDirectory + "\\Log.txt", options.Prepare);
-            _testConfig.Driver.BaseDir = CurrentTestBaseDirectory;
-
-            if (options.Prepare) PrepareAnalyze(TaskChoice.Prepare);
-            if (options.ExecSta) ExecSta();
-            if (options.AllRemoteSta)
-            {
-                Console.WriteLine(string.Format("\r\nWaiting for user to run tests and overwrite the result in {0}\r\n",
-                    CurrentTestBaseDirectory));
-                Console.ReadKey();
-            }
-            if (options.Analyze) PrepareAnalyze(TaskChoice.Analyze);
-        }
-
-        /// <summary>
-        /// Runs the Run.bat in CurrentTest to apply STA.
-        /// </summary>
-        public void ExecSta()
-        {
-            Logger.LogStageHeader("execute-sta");
-            using (var cp = new Process())
-            {
-                cp.StartInfo.WorkingDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) +
-                    "\\" + CurrentTestBaseDirectory;
-                cp.StartInfo.FileName = cp.StartInfo.WorkingDirectory + "\\Run.bat";
-                cp.StartInfo.UseShellExecute = false;
-                cp.StartInfo.CreateNoWindow = false;
-                cp.StartInfo.RedirectStandardOutput = false;
-                cp.Start();
-                cp.WaitForExit();
-            }
-        }
+        private enum TaskChoice { Prepare, Analyze }
     }
 }

@@ -4,7 +4,6 @@ using System.Collections.Generic;
 
 namespace HastlayerTimingTester
 {
-
     /// <summary>
     /// Base class for configuration. For more information, check the <see cref="TimingTestConfig" /> subclass.
     /// </summary>
