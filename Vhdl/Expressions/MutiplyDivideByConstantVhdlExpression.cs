@@ -59,15 +59,5 @@ namespace HastlayerTimingTester.Vhdl.Expressions
                     ((_validationMode == ValidationMode.UnsignedOnly) ? unsignedMode : true) &&
                     ((_validationMode == ValidationMode.SignedOnly) ? signedMode : true);
         }
-
-
-        /// <summary>
-        /// Cuts any "0" characters from the beginning of an input string, and returns the trimmed string.
-        /// </summary>
-        private static string CutZerosFromBeginning(string input, int maxLength = 0)
-        {
-            while (input.Length > maxLength && input.StartsWith("0")) input = input.Substring(1);
-            return input;
-        }
     }
 }
