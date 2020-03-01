@@ -49,6 +49,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AdditionalVhdlIncludes.cs" />
+    <Compile Include="Drivers\RetryLogicStreamWriterExtensions.cs" />
     <Compile Include="Vhdl\Expressions\BinaryVhdlExpression.cs" />
     <Compile Include="Drivers\IntelDriver.cs" />
     <Compile Include="Drivers\FpgaVendorDriver.cs" />

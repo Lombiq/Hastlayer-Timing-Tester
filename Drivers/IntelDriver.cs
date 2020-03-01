@@ -152,8 +152,10 @@ for subdir in subdirs:
             File.WriteAllText(sdcPath, (vhdlTemplate.HasTimingConstraints) ? sdcContent : "");
 
             _batchWriter.WriteLine("cd {0}", outputDirectoryName);
+            _batchWriter.BeginRetryWrapper("TimingSummary.txt");
             _batchWriter.WriteLine("{0}\\quartus_sh.exe -t ../Quartus.tcl", _quartusPath);
             _batchWriter.WriteLine("{0}\\quartus_sta.exe -t ../TimeQuest.tcl", _quartusPath);
+            _batchWriter.EndRetryWrapper();
             _batchWriter.WriteLine("cd ..");
         }
 
