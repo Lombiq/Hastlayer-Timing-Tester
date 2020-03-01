@@ -135,9 +135,12 @@ namespace HastlayerTimingTester
                 }
             });
 
+            var actualNumberOfSTAProcesses = testCount < _testConfig.NumberOfSTAProcesses ? testCount : _testConfig.NumberOfSTAProcesses;
+
             // Creating script to be able to easily execute all STA scripts in parallel by hand too.
             var scriptBuilder = new StringBuilder();
-            for (int i = 0; i < _testConfig.NumberOfSTAProcesses; i++)
+
+            for (int i = 0; i < actualNumberOfSTAProcesses; i++)
             {
                 scriptBuilder.AppendLine("cd " + i);
                 scriptBuilder.AppendLine("start cmd /c Run.bat");
@@ -148,11 +151,10 @@ namespace HastlayerTimingTester
             try
             {
                 // The last process will have all the remainder tests.
-                var testsPerProcess = testCount / _testConfig.NumberOfSTAProcesses;
-                if (testsPerProcess == 0) testsPerProcess = 1;
-                var lastProcessIndex = _testConfig.NumberOfSTAProcesses - 1;
+                var testsPerProcess = testCount / actualNumberOfSTAProcesses;
+                var lastProcessIndex = actualNumberOfSTAProcesses - 1;
                 // The last process will have fewer tests if testCount is not a multiple of NumberOfSTAProcesses.
-                //var testsPerProcess = (int)Math.Ceiling((double)testCount / _testConfig.NumberOfSTAProcesses);
+                //var testsPerProcess = (int)Math.Ceiling((double)testCount / actualNumberOfSTAProcesses);
                 var testIndex = 0;
                 var isLastProcess = false;
 
@@ -161,7 +163,7 @@ namespace HastlayerTimingTester
                     try
                     {
                         var processIndex = (int)Math.Floor((double)testIndex / testsPerProcess);
-                        if (processIndex >= _testConfig.NumberOfSTAProcesses) processIndex = lastProcessIndex;
+                        if (processIndex >= actualNumberOfSTAProcesses) processIndex = lastProcessIndex;
                         var inputDataType = inputDataTypeFunction(inputSize, false);
                         var outputDataType = op.OutputDataTypeFunction(
                             inputSize,
