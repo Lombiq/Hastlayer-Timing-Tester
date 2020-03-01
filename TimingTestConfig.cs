@@ -1,6 +1,7 @@
 using HastlayerTimingTester.Drivers;
 using HastlayerTimingTester.Vhdl;
 using HastlayerTimingTester.Vhdl.Expressions;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 
@@ -186,11 +187,13 @@ namespace HastlayerTimingTester
             ImplementDesign = true;
 
             // Determines the number of threads used during simulation in a given FPGA vendor tool process if the tool
-            // supports it. Currently only Vivado supports multi threading. Also see NumberOfSTAProcesses.
-            NumberOfThreadsPerProcess = 8;
+            // supports it. Currently only Vivado supports multi threading. This should most of the time correspond to
+            // the number of logical processors (cores) in the system. Also see NumberOfSTAProcesses.
+            NumberOfThreadsPerProcess = Environment.ProcessorCount;
 
-            // Determines the number of FPGA vendor tool processes to use during static timing analysis. Also see
-            // NumberOfThreadsPerProcess.
+            // Determines the number of FPGA vendor tool processes to use during static timing analysis. Since even
+            // when supposedly using all the cores the FPGA tools can't usually utilize the whole CPU you can increase
+            // the degree of parallelism further. Also see NumberOfThreadsPerProcess.
             NumberOfSTAProcesses = 6;
         }
     }
