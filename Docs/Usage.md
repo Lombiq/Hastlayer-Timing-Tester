@@ -4,7 +4,7 @@
 
 ## What you will need
 
-Hastlayer Timing Tester requires **Visual Studio Community Edition 2017 (Version 15.4.4) or greater** to run. (You will need to recompile the project from source if you edit the configuration.)
+Hastlayer Timing Tester requires **Visual Studio Community Edition 2019 or greater** to run. (You will need to recompile the project from source if you edit the configuration.)
 
 In case you are using Hastlayer on Xilinx platform, you will need **Xilinx Vivado 2016.4**.
 
@@ -34,7 +34,7 @@ Hastlayer Timing Tester has three different processing stages:
 
 > Note: For Quartus consider running `Cleanup.py` in the test directory after this stage. (See the "Output" section later this document.)
 
-> This step can take a lot of time. For Quartus on Catapult it takes about 4 days. Also, sometimes Vivado can get stuck on some of the steps (typically on "INFO: [DRC 23-27] Running DRC with 8 threads", sometimes failing with "Abnormal program termination (EXCEPTION_ACCESS_VIOLATION)") so be sure to check on this step to see if it still runs, and if not, restart it (it'll resume where it has left off).
+> This step can take a lot of time. With Quartus on Catapult it takes about 4 days (sequentially), with Vivado for the Nexys A7 about 15 hours (parallelized). Also, sometimes Vivado can get stuck on some of the steps (typically on "INFO: [DRC 23-27] Running DRC with 8 threads", sometimes failing with "Abnormal program termination (EXCEPTION_ACCESS_VIOLATION)") so be sure to check on this step to see if it still runs, and if not, restart it (it'll resume where it has left off).
 
 3. **Analyze** (`--analyze`, `-a`): process the STA results (after running the batch file). In this step, Hastlayer Timing Tester will parse the timing summaries and the timing reports, and display the most important values. These are also saved into the `Results.tsv` file for later processing.
 
