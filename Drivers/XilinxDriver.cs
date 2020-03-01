@@ -113,8 +113,8 @@ quit
 
             if (phase == StaPhase.Implementation)
             {
-                var ImplementationSuccessful = File.Exists(implTimingReportOutputPath);
-                if (!ImplementationSuccessful)
+                var implementationSuccessful = File.Exists(implTimingReportOutputPath);
+                if (!implementationSuccessful)
                 {
                     Logger.Log("Implementation (or STA) failed!");
                     return null;

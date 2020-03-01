@@ -233,8 +233,7 @@ namespace HastlayerTimingTester
 
                             if (_testConfig.Driver.CanStaAfterSynthesize)
                             {
-                                var synthesisParser = _testConfig.Driver.Analyze(
-                                    testFriendlyName, StaPhase.Synthesis);
+                                var synthesisParser = _testConfig.Driver.Analyze(testFriendlyName, StaPhase.Synthesis);
                                 Logger.Log("\r\nSynthesis:\r\n----------");
                                 synthesisParser.PrintParsedTimingReport("S");
                                 synthesisParser.PrintParsedTimingSummary();
@@ -244,8 +243,10 @@ namespace HastlayerTimingTester
 
                             if (_testConfig.Driver.CanStaAfterImplementation && _testConfig.ImplementDesign)
                             {
-                                var implementationParser = _testConfig.Driver.Analyze(testFriendlyName,
+                                var implementationParser = _testConfig.Driver.Analyze(
+                                    testFriendlyName,
                                     StaPhase.Implementation);
+
                                 if (implementationParser != null)
                                 {
                                     Logger.Log("\r\nImplementation:\r\n---------------");
@@ -257,6 +258,7 @@ namespace HastlayerTimingTester
                                         dataPathDelay + timingWindowDiffFromRequirement <
                                         implementationParser.DataPathDelay +
                                         implementationParser.TimingWindowDiffFromRequirement;
+
                                     if (useImplementationResults)
                                     {
                                         Logger.Log("Chosen to use implementation results.");
