@@ -30,8 +30,9 @@
         public override string GetVhdlCode(string[] inputs, int inputSize) => string.Format("{0} {1}", _vhdlOperator, inputs[0]);
 
         /// <summary>
-        /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we don't want to make any restriction on valid test 
-        /// cases, as this class might generate test cases for a wide range of operators.
+        /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we don't want to make any restriction on valid test
+        /// cases, as this class might generate test cases for a wide range of operators. Note that because of this a
+        /// lot of cases will fail with something like "0 definitions of operator "+" match here"
         /// </summary>
         public override bool IsValid(
             int inputSize,
