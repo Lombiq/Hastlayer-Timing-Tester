@@ -115,6 +115,7 @@ namespace HastlayerTimingTester
                 {
                     AutoFlush = true
                 };
+                batchWriter.WriteLine("mode con lines=99999");
                 _testConfig.Driver.InitPrepare(batchWriter);
             }
 
