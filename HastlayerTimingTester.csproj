@@ -50,6 +50,8 @@
   <ItemGroup>
     <Compile Include="AdditionalVhdlIncludes.cs" />
     <Compile Include="Drivers\RetryLogicStreamWriterExtensions.cs" />
+    <Compile Include="TimingTestConfigs\CatapultTimingTestConfig.cs" />
+    <Compile Include="TimingTestConfigs\NexysA7TimingTestConfig.cs" />
     <Compile Include="Vhdl\Expressions\BinaryVhdlExpression.cs" />
     <Compile Include="Drivers\IntelDriver.cs" />
     <Compile Include="Drivers\FpgaVendorDriver.cs" />
@@ -78,6 +80,7 @@
     <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

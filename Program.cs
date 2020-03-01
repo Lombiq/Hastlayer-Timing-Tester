@@ -1,5 +1,6 @@
 ﻿using CommandLine;
 using CommandLine.Text;
+using HastlayerTimingTester.TimingTestConfigs;
 
 namespace HastlayerTimingTester
 {
@@ -47,7 +48,7 @@ namespace HastlayerTimingTester
             if (args.Length == 0) args = new string[] { "--help" };
             if (Parser.Default.ParseArguments(args, parameters))
             {
-                new TimingTester().DoTests(new TimingTestConfig(), parameters);
+                new TimingTester().DoTests(new NexysA7TimingTestConfig(), parameters);
             }
         }
     }

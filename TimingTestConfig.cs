@@ -1,4 +1,3 @@
-using HastlayerTimingTester.Drivers;
 using HastlayerTimingTester.Vhdl;
 using HastlayerTimingTester.Vhdl.Expressions;
 using System;
@@ -155,23 +154,22 @@ namespace HastlayerTimingTester
             // InputSizes is the list of input sizes for the data type that we want to test
             InputSizes = new List<int> { 1, 8, 16, 32, 64 };
 
-            Part = "xc7a100tcsg324-1"; // The FPGA part number (only used for Xilinx devices)
+            // The FPGA part number (only used for Xilinx devices).
+            //Part = "xc7a100tcsg324-1";
 
+            // System clock frequency in Hz
+            //Frequency = 100e6m;
 
-            Frequency = 100e6m; // System clock frequency in Hz
-            //Frequency = 150e6m; // System clock frequency in Hz
-            Name = "default"; // Name of the configuration, will be used in the name of the output directory
+            // Name of the configuration, will be used in the name of the output directory
+            Name = "default";
 
             // If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
             // If it is false, the exceptions are logged and the program continues with the next test.
             DebugMode = false;
 
             // This selects for which FPGA vendor do we want to run the timing test. 
-            // XilinxDriver supports Vivado.
-            Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
-
-            // IntelDriver supports Quartus and TimeQuest.
-            //Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
+            // XilinxDriver supports Vivado, IntelDriver supports Quartus and TimeQuest.
+            //Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
 
             // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester. It does not
             // open the GUI for every single test. However, it cannot generate schematic drawings (Schematic.pdf).
