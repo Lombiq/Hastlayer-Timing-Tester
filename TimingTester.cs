@@ -304,14 +304,16 @@ namespace HastlayerTimingTester
                                 timingWindowDiffFromRequirement
                             );
                         }
-
-                        testIndex++;
-                        testIndexInCurrentProcess++;
                     }
                     catch (Exception exception)
                     {
                         if (_testConfig.DebugMode) throw;
                         else Logger.Log("Exception happened during {0}: {1}", taskChoiceString, exception.Message);
+                    }
+                    finally
+                    {
+                        testIndex++;
+                        testIndexInCurrentProcess++;
                     }
                 });
             }
