@@ -16,8 +16,8 @@ namespace HastlayerTimingTester
 
 
         /// <summary>
-        /// Initializes the Logger, to open the file given in LogFilePath.
-        /// (Logger already works before initialization, but it only writes to the console.)
+        /// Initializes the Logger, to open the file given in LogFilePath. (Logger already works before initialization,
+        /// but it only writes to the console.)
         /// </summary>
         public static void Init(string logFilePath, bool createFile = true)
         {
@@ -27,8 +27,8 @@ namespace HastlayerTimingTester
         }
 
         /// <summary>
-        /// Writes a formatted string to both a log file (if already initialized) and the console, ending
-        /// with a line break.
+        /// Writes a formatted string to both a log file (if already initialized) and the console, ending with a line
+        /// break.
         /// </summary>
         public static void Log(string format, params object[] objs)
         {
@@ -36,8 +36,8 @@ namespace HastlayerTimingTester
         }
 
         /// <summary>
-        /// Writes a formatted string to both a log file (if already initialized) and the console.
-        /// It does not end with a line break.
+        /// Writes a formatted string to both a log file (if already initialized) and the console. It does not end with
+        /// a line break.
         /// </summary>
         public static void LogInline(string format, params object[] objs)
         {
@@ -45,13 +45,22 @@ namespace HastlayerTimingTester
         }
 
         /// <summary>
-        /// Writes a header to the log and screen for a given processing stage of Hastlayer Timing Tester, 
-        /// which can be specified as an input parameter (stage).
+        /// Writes a header to the log and screen for a given processing stage of Hastlayer Timing Tester, which can be
+        /// specified as an input parameter (stage).
         /// </summary>
         public static void LogStageHeader(string stage)
         {
             Log("\r\n=== HastlayerTimingTester {0} stage ===", stage);
             Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
+
+        /// <summary>
+        /// Writes a footer to the log and screen for a given processing stage of Hastlayer Timing Tester, which can be
+        /// specified as an input parameter (stage).
+        /// </summary>
+        public static void LogStageFooter(string stage)
+        {
+            Log("\r\n=== HastlayerTimingTester {0} stage finished at {1} ===", stage, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
         }
 
         public static void Dispose()

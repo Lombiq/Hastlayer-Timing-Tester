@@ -90,6 +90,7 @@ namespace HastlayerTimingTester
             }
 
             Task.WaitAll(tasks);
+            Logger.LogStageFooter("execute-sta");
         }
 
 
@@ -305,6 +306,8 @@ namespace HastlayerTimingTester
                 }
                 if (resultsWriter != null) resultsWriter.Dispose();
             }
+
+            Logger.LogStageFooter(taskChoiceString);
         }
 
 
