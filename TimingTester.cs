@@ -159,6 +159,7 @@ namespace HastlayerTimingTester
                 var isLastProcess = false;
                 var testIndexInCurrentProcess = 0;
                 var testsPerCurrentProcess = testsPerProcess;
+                var previousProcessIndex = -1;
 
                 ExecuteForOperators((op, inputSize, inputDataTypeFunction, vhdlTemplate) =>
                 {
@@ -187,8 +188,9 @@ namespace HastlayerTimingTester
                             return;
                         }
 
-                        if (!isLastProcess && testIndex % testsPerProcess == 0)
+                        if (!isLastProcess && processIndex != previousProcessIndex)
                         {
+                            previousProcessIndex = processIndex;
                             testIndexInCurrentProcess = 0;
                             var processFolderPath = CombineWithBaseDirectoryPath(GetProcessFolderName(processIndex));
 
