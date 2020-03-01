@@ -154,8 +154,6 @@ namespace HastlayerTimingTester
                 // The last process will have all the remainder tests.
                 var testsPerProcess = testCount / actualNumberOfSTAProcesses;
                 var lastProcessIndex = actualNumberOfSTAProcesses - 1;
-                // The last process will have fewer tests if testCount is not a multiple of NumberOfSTAProcesses.
-                //var testsPerProcess = (int)Math.Ceiling((double)testCount / actualNumberOfSTAProcesses);
                 var testIndex = 0;
                 var isLastProcess = false;
 
