@@ -115,7 +115,9 @@ namespace HastlayerTimingTester
                 {
                     AutoFlush = true
                 };
-                batchWriter.WriteLine("mode con lines=99999");
+                // Increasing the command buffer size. 32766 is the maximum (see:
+                // https://stackoverflow.com/questions/4692673/how-to-change-screen-buffer-size-in-windows-command-prompt-from-batch-script)
+                batchWriter.WriteLine("mode con lines=32766");
                 _testConfig.Driver.InitPrepare(batchWriter);
             }
 
