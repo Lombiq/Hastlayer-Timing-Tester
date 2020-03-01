@@ -69,12 +69,16 @@ namespace HastlayerTimingTester
             {
                 tasks[i] = Task.Factory.StartNew(indexObject =>
                 {
-                    using (var process = new Process())
-                    {
-                        process.StartInfo.WorkingDirectory = Path.Combine(
+                    var folder = Path.Combine(
                             Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
                             CurrentTestBaseDirectory,
                             GetProcessFolderName((int)indexObject));
+
+                    if (!Directory.Exists(folder)) return;
+
+                    using (var process = new Process())
+                    {
+                        process.StartInfo.WorkingDirectory = folder;
                         process.StartInfo.FileName = Path.Combine(process.StartInfo.WorkingDirectory, "Run.bat");
                         process.StartInfo.UseShellExecute = _testConfig.NumberOfSTAProcesses > 1;
                         process.StartInfo.CreateNoWindow = false;
@@ -145,6 +149,7 @@ namespace HastlayerTimingTester
             {
                 // The last process will have all the remainder tests.
                 var testsPerProcess = testCount / _testConfig.NumberOfSTAProcesses;
+                if (testsPerProcess == 0) testsPerProcess = 1;
                 var lastProcessIndex = _testConfig.NumberOfSTAProcesses - 1;
                 // The last process will have fewer tests if testCount is not a multiple of NumberOfSTAProcesses.
                 //var testsPerProcess = (int)Math.Ceiling((double)testCount / _testConfig.NumberOfSTAProcesses);
