@@ -21,7 +21,8 @@ To configure Hastlayer Timing Tester, you will have to edit the source file `Tim
 
 > You can generate different configurations by adding new classes that have `TimingTestConfigBase` as their parent. However, the class to be used is specified in `Main()` in `Program.cs`.
 
-# How to run
+
+## How to run
 
 After building the project, you can run `HastlayerTimingTester.exe`, which is a console application that has some command line parameters, as detailed below. 
 
@@ -42,7 +43,7 @@ The `--all` or `-x` switch runs all the steps above (1-3).
 The `--all-remote-sta` or `-r` switch runs step 1, then waits for the user to run the script manually on the local or remote machine, then runs step 3.
 
 
-# Operation
+## Operation
 
 Hastlayer Timing Tester will go through:
 
@@ -53,8 +54,7 @@ Hastlayer Timing Tester will go through:
 
 ...and generates, runs, then analyzes tests for all combinations of them.
 
-
-## Output
+### Output
 
 Hastlayer Timing Tester will generate a similar directory structure:
 
@@ -110,8 +110,7 @@ Timing Summary:
 
 The important values that the Transformer can make use of are prefixed with `>>`.
 
-
-## What does this mean at all?
+### What does this mean at all?
 
 Some of these values are explained in the [introduction](Introduction.md), make sure to read it first.
 
@@ -158,7 +157,7 @@ However, it raises even more questions:
 > **Note:** the TWDFR value in `Results.tsv` is normally a negative number. It is used just opposite to the value shown on the images above. We need to add this negative number to the clock cycle duration (also called *Requirement*) to get the duration of the *Timing Window*, in which the sum of the DPD of all operations in a given cycle need to fit into.
 
 
-## Limitations of the analysis
+ ### Limitations of the analysis
 
 When the synthesis ends, we know how many hardware resources will be used (e.g. LUT, FDRE, DSP48E, etc.) and how they will be connected together. However, mapping these resources to real hardware has not been done yet.
 
@@ -184,8 +183,7 @@ Another limitation of this tool is not doing any further analysis on hold time a
 
 Additional research has been carried out about hold violations, the result of which can be found on the [Lombiq Wiki (Timing on Catapult)](https://lombiq.atlassian.net/wiki/spaces/HAST/pages/186744859/Timing+on+Catapult).
 
-
-## The meaning of other parameters
+### The meaning of other parameters
 
 For **Data path delay** and **Source clock delay** check [the introduction](Introduction.md).
 
@@ -209,8 +207,7 @@ This figure will hopefully make it clear where do some of these parameters come 
 
 ![](Images/WhereDoValuesComeFrom.png)
 
-
-## Questions
+### Questions
 
 * Q: What is the difference between `VhdlTemplateSync` and `VhdlTemplateComb`?
 * A: `VhdlTemplateComb` is a pure design without a clock. Only the operator is there. In the synthesized design, the inputs are connected to IBUFs and the outputs are connected to OBUFs, which add a lot of time to the *Data Path Delay*. `VhdlTemplateSync` was added because I decided that calculating the operator once for every clock cycle, feeding its inputs and capturing its output with flip-flops is more realistic, as this is what happens in Hastlayer. Also Vivado can output more timing information for a design like that. I recommend using this template.
