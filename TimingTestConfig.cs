@@ -21,8 +21,8 @@ namespace HastlayerTimingTester
             // Any of these can be used as a parameter to the constructor of VhdlOp.
             // (It is advised to start with the Operators variable when looking at this file.)
             // For example, for an input size of 32, we should get "unsigned(31 downto 0)" to be pasted into the VHDL
-            // template. However, if a friendly name is requested instead, "unsigned32" is returned, which can be safely
-            // used in directory names.
+            // template. However, if a friendly name is requested instead, "unsigned32" is returned, which can be
+            // safely used in directory names.
             var suNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate> {
                 (size, getFriendlyName) =>
                     (getFriendlyName) ?
@@ -87,10 +87,9 @@ namespace HastlayerTimingTester
             };
 
             // We test shifting by the amount of bits listed below. 
-            // Multiplying by a constant 2^N is also a shift operation, so 
-            // we test that here, too. As we expect the FPGA compiler to implement this by wiring, multiplying by 2^N is
-            // expected to be faster than multiplying by another constant or another variable (where it would use DSP
-            // blocks).
+            // Multiplying by a constant 2^N is also a shift operation, so we test that here, too. As we expect the
+            // FPGA compiler to implement this by wiring, multiplying by 2^N is expected to be faster than multiplying
+            // by another constant or another variable (where it would use DSP blocks).
             for (int i = 0; i < 64; i++) // <-- bit shift amounts to test
             {
                 // These are the original shift test cases, however the DotnetShiftVhdlExpression implements the
@@ -174,12 +173,11 @@ namespace HastlayerTimingTester
             // IntelDriver supports Quartus and TimeQuest.
             //Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
 
-            // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester.
-            // It does not open the GUI for every single test. However, it cannot generate schematic drawings
-            // (Schematic.pdf).
+            // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester. It does not
+            // open the GUI for every single test. However, it cannot generate schematic drawings (Schematic.pdf).
             // Note: if you are using Vivado in GUI mode with VivadoBatchMode = false and with ImplementDesign = true,
-            // only generate designs that are possible to implement, or a message box will pop up with Tcl errors,
-            // and the tests will hang.
+            // only generate designs that are possible to implement, or a message box will pop up with Tcl errors, and
+            // the tests will hang.
             VivadoBatchMode = true;
 
             // If ImplementDesign is true, Vivado will perform STA for both the synthesized and the implemented designs.
