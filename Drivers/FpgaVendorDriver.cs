@@ -23,7 +23,7 @@ namespace HastlayerTimingTester.Drivers
         public abstract bool CanStaAfterImplementation { get; }
 
 
-        public FpgaVendorDriver(TimingTestConfigBase testConfig)
+        protected FpgaVendorDriver(TimingTestConfigBase testConfig)
         {
             _testConfig = testConfig;
         }

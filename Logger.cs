@@ -50,13 +50,19 @@ namespace HastlayerTimingTester
         /// </summary>
         public static void LogStageHeader(string stage)
         {
-            Logger.Log("\r\n=== HastlayerTimingTester {0} stage ===", stage);
-            Logger.Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            Log("\r\n=== HastlayerTimingTester {0} stage ===", stage);
+            Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+        }
+
+        public static void Dispose()
+        {
+            _logStreamWriter?.Dispose();
+            _initialized = false;
         }
 
 
         /// <summary>
-        /// Implements the functionality described for <see cref="Logger.Log"/> and <see cref="Logger.LogInline"/>.
+        /// Implements the functionality described for <see cref="Log"/> and <see cref="LogInline"/>.
         /// </summary>
         /// <param name="inline">It ends the line with a line break based on this parameter.</param>
         private static void LogInternal(string format, bool inline, params object[] objs)

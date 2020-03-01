@@ -12,7 +12,7 @@ namespace HastlayerTimingTester.Drivers
     /// </summary>
     public class XilinxDriver : FpgaVendorDriver
     {
-        private string _vivadoPath;
+        private readonly string _vivadoPath;
 
         /// <summary>
         /// Xilinx tools support STA both after synthesis and implementation. 
@@ -68,7 +68,7 @@ quit
             File.WriteAllText(
                 Path.Combine(CurrentRootDirectoryPath, "Generate.tcl"),
                 _tclTemplate
-                    .Replace("%NUMTHREADS%", _testConfig.NumberOfThreads.ToString())
+                    .Replace("%NUMTHREADS%", _testConfig.NumberOfThreadsPerProcess.ToString())
                     .Replace("%PART%", _testConfig.Part)
                     .Replace("%IMPLEMENT%", (Convert.ToInt32(_testConfig.ImplementDesign)).ToString())
             );

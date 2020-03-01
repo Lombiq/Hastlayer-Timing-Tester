@@ -2,7 +2,6 @@ using HastlayerTimingTester.Drivers;
 using HastlayerTimingTester.Vhdl;
 using HastlayerTimingTester.Vhdl.Expressions;
 using System.Collections.Generic;
-using System.Numerics;
 
 namespace HastlayerTimingTester
 {
@@ -61,95 +60,95 @@ namespace HastlayerTimingTester
                 new VhdlOp(new BinaryOperatorVhdlExpression("and"),   "and",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("nand"),  "nand", stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new BinaryOperatorVhdlExpression("or"),    "or",   stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("nor"),   "nor",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("xor"),   "xor",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("xnor"),  "xnor", stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("+"),     "add",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression(">"),     "gt",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("<"),     "lt",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression(">="),    "ge",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("<="),    "le",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("="),     "eq",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("/="),    "neq",  suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("-"),     "sub",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("mod"),   "mod",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new BinaryOperatorVhdlExpression("rem"),   "rem",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new UnaryOperatorVhdlExpression("not"),    "not",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new UnaryOperatorVhdlExpression("+", UnaryOperatorVhdlExpression.ValidationMode.AnyDataType),
-                                                                      "unary_plus",  suNumericDataTypes, VhdlOp.SameOutputDataType,       defaultVhdlTemplates),
-                new VhdlOp(new UnaryOperatorVhdlExpression("-", UnaryOperatorVhdlExpression.ValidationMode.SignedOnly),
-                                                                      "unary_minus",  suNumericDataTypes, VhdlOp.SameOutputDataType,       defaultVhdlTemplates),
-                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("/")),
-                                                                      "div",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("*")),
-                                                                      "mul",  suNumericDataTypes,     VhdlOp.SameOutputDataType,         defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("nor"),   "nor",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("xor"),   "xor",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("xnor"),  "xnor", stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("+"),     "add",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression(">"),     "gt",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("<"),     "lt",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression(">="),    "ge",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("<="),    "le",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("="),     "eq",   suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("/="),    "neq",  suNumericDataTypes,     VhdlOp.ComparisonWithBoolOutput,  defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("-"),     "sub",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("mod"),   "mod",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                //new VhdlOp(new BinaryOperatorVhdlExpression("rem"),   "rem",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                //new VhdlOp(new UnaryOperatorVhdlExpression("not"),    "not",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                //new VhdlOp(new UnaryOperatorVhdlExpression("+", UnaryOperatorVhdlExpression.ValidationMode.AnyDataType),
+                //                                                      "unary_plus",  suNumericDataTypes, VhdlOp.SameOutputDataType,       defaultVhdlTemplates),
+                //new VhdlOp(new UnaryOperatorVhdlExpression("-", UnaryOperatorVhdlExpression.ValidationMode.SignedOnly),
+                //                                                      "unary_minus",  suNumericDataTypes, VhdlOp.SameOutputDataType,       defaultVhdlTemplates),
+                //new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("/")),
+                //                                                      "div",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
+                //new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("*")),
+                //                                                      "mul",  suNumericDataTypes,     VhdlOp.SameOutputDataType,         defaultVhdlTemplates),
             };
 
-            // We test shifting by the amount of bits listed below. 
-            // Multiplying by a constant 2^N is also a shift operation, so 
-            // we test that here, too. As we expect the FPGA compiler to implement this by wiring, multiplying by 2^N is
-            // expected to be faster than multiplying by another constant or another variable (where it would use DSP
-            // blocks).
-            for (int i = 0; i < 64; i++) // <-- bit shift amounts to test
-            {
-                // These are the original shift test cases, however the DotnetShiftVhdlExpression implements the
-                // expression that Hastlayer really uses:
-                // Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
-                //     "shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                // Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
-                //     "shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //// We test shifting by the amount of bits listed below. 
+            //// Multiplying by a constant 2^N is also a shift operation, so 
+            //// we test that here, too. As we expect the FPGA compiler to implement this by wiring, multiplying by 2^N is
+            //// expected to be faster than multiplying by another constant or another variable (where it would use DSP
+            //// blocks).
+            //for (int i = 0; i < 64; i++) // <-- bit shift amounts to test
+            //{
+            //    // These are the original shift test cases, however the DotnetShiftVhdlExpression implements the
+            //    // expression that Hastlayer really uses:
+            //    // Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
+            //    //     "shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //    // Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
+            //    //     "shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
 
-                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 64, true, false, i),
-                    "dotnet_shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 64, true, false, i),
-                    "dotnet_shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 32, true, false, i),
-                    "dotnet_shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 32, true, false, i),
-                    "dotnet_shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //    Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 64, true, false, i),
+            //        "dotnet_shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //    Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 64, true, false, i),
+            //        "dotnet_shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //    Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 32, true, false, i),
+            //        "dotnet_shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //    Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 32, true, false, i),
+            //        "dotnet_shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
 
-                // These are test cases for /(2^n) or *(2^n) which is practically just a shift:
-                var powTwoOfI = BigInteger.Pow(2, i);
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
-                     MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
-                     MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
-                     "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
-                     MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
-                     MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
-                     "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
-                    MutiplyDivideByConstantVhdlExpression.Mode.Divide,
-                    MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
-                     "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
-                    MutiplyDivideByConstantVhdlExpression.Mode.Divide,
-                    MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
-                     "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-            }
+            //    // These are test cases for /(2^n) or *(2^n) which is practically just a shift:
+            //    var powTwoOfI = BigInteger.Pow(2, i);
+            //    Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
+            //         MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
+            //         MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
+            //         "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //    Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
+            //         MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
+            //         MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
+            //         "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //    Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
+            //        MutiplyDivideByConstantVhdlExpression.Mode.Divide,
+            //        MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
+            //         "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //    Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
+            //        MutiplyDivideByConstantVhdlExpression.Mode.Divide,
+            //        MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
+            //         "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //}
 
-            // These are DotnetShiftExpression with a<<b where both are variables:
-            foreach (int outputSize in new List<int> { 32, 64 })
-            {
-                Operators.Add(new VhdlOp(
-                        new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, outputSize, false, false),
-                        "dotnet_shift_left", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates
-                    ));
-                Operators.Add(new VhdlOp(
-                        new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, outputSize, false, false),
-                        "dotnet_shift_right", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates
-                    ));
-            }
+            //// These are DotnetShiftExpression with a<<b where both are variables:
+            //foreach (int outputSize in new List<int> { 32, 64 })
+            //{
+            //    Operators.Add(new VhdlOp(
+            //            new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, outputSize, false, false),
+            //            "dotnet_shift_left", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates
+            //        ));
+            //    Operators.Add(new VhdlOp(
+            //            new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, outputSize, false, false),
+            //            "dotnet_shift_right", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates
+            //        ));
+            //}
 
-            // Just to test MultiplyDivideByConstantVhdlExpression behaviour on constant 0 or negative numbers:
+            //// Just to test MultiplyDivideByConstantVhdlExpression behavior on constant 0 or negative numbers:
             Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(-2,
                  MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
                  MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
                  "mul_by_-2", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-            Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(0,
-                 MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
-                 MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
-                 "mul_by_0", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            //Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(0,
+            //     MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
+            //     MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
+            //     "mul_by_0", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
 
 
             // InputSizes is the list of input sizes for the data type that we want to test
@@ -185,9 +184,13 @@ namespace HastlayerTimingTester
             // If it is false, Vivado will only do synthesis + STA, and skip implementation + STA.
             ImplementDesign = true;
 
-            // It sets the number of threads used during simulation, if the FPGA vendor tools supports it. 
-            // (Currently only Vivado supports multi threading.)
-            NumberOfThreads = 8;
+            // Determines the number of threads used during simulation in a given FPGA vendor tool process if the tool
+            // supports it. Currently only Vivado supports multi threading. Also see NumberOfSTAProcesses.
+            NumberOfThreadsPerProcess = 8;
+
+            // Determines the number of FPGA vendor tool processes to use during static timing analysis. Also see
+            // NumberOfThreadsPerProcess.
+            NumberOfSTAProcesses = 6;
         }
     }
 }

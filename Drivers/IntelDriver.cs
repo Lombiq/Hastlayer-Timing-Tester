@@ -12,7 +12,7 @@ namespace HastlayerTimingTester.Drivers
     /// </summary>
     public class IntelDriver : FpgaVendorDriver
     {
-        private string _quartusPath;
+        private readonly string _quartusPath;
 
         /// <summary>
         /// Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
