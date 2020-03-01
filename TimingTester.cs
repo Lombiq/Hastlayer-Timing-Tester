@@ -156,6 +156,8 @@ namespace HastlayerTimingTester
                 var lastProcessIndex = actualNumberOfSTAProcesses - 1;
                 var testIndex = 0;
                 var isLastProcess = false;
+                var testIndexInCurrentProcess = 0;
+                var testsPerCurrentProcess = testsPerProcess;
 
                 ExecuteForOperators((op, inputSize, inputDataTypeFunction, vhdlTemplate) =>
                 {
@@ -186,6 +188,7 @@ namespace HastlayerTimingTester
 
                         if (!isLastProcess && testIndex % testsPerProcess == 0)
                         {
+                            testIndexInCurrentProcess = 0;
                             var processFolderPath = CombineWithBaseDirectoryPath(GetProcessFolderName(processIndex));
 
                             _testConfig.Driver.CurrentRootDirectoryPath = processFolderPath;
@@ -193,15 +196,22 @@ namespace HastlayerTimingTester
                             if (taskChoice == TaskChoice.Prepare)
                             {
                                 CreateBatchWriter(processFolderPath);
-                                if (processIndex == lastProcessIndex) isLastProcess = true;
+                            }
+
+                            if (processIndex == lastProcessIndex)
+                            {
+                                isLastProcess = true;
+                                testsPerCurrentProcess = testCount - testIndex;
                             }
                         }
-                        testIndex++;
 
                         if (taskChoice == TaskChoice.Prepare)
                         {
                             Directory.CreateDirectory(CombineWithBaseDirectoryPath(GetProcessFolderName(processIndex), testFriendlyName));
                             Logger.Log("\tDir name: {0}", testFriendlyName);
+
+                            batchWriter.WriteLine(
+                                $"{Environment.NewLine}echo STARTING #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}{Environment.NewLine}");
 
                             var vhdl = AdditionalVhdlIncludes.Content + vhdlTemplate.VhdlTemplate
                                 .Replace("%INTYPE%", inputDataType)
@@ -209,6 +219,10 @@ namespace HastlayerTimingTester
                                 .Replace("%EXPRESSION%",
                                     op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize));
                             _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
+
+
+                            batchWriter.WriteLine(
+                                $"echo {Environment.NewLine}echo FINISHED #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}{Environment.NewLine}");
                         }
                         else // if taskChoice == TaskChoice.Analyze
                         {
@@ -289,6 +303,9 @@ namespace HastlayerTimingTester
                                 timingWindowDiffFromRequirement
                             );
                         }
+
+                        testIndex++;
+                        testIndexInCurrentProcess++;
                     }
                     catch (Exception exception)
                     {

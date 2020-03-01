@@ -64,7 +64,7 @@ quit
         {
             base.InitPrepare(batchWriter);
             if (_testConfig.VivadoBatchMode)
-                batchWriter.WriteLine("echo \"Vivado cannot generate Schematic.pdf for designs in batch mode.\"");
+                batchWriter.WriteLine("echo Vivado cannot generate Schematic.pdf for designs in batch mode.");
             File.WriteAllText(
                 Path.Combine(CurrentRootDirectoryPath, "Generate.tcl"),
                 _tclTemplate
