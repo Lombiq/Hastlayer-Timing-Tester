@@ -88,7 +88,7 @@ quit
             );
 
             _batchWriter.WriteLine("cd {0}", outputDirectoryName);
-            _batchWriter.BeginRetryWrapper("ImplTimingSummary.txt");
+            _batchWriter.BeginRetryWrapper(_testConfig.ImplementDesign ? "ImplTimingSummary.txt" : "SynthTimingSummary.txt");
             _batchWriter.WriteLine("cmd /c \"{0} {1} -source ../Generate.tcl\"",
                 _vivadoPath, (_testConfig.VivadoBatchMode) ? "-mode batch" : "");
             _batchWriter.EndRetryWrapper();
