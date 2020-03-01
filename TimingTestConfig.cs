@@ -154,7 +154,10 @@ namespace HastlayerTimingTester
             // InputSizes is the list of input sizes for the data type that we want to test
             InputSizes = new List<int> { 1, 8, 16, 32, 64 };
 
-            // The FPGA part number (only used for Xilinx devices).
+            // The FPGA part name. Only used for Xilinx devices. You can find these in the Xilinx Board Store here:
+            // https://github.com/Xilinx/XilinxBoardStore. E.g. the part name for the Alveo U280 board is in the
+            // https://github.com/Xilinx/XilinxBoardStore/blob/master/boards/Xilinx/au280/production/1.1/board.xml 
+            // file, just search for "part_name".
             //Part = "xc7a100tcsg324-1";
 
             // System clock frequency in Hz

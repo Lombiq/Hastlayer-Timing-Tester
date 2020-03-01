@@ -50,8 +50,12 @@
   <ItemGroup>
     <Compile Include="AdditionalVhdlIncludes.cs" />
     <Compile Include="Drivers\RetryLogicStreamWriterExtensions.cs" />
+    <Compile Include="TimingTestConfigs\AlveoU250TimingTestConfig.cs" />
+    <Compile Include="TimingTestConfigs\AlveoU280TimingTestConfig.cs" />
+    <Compile Include="TimingTestConfigs\AwsF1TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigs\CatapultTimingTestConfig.cs" />
     <Compile Include="TimingTestConfigs\NexysA7TimingTestConfig.cs" />
+    <Compile Include="TimingTestConfigs\XilinxTimingTestConfigBase.cs" />
     <Compile Include="Vhdl\Expressions\BinaryVhdlExpression.cs" />
     <Compile Include="Drivers\IntelDriver.cs" />
     <Compile Include="Drivers\FpgaVendorDriver.cs" />

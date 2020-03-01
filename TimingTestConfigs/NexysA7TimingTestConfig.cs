@@ -2,7 +2,7 @@
 
 namespace HastlayerTimingTester.TimingTestConfigs
 {
-    internal class NexysA7TimingTestConfig : TimingTestConfig
+    internal class NexysA7TimingTestConfig : XilinxTimingTestConfigBase
     {
         public NexysA7TimingTestConfig()
         {
