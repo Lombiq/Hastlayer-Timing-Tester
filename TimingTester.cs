@@ -216,7 +216,7 @@ namespace HastlayerTimingTester
                             Logger.Log("\tDir name: {0}", testFriendlyName);
 
                             batchWriter.WriteLine(
-                                $"{Environment.NewLine}echo STARTING #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}{Environment.NewLine}");
+                                $"{Environment.NewLine}echo STARTING #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at %date% %time%{Environment.NewLine}");
 
                             var vhdl = AdditionalVhdlIncludes.Content + vhdlTemplate.VhdlTemplate
                                 .Replace("%INTYPE%", inputDataType)
@@ -227,7 +227,7 @@ namespace HastlayerTimingTester
 
 
                             batchWriter.WriteLine(
-                                $"echo {Environment.NewLine}echo FINISHED #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at {DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss")}{Environment.NewLine}");
+                                $"{Environment.NewLine}echo FINISHED #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at %date% %time%{Environment.NewLine}");
                         }
                         else // if taskChoice == TaskChoice.Analyze
                         {
