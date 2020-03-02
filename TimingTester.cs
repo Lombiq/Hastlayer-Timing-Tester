@@ -308,16 +308,19 @@ namespace HastlayerTimingTester
                                 timingWindowDiffFromRequirement
                             );
                         }
+
+                        // These incrementation are here and in the catch, not in a finally because we don't want to
+                        // run them if an early return happens (when the operation would be invalid).
+                        testIndex++;
+                        testIndexInCurrentProcess++;
                     }
                     catch (Exception exception)
                     {
-                        if (_testConfig.DebugMode) throw;
-                        else Logger.Log("Exception happened during {0}: {1}", taskChoiceString, exception.Message);
-                    }
-                    finally
-                    {
                         testIndex++;
                         testIndexInCurrentProcess++;
+
+                        if (_testConfig.DebugMode) throw;
+                        else Logger.Log("Exception happened during {0}: {1}", taskChoiceString, exception.Message);
                     }
                 });
             }
