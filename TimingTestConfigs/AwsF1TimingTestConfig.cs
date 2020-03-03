@@ -8,7 +8,7 @@
     /// https://github.com/aws/aws-fpga/search?q=part_name&unscoped_q=part_name The main clock is mentioned here:
     /// https://forums.aws.amazon.com/thread.jspa?threadID=257471
     /// </remarks>
-    internal class AwsF1TimingTestConfig : XilinxTimingTestConfigBase
+    internal class AwsF1TimingTestConfig : XilinxUltraScalePlusTimingTestConfigBase
     {
         public AwsF1TimingTestConfig()
         {
