@@ -11,7 +11,6 @@ namespace HastlayerTimingTester.Drivers
 
         public static void EndRetryWrapper(this StreamWriter batchWriter)
         {
-            //batchWriter.WriteLine("type nul > Completed");
             batchWriter.WriteLine(")");
         }
     }
