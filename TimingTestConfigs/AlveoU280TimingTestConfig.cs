@@ -1,6 +1,6 @@
 ﻿namespace HastlayerTimingTester.TimingTestConfigs
 {
-    internal class AlveoU280TimingTestConfig : XilinxUltraScalePlusTimingTestConfigBase
+    internal class AlveoU280TimingTestConfig : AlveoTimingTestConfigBase
     {
         public AlveoU280TimingTestConfig()
         {

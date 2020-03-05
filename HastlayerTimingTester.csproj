@@ -50,6 +50,7 @@
   <ItemGroup>
     <Compile Include="AdditionalVhdlIncludes.cs" />
     <Compile Include="Drivers\RetryLogicStreamWriterExtensions.cs" />
+    <Compile Include="TimingTestConfigs\AlveoTimingTestConfigBase.cs" />
     <Compile Include="TimingTestConfigs\AlveoU250TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigs\AlveoU280TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigs\AwsF1TimingTestConfig.cs" />
