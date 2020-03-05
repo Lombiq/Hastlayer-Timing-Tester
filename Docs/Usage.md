@@ -4,11 +4,7 @@
 
 ## What you will need
 
-Hastlayer Timing Tester requires **Visual Studio Community Edition 2019 or greater** to run. (You will need to recompile the project from source if you edit the configuration.)
-
-In case you are using Hastlayer on Xilinx platform, you will need **Xilinx Vivado 2016.4**.
-
-On Microsoft Catapult, you will need **Altera (Intel) Quartus Prime and TimeQuest, version 15.1**, and optionally also [Python 2.7](https://www.python.org/downloads/) for running `Cleanup.py`.
+Hastlayer Timing Tester requires **Visual Studio Community Edition 2019 or greater** to run. (You will need to recompile the project from source if you edit the configuration.) For software requirements for specific platforms check out the comments on the respective `TimingTestConfig` instances.
 
 > While cloning the repository or unpacking the project, make sure that there are no special characters in the path (as Vivado cannot handle them, e.g. it can fail with: `TclStackFree: incorrect freePtr. Call out of sequence?`).
 
