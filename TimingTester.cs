@@ -141,9 +141,9 @@ namespace HastlayerTimingTester
 
             var actualNumberOfSTAProcesses = testCount < _testConfig.NumberOfSTAProcesses ? testCount : _testConfig.NumberOfSTAProcesses;
 
-            // Creating script to be able to easily execute all STA scripts in parallel by hand too.
             var scriptBuilder = new StringBuilder();
 
+            // Creating script to be able to easily execute all STA scripts in parallel by hand too.
             for (int i = 0; i < actualNumberOfSTAProcesses; i++)
             {
                 scriptBuilder.AppendLine("cd " + i);
@@ -151,6 +151,19 @@ namespace HastlayerTimingTester
                 scriptBuilder.AppendLine("cd ..");
             }
             File.WriteAllText(CombineWithBaseDirectoryPath("Run.bat"), scriptBuilder.ToString());
+
+            // Creating script to be able to easily tail all STA processes' progress logs.
+            scriptBuilder.Clear();
+            for (int i = 0; i < actualNumberOfSTAProcesses; i++)
+            {
+                scriptBuilder.AppendLine("invoke-expression 'cmd /c start powershell -NoExit -Command {");
+                scriptBuilder.AppendLine($"    $host.UI.RawUI.WindowTitle = \"Tailing the #{i} progress log\";");
+                scriptBuilder.AppendLine($"    Get-Content {i}{Path.DirectorySeparatorChar}Progress.log -Wait;");
+                scriptBuilder.AppendLine("}';");
+                scriptBuilder.AppendLine();
+            }
+            File.WriteAllText(CombineWithBaseDirectoryPath("Tail.ps1"), scriptBuilder.ToString());
+
 
             try
             {
