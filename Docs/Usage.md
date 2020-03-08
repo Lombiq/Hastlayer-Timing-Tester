@@ -30,7 +30,7 @@ Hastlayer Timing Tester has three different processing stages:
 
 > Note: For Quartus consider running `Cleanup.py` in the test directory after this stage. (See the "Output" section later this document.)
 
-> This step can take a lot of time. With Quartus on Catapult it takes about 4 days (sequentially), with Vivado for the Nexys A7 about 15 hours and for Alveo U280 about 2.5 days (both parallelized). Also, sometimes Vivado can get stuck on some of the steps (typically on "INFO: [DRC 23-27] Running DRC with 8 threads", sometimes failing with "Abnormal program termination (EXCEPTION_ACCESS_VIOLATION)") so be sure to check on this step to see if it still runs, and if not, restart it (it'll resume where it has left off).
+> This step can take a lot of time. With Quartus on Catapult it takes about 4 days (sequentially), with Vivado for the Nexys A7 about 15 hours (parallelized with 6 processes), for Alveo cards about 2.5-3 days (parallelized with 5 processes) and for AWS F1 a bit less than 2 days (parallelized with 6 processes). Also, sometimes Vivado can get stuck on some of the steps (typically on "INFO: [DRC 23-27] Running DRC with 8 threads", sometimes failing with "Abnormal program termination (EXCEPTION_ACCESS_VIOLATION)") so be sure to check on this step to see if it still runs, and if not, restart it (it'll resume where it has left off).
 
 3. **Analyze** (`--analyze`, `-a`): process the STA results (after running the batch file). In this step, Hastlayer Timing Tester will parse the timing summaries and the timing reports, and display the most important values. These are also saved into the `Results.tsv` file for later processing.
 
