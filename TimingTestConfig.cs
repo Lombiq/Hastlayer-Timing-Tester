@@ -163,13 +163,8 @@ namespace HastlayerTimingTester
             // https://github.com/Xilinx/XilinxBoardStore/blob/master/boards/Xilinx/au280/production/1.1/board.xml 
             // file, just search for "part_name". Be sure to use the production versions, not the engineering sample 
             // ("es").
-            // Part numbers we've used:
-            // - Nexys A7: xc7a100tcsg324-1
-            // - Alveo U50: xcu50-fsvh2104-2-e
-            // - Alveo U200: xcu200-fsgd2104-2-e
-            // - Alveo U250: xcu250-figd2104-2L-e
-            // - Alveo U280: xcu280-fsvh2892-2L-e
-            // - AWS F1: xcvu9p-flgb2104-2-i
+            // Use the existing configurations under the TimingTestConfigs folder instead of directly changing this 
+            // here, and create new configs for new boards.
             //Part = "xc7a100tcsg324-1";
 
             // System clock frequency in Hz

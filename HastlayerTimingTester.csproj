@@ -52,6 +52,7 @@
     <Compile Include="Drivers\RetryLogicStreamWriterExtensions.cs" />
     <Compile Include="TimingTestConfigs\AlveoTimingTestConfigBase.cs" />
     <Compile Include="TimingTestConfigs\AlveoU200TimingTestConfig.cs" />
+    <Compile Include="TimingTestConfigs\AlveoU50TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigs\AlveoU250TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigs\AlveoU280TimingTestConfig.cs" />
     <Compile Include="TimingTestConfigs\AwsF1TimingTestConfig.cs" />
