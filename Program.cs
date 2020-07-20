@@ -41,15 +41,32 @@ namespace HastlayerTimingTester
 
     class Program
     {
+#pragma warning disable CS0162 // Unreachable code detected
         static void Main(string[] args)
         {
+            const bool useInlineConfiguration = false;
             var parameters = new ProgramParameters();
-            // This is a hack but I couldn't find an easy way to display the help if no parameters are present:
-            if (args.Length == 0) args = new string[] { "--help" };
+
+            if (!useInlineConfiguration)
+            {
+                // This is a hack but I couldn't find an easy way to display the help if no parameters are present:
+
+                if (args.Length == 0) args = new string[] { "--help" };
+            }
+
             if (Parser.Default.ParseArguments(args, parameters))
             {
+                if (useInlineConfiguration)
+                {
+                    // Uncomment the one you want to use if you don't want to supply parameters as command line arguments.
+                    //parameters.Prepare = true;
+                    //parameters.ExecSta = true;
+                    //parameters.Analyze = true; 
+                }
+
                 new TimingTester().DoTests(new NexysA7TimingTestConfig(), parameters);
             }
         }
+#pragma warning restore CS0162 // Unreachable code detected
     }
 }
