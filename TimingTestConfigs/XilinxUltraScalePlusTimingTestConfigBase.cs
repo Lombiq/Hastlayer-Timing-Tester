@@ -9,7 +9,7 @@ namespace HastlayerTimingTester.TimingTestConfigs
     {
         public XilinxUltraScalePlusTimingTestConfigBase()
         {
-            Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2019.2\bin\vivado.bat");
+            Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2020.1\bin\vivado.bat");
         }
     }
 }
