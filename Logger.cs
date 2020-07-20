@@ -21,8 +21,10 @@ namespace HastlayerTimingTester
         /// </summary>
         public static void Init(string logFilePath, bool createFile = true)
         {
-            _logStreamWriter = new StreamWriter(File.Open(logFilePath, (createFile) ? FileMode.Create : FileMode.Append));
-            _logStreamWriter.AutoFlush = true;
+            _logStreamWriter = new StreamWriter(File.Open(logFilePath, (createFile) ? FileMode.Create : FileMode.Append))
+            {
+                AutoFlush = true
+            };
             _initialized = true;
         }
 
