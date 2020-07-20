@@ -156,14 +156,19 @@ namespace HastlayerTimingTester
             InputSizes = new List<int> { 1, 8, 16, 32, 64 };
 
             // The FPGA part name. Only used for Xilinx devices. You can find these in the Xilinx Board Store here:
-            // https://github.com/Xilinx/XilinxBoardStore. E.g. the part name for the Alveo U280 board is in the
+            // https://github.com/Xilinx/XilinxBoardStore (if you can't find something there then check out the branch
+            // for the given Vitis version, like this one for 2020.1.1: 
+            // https://github.com/Xilinx/XilinxBoardStore/tree/2020.1.1/boards/Xilinx. E.g. the part name for the Alveo
+            // U280 board is in the
             // https://github.com/Xilinx/XilinxBoardStore/blob/master/boards/Xilinx/au280/production/1.1/board.xml 
-            // file, just search for "part_name".
+            // file, just search for "part_name". Be sure to use the production versions, not the engineering sample 
+            // ("es").
             // Part numbers we've used:
-            // - Nexys: xc7a100tcsg324-1
-            // - Alveo U280: xcu280-fsvh2892-2L-e
-            // - Alveo U250: xcu250-figd2104-2L-e
+            // - Nexys A7: xc7a100tcsg324-1
+            // - Alveo U50: xcu50-fsvh2104-2-e
             // - Alveo U200: xcu200-fsgd2104-2-e
+            // - Alveo U250: xcu250-figd2104-2L-e
+            // - Alveo U280: xcu280-fsvh2892-2L-e
             // - AWS F1: xcvu9p-flgb2104-2-i
             //Part = "xc7a100tcsg324-1";
 
