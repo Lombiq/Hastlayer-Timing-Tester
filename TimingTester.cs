@@ -157,6 +157,9 @@ namespace HastlayerTimingTester
             // Creating script to be able to easily tail all STA processes' progress logs.
             scriptBuilder.Clear();
 
+            scriptBuilder.AppendLine(@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
+            scriptBuilder.AppendLine(@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
+            scriptBuilder.AppendLine("Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force");
             // For details on Gridify see: 
             // http://ridicurious.com/2017/11/14/set-gridlayout-arrange-apps-and-scripts-in-an-automatic-grid-to-fit-your-screen/
             scriptBuilder.AppendLine("Install-Module Gridify -scope CurrentUser -Confirm:$False -Force");
