@@ -13,16 +13,19 @@ namespace HastlayerTimingTester
     /// <summary>Implements the core functionality of the Hastlayer Timing Tester application.</summary>
     internal class TimingTester
     {
-        private TimingTestConfigBase _testConfig;
+        private readonly TimingTestConfigBase _testConfig;
 
         /// <summary>The output directory of all tests to be done when running the Timing Tester.</summary>
-        private const string CurrentTestBaseDirectory = "CurrentTest";
+        public string CurrentTestBaseDirectory => _testConfig.Name;
+
+
+        public TimingTester(TimingTestConfigBase testConfig) => _testConfig = testConfig;
 
 
         /// <summary>
         /// Gets things ready before the test, then runs the test.
         /// </summary>
-        public void DoTests(TimingTestConfigBase testConfig, ProgramParameters parameters)
+        public void DoTests(ProgramParameters parameters)
         {
             // Command-line parameters.
             if (parameters.All) parameters.Analyze = parameters.ExecSta = parameters.Prepare = true;
@@ -32,7 +35,6 @@ namespace HastlayerTimingTester
                 parameters.ExecSta = false;
             }
 
-            _testConfig = testConfig;
             if (parameters.Prepare)
             {
                 if (!Directory.Exists(CurrentTestBaseDirectory)) Directory.CreateDirectory(CurrentTestBaseDirectory);
@@ -56,10 +58,11 @@ namespace HastlayerTimingTester
             Logger.Dispose();
         }
 
+
         /// <summary>
         /// Runs the Run.bat script(s) in CurrentTest to apply STA.
         /// </summary>
-        public void ExecSta()
+        private void ExecSta()
         {
             Logger.LogStageHeader("execute-sta");
 
@@ -92,7 +95,6 @@ namespace HastlayerTimingTester
             Task.WaitAll(tasks);
             Logger.LogStageFooter("execute-sta");
         }
-
 
         /// <summary>
         /// Implements the --prepare and the --analyze stages of processing.
@@ -154,14 +156,27 @@ namespace HastlayerTimingTester
 
             // Creating script to be able to easily tail all STA processes' progress logs.
             scriptBuilder.Clear();
+
+            // For details on Gridify see: 
+            // http://ridicurious.com/2017/11/14/set-gridlayout-arrange-apps-and-scripts-in-an-automatic-grid-to-fit-your-screen/
+            scriptBuilder.AppendLine("Install-Module Gridify -scope CurrentUser -Confirm:$False -Force");
+
             for (int i = 0; i < actualNumberOfSTAProcesses; i++)
             {
-                scriptBuilder.AppendLine("invoke-expression 'cmd /c start powershell -NoExit -Command {");
+                scriptBuilder.AppendLine("Invoke-Expression 'cmd /c start powershell -NoExit -Command {");
                 scriptBuilder.AppendLine($"    $host.UI.RawUI.WindowTitle = \"Tailing the #{i} progress log\";");
                 scriptBuilder.AppendLine($"    Get-Content {i}{Path.DirectorySeparatorChar}Progress.log -Wait;");
                 scriptBuilder.AppendLine("}';");
                 scriptBuilder.AppendLine();
             }
+
+            scriptBuilder.AppendLine("Do");
+            scriptBuilder.AppendLine("{");
+            scriptBuilder.AppendLine("    $processes = (Get-Process | Where-Object { $_.MainWindowTitle -like \"Tailing the * progress log\" })");
+            scriptBuilder.AppendLine("}");
+            scriptBuilder.AppendLine($"Until ($processes.Length -eq {actualNumberOfSTAProcesses})");
+            scriptBuilder.AppendLine("Set-GridLayout -Process $processes");
+
             File.WriteAllText(CombineWithBaseDirectoryPath("Tail.ps1"), scriptBuilder.ToString());
 
 
@@ -349,7 +364,6 @@ namespace HastlayerTimingTester
 
             Logger.LogStageFooter(taskChoiceString);
         }
-
 
         private string CombineWithBaseDirectoryPath(params string[] subPaths) =>
             Path.Combine(new[] { CurrentTestBaseDirectory }.Union(subPaths).ToArray());

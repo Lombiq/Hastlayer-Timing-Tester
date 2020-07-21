@@ -64,7 +64,7 @@ namespace HastlayerTimingTester
                     //parameters.Analyze = true; 
                 }
 
-                new TimingTester().DoTests(new NexysA7TimingTestConfig(), parameters);
+                new TimingTester(new NexysA7TimingTestConfig()).DoTests(parameters);
             }
         }
 #pragma warning restore CS0162 // Unreachable code detected

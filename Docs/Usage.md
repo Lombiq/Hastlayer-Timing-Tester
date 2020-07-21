@@ -56,7 +56,7 @@ Hastlayer Timing Tester will go through:
 
 Hastlayer Timing Tester will generate a similar directory structure:
 
-    └─ CurrentTest
+    └─ test directory (named according the configuration)
        └─ add_unsigned32_to_unsigned32_sync # This directory contains an actual test case for a given operator,
        |  |                                 # input and output operands, and VHDL template.
        |  ├─ UUT.vhd            # This is the VHDL code of the design to be tested.
