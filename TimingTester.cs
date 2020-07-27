@@ -73,9 +73,9 @@ namespace HastlayerTimingTester
                 tasks[i] = Task.Factory.StartNew(indexObject =>
                 {
                     var folder = Path.Combine(
-                            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                            CurrentTestBaseDirectory,
-                            GetProcessFolderName((int)indexObject));
+                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+                        CurrentTestBaseDirectory,
+                        GetProcessFolderName((int)indexObject));
 
                     if (!Directory.Exists(folder)) return;
 
