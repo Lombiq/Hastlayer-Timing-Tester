@@ -1,7 +1,7 @@
 ﻿namespace HastlayerTimingTester.TimingTestConfigs
 {
     /// <summary>
-    /// Configuration for the FPGA in the AWS F1 instances.
+    /// Configuration for the FPGA in the AWS F1 instances (VU9P chip).
     /// </summary>
     /// <remarks>
     /// There's not much info on the actual hardware. The part name is apparent from here: 
