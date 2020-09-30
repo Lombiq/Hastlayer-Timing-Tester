@@ -45,7 +45,7 @@ namespace HastlayerTimingTester
         /// </summary>
         public static void LogStageHeader(string stage)
         {
-            Log($"{Environment.NewLine}=== HastlayerTimingTester {0} stage ===", stage);
+            Log(Environment.NewLine + "=== HastlayerTimingTester {0} stage ===", stage);
             Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
         }
 
@@ -55,7 +55,7 @@ namespace HastlayerTimingTester
         /// </summary>
         public static void LogStageFooter(string stage) =>
             Log(
-                $"{Environment.NewLine}=== HastlayerTimingTester {0} stage finished at {1} ===",
+                Environment.NewLine + "=== HastlayerTimingTester {0} stage finished at {1} ===",
                 stage,
                 DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
 

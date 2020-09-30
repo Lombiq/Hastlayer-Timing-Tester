@@ -90,7 +90,7 @@ namespace HastlayerTimingTester.Parsers
             {
                 Logger.Log(string.Join(
                     Environment.NewLine + "\t",
-                    $"Timing Summary:",
+                    "Timing Summary:",
                     $"Design {(DesignMetTimingRequirements ? "PASSED" : "FAILED")} meeting timing requirements",
                     $"Worst Setup Slack = {WorstSetupSlack} ns",
                     $"Total Setup Slack = {TotalSetupSlack} ns",

@@ -226,7 +226,7 @@ namespace HastlayerTimingTester
                         var testFriendlyName =
                             $"{op.FriendlyName}_{inputDataTypeFunction(inputSize, true)}_to_{op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true)}_{vhdlTemplate.Name}";
 
-                        Logger.Log($"{Environment.NewLine}Current test item: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize, inputDataType, outputDataType);
+                        Logger.Log(Environment.NewLine + "Current test item: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize, inputDataType, outputDataType);
 
                         if (!op.VhdlExpression.IsValid(inputSize, inputDataTypeFunction, vhdlTemplate))
                         {
