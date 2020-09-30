@@ -89,6 +89,8 @@ namespace HastlayerTimingTester.Parsers
                     {
                         // Pass, at least TimingSummaryAvailable will stay false.
                     }
+
+                    return;
                 }
             }
         }
