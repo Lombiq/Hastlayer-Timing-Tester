@@ -56,8 +56,10 @@ namespace HastlayerTimingTester
 
             // The const is a configuration.
 #pragma warning disable S2589 // Boolean expressions should not be gratuitous
+#pragma warning disable S2583 // Conditionally executed code should be reachable
             // This is a hack but couldn't find an easy way to display the help if no parameters are present:
             if (!useInlineConfiguration && args.Length == 0) args = new[] { "--help" };
+#pragma warning restore S2583 // Conditionally executed code should be reachable
 #pragma warning restore S2589 // Boolean expressions should not be gratuitous
 
             if (Parser.Default.ParseArguments(args, parameters))
