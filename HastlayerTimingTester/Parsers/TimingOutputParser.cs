@@ -15,7 +15,7 @@ namespace HastlayerTimingTester.Parsers
     /// </summary>
     public abstract class TimingOutputParser
     {
-        public decimal ClockFrequency { get; set; }
+        public decimal ClockFrequency { get; protected set; }
         public decimal DataPathDelay { get; protected set; }
         public bool DataPathDelayAvailable { get; protected set; }
         public bool TimingSummaryAvailable { get; protected set; }

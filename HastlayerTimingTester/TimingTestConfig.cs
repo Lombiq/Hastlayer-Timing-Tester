@@ -24,18 +24,18 @@ namespace HastlayerTimingTester
 #pragma warning restore SA1629 // Documentation text should end with a period
     internal class TimingTestConfig
     {
-        public string Name { get; set; }
+        public string Name { get; protected set; }
         public List<VhdlOp> Operators { get; private set; }
         public List<int> InputSizes { get; private set; }
-        public string Part { get; set; }
-        public string VivadoPath { get; set; }
-        public bool DebugMode { get; set; }
-        public decimal Frequency { get; set; }
-        public bool VivadoBatchMode { get; set; }
-        public bool ImplementDesign { get; set; }
-        public int NumberOfThreadsPerProcess { get; set; }
-        public int NumberOfStaProcesses { get; set; }
-        public FpgaVendorDriver Driver { get; set; }
+        public string Part { get; protected set; }
+        public string VivadoPath { get; protected set; }
+        public bool DebugMode { get; protected set; }
+        public decimal Frequency { get; protected set; }
+        public bool VivadoBatchMode { get; protected set; }
+        public bool ImplementDesign { get; protected set; }
+        public int NumberOfThreadsPerProcess { get; protected set; }
+        public int NumberOfStaProcesses { get; protected set; }
+        public FpgaVendorDriver Driver { get; protected set; }
 
 
         public TimingTestConfig()
