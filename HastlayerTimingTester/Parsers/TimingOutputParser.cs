@@ -62,12 +62,14 @@ namespace HastlayerTimingTester.Parsers
             if (ExtendedSyncParametersAvailable)
             {
                 Logger.Log(
-                    $"\tSource clock delay = {0} ns{Environment.NewLine}" +
-                    $"\tRequirement for arrival = {1} ns{Environment.NewLine}" +
-                    $"\tRequirement plus delays = {2} ns{Environment.NewLine}" +
-                    $"\tTiming window available = {3} ns{Environment.NewLine}" +
-                    $"\t{8}>> Timing window diff from requirement = {4} ns  ({5} cycle at {6} MHz clock){Environment.NewLine}" +
-                    "\tMax clock frequency = {7} MHz ",
+                    string.Join(
+                        Environment.NewLine + "\t",
+                        "Source clock delay = {0} ns",
+                        "Requirement for arrival = {1} ns",
+                        "Requirement plus delays = {2} ns",
+                        "Timing window available = {3} ns",
+                        "{8}>> Timing window diff from requirement = {4} ns  ({5} cycle at {6} MHz clock)",
+                        "Max clock frequency = {7} MHz "),
                     SourceClockDelay,
                     Requirement,
                     RequirementPlusDelays,
@@ -86,16 +88,17 @@ namespace HastlayerTimingTester.Parsers
         {
             if (TimingSummaryAvailable)
             {
-                Logger.Log(
-                    $"Timing Summary:{Environment.NewLine}" +
-                    $"\tDesign {(DesignMetTimingRequirements ? "PASSED" : "FAILED")} meeting timing requirements{Environment.NewLine}" +
-                    $"\tWorst Setup Slack = {WorstSetupSlack} ns{Environment.NewLine}" +
-                    $"\tTotal Setup Slack = {TotalSetupSlack} ns{Environment.NewLine}" +
-                    $"\tWorst Hold Slack = {WorstHoldSlack} ns{Environment.NewLine}" +
-                    $"\tTotal Hold Slack = {TotalHoldSlack} ns{Environment.NewLine}" +
-                    $"\tWorst Pulse Width Slack = {WorstPulseWidthSlack} ns{Environment.NewLine}" +
-                    $"\tTotal Pulse Width Slack = {TotalPulseWidthSlack} ns{Environment.NewLine}" +
-                    $"\t(Any \"worst slack\" is okay if positive,{Environment.NewLine}\t\tany \"total slack\" is okay if zero.)");
+                Logger.Log(string.Join(
+                    Environment.NewLine + "\t",
+                    $"Timing Summary:",
+                    $"Design {(DesignMetTimingRequirements ? "PASSED" : "FAILED")} meeting timing requirements",
+                    $"Worst Setup Slack = {WorstSetupSlack} ns",
+                    $"Total Setup Slack = {TotalSetupSlack} ns",
+                    $"Worst Hold Slack = {WorstHoldSlack} ns",
+                    $"Total Hold Slack = {TotalHoldSlack} ns",
+                    $"Worst Pulse Width Slack = {WorstPulseWidthSlack} ns",
+                    $"Total Pulse Width Slack = {TotalPulseWidthSlack} ns",
+                    $"(Any \"worst slack\" is okay if positive,{Environment.NewLine}\t\tany \"total slack\" is okay if zero.)"));
 
                 if (TotalSetupSlack > 0) Logger.Log("WARNING: setup time violation!");
                 if (TotalHoldSlack > 0) Logger.Log("WARNING: hold time violation!");
