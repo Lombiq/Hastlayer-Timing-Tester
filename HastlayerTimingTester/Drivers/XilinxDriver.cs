@@ -70,7 +70,7 @@ quit
                     .Replace("%PART%", _testConfig.Part, StringComparison.InvariantCulture)
                     .Replace(
                         "%IMPLEMENT%",
-                        Convert.ToInt32(_testConfig.ImplementDesign).ToString(CultureInfo.InvariantCulture),
+                        _testConfig.ImplementDesign ? "1" : "0",
                         StringComparison.InvariantCulture)
             );
         }
