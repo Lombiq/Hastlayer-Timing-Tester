@@ -8,8 +8,6 @@ using System.Numerics;
 
 namespace HastlayerTimingTester
 {
-    // False alarm.
-#pragma warning disable SA1629 // Documentation text should end with a period
     /// <summary>
     /// Provides configuration for Hastlayer Timing Tester.
     /// </summary>
@@ -20,7 +18,6 @@ namespace HastlayerTimingTester
     /// first.
     /// </para>
     /// </remarks>
-#pragma warning restore SA1629 // Documentation text should end with a period
     internal class TimingTestConfig
     {
         public string Name { get; protected set; }
