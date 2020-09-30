@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace HastlayerTimingTester.Vhdl
 {
     /// <summary>
-    /// Provides data to fill a VHDL template with (see <see cref="VhdlString" /> and
+    /// Provides data to fill a VHDL template with (see <see cref="VhdlExpression" /> and
     /// <see cref="OutputDataTypeFunction" />).
     /// </summary>
     public class VhdlOp

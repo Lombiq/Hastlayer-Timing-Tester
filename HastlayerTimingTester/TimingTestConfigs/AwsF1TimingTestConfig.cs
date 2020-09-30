@@ -6,8 +6,8 @@ namespace HastlayerTimingTester.TimingTestConfigs
     /// <remarks>
     /// <para>
     /// There's not much info on the actual hardware. The part name is apparent from here:
-    /// https://github.com/aws/aws-fpga/search?q=part_name&unscoped_q=part_name The main clock is mentioned here:
-    /// https://forums.aws.amazon.com/thread.jspa?threadID=257471.
+    /// <see href="https://github.com/aws/aws-fpga/search?q=part_name&amp;unscoped_q=part_name"/>. The main clock is
+    /// mentioned here: <see href="https://forums.aws.amazon.com/thread.jspa?threadID=257471"/>.
     /// </para>
     /// <para>
     /// Note that a license for the part being used is not included in a Vitis installation by default. But if you the

@@ -30,7 +30,7 @@ namespace HastlayerTimingTester.Vhdl.Expressions
         /// Returns VHDL code for the binary operator.
         /// </summary>
         /// <param name="inputs">The single operand for the operator.</param>
-        /// <param name="inputs">The number of bits per input.</param>
+        /// <param name="inputSize">The number of bits per input.</param>
         public override string GetVhdlCode(IReadOnlyList<string> inputs, int inputSize) => _vhdlOperator + " " + inputs[0];
 
         /// <summary>

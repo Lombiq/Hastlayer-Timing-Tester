@@ -1,100 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{408751DC-709A-4BCE-A62A-361F0493A102}</ProjectGuid>
+    <TargetFramework>net452</TargetFramework>
     <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>HastlayerTimingTester</RootNamespace>
-    <AssemblyName>HastlayerTimingTester</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
   <ItemGroup>
-    <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
-      <HintPath>packages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Numerics" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AdditionalVhdlIncludes.cs" />
-    <Compile Include="Drivers\RetryLogicStreamWriterExtensions.cs" />
-    <Compile Include="TimingTestConfigs\AlveoTimingTestConfigBase.cs" />
-    <Compile Include="TimingTestConfigs\AlveoU200TimingTestConfig.cs" />
-    <Compile Include="TimingTestConfigs\AlveoU50TimingTestConfig.cs" />
-    <Compile Include="TimingTestConfigs\AlveoU250TimingTestConfig.cs" />
-    <Compile Include="TimingTestConfigs\AlveoU280TimingTestConfig.cs" />
-    <Compile Include="TimingTestConfigs\AwsF1TimingTestConfig.cs" />
-    <Compile Include="TimingTestConfigs\CatapultTimingTestConfig.cs" />
-    <Compile Include="TimingTestConfigs\NexysA7TimingTestConfig.cs" />
-    <Compile Include="TimingTestConfigs\XilinxTimingTestConfigBase.cs" />
-    <Compile Include="TimingTestConfigs\XilinxUltraScalePlusTimingTestConfigBase.cs" />
-    <Compile Include="Vhdl\Expressions\BinaryVhdlExpression.cs" />
-    <Compile Include="Drivers\IntelDriver.cs" />
-    <Compile Include="Drivers\FpgaVendorDriver.cs" />
-    <Compile Include="Parsers\IntelParser.cs" />
-    <Compile Include="Logger.cs" />
-    <Compile Include="Vhdl\Expressions\MutiplyDivideByConstantVhdlExpression.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Vhdl\Expressions\DotnetShiftVhdlExpression.cs" />
-    <Compile Include="Vhdl\Expressions\ShiftVhdlExpression.cs" />
-    <Compile Include="Parsers\TimingOutputParser.cs" />
-    <Compile Include="TimingTestConfig.cs" />
-    <Compile Include="TimingTester.cs" />
-    <Compile Include="Vhdl\Expressions\UnaryVhdlExpression.cs" />
-    <Compile Include="Vhdl\Expressions\VhdlExpressionBase.cs" />
-    <Compile Include="Vhdl\VhdlOp.cs" />
-    <Compile Include="Vhdl\VhdlTemplateBase.cs" />
-    <Compile Include="Vhdl\VhdlTemplateComb.cs" />
-    <Compile Include="Vhdl\VhdlTemplateSync.cs" />
-    <Compile Include="Vhdl\Expressions\WrapSmartResizeVhdlExpression.cs" />
-    <Compile Include="Drivers\XilinxDriver.cs" />
-    <Compile Include="Parsers\XilinxParser.cs" />
+    <PackageReference Include="CommandLineParser" Version="1.9.71" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

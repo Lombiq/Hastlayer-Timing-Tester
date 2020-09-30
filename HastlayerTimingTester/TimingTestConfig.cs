@@ -16,8 +16,7 @@ namespace HastlayerTimingTester
     /// <remarks>
     /// <para>
     /// You need to edit the source and recompile the application to change configuration. See the comments in the
-    /// source of this class for detailed description of the options. It is advised to check <see
-    /// cref="Operators">
+    /// source of this class for detailed description of the options. It is advised to check <see cref="Operators"/>
     /// first.
     /// </para>
     /// </remarks>
