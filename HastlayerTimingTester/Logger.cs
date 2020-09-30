@@ -31,19 +31,13 @@ namespace HastlayerTimingTester
         /// Writes a formatted string to both a log file (if already initialized) and the console, ending with a line
         /// break.
         /// </summary>
-        public static void Log(string format, params object[] objs)
-        {
-            LogInternal(format, false, objs);
-        }
+        public static void Log(string format, params object[] objs) => LogInternal(format, false, objs);
 
         /// <summary>
         /// Writes a formatted string to both a log file (if already initialized) and the console. It does not end with
         /// a line break.
         /// </summary>
-        public static void LogInline(string format, params object[] objs)
-        {
-            LogInternal(format, true, objs);
-        }
+        public static void LogInline(string format, params object[] objs) => LogInternal(format, true, objs);
 
         /// <summary>
         /// Writes a header to the log and screen for a given processing stage of Hastlayer Timing Tester, which can be
@@ -59,13 +53,11 @@ namespace HastlayerTimingTester
         /// Writes a footer to the log and screen for a given processing stage of Hastlayer Timing Tester, which can be
         /// specified as an input parameter (stage).
         /// </summary>
-        public static void LogStageFooter(string stage)
-        {
+        public static void LogStageFooter(string stage) =>
             Log(
                 $"{Environment.NewLine}=== HastlayerTimingTester {0} stage finished at {1} ===",
                 stage,
                 DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
-        }
 
         public static void Close()
         {
