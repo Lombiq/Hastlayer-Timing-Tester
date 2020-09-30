@@ -142,8 +142,14 @@ for subdir in subdirs:
             var sdcPath = CombineWithCurrentRootPath(outputDirectoryName, "Constraints.sdc");
             File.WriteAllText(uutPath, vhdl);
             var sdcContent = _sdcTemplate
-                .Replace("%CLKPERIOD%", ((1.0m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture))
-                .Replace("%CLKHALFPERIOD%", ((0.5m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture));
+                .Replace(
+                    "%CLKPERIOD%",
+                    (1.0m / _testConfig.Frequency * 1e9m).ToString(CultureInfo.InvariantCulture),
+                    StringComparison.InvariantCulture)
+                .Replace(
+                    "%CLKHALFPERIOD%",
+                    (0.5m / _testConfig.Frequency * 1e9m).ToString(CultureInfo.InvariantCulture),
+                    StringComparison.InvariantCulture);
             File.WriteAllText(sdcPath, vhdlTemplate.HasTimingConstraints ? sdcContent : string.Empty);
 
             _batchWriter.WriteLine("cd {0}", outputDirectoryName);

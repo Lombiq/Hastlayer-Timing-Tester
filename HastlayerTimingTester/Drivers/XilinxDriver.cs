@@ -63,9 +63,15 @@ quit
             File.WriteAllText(
                 Path.Combine(CurrentRootDirectoryPath, "Generate.tcl"),
                 _tclTemplate
-                    .Replace("%NUMTHREADS%", _testConfig.NumberOfThreadsPerProcess.ToString(CultureInfo.InvariantCulture))
-                    .Replace("%PART%", _testConfig.Part)
-                    .Replace("%IMPLEMENT%", Convert.ToInt32(_testConfig.ImplementDesign).ToString(CultureInfo.InvariantCulture))
+                    .Replace(
+                        "%NUMTHREADS%",
+                        _testConfig.NumberOfThreadsPerProcess.ToString(CultureInfo.InvariantCulture),
+                        StringComparison.InvariantCulture)
+                    .Replace("%PART%", _testConfig.Part, StringComparison.InvariantCulture)
+                    .Replace(
+                        "%IMPLEMENT%",
+                        Convert.ToInt32(_testConfig.ImplementDesign).ToString(CultureInfo.InvariantCulture),
+                        StringComparison.InvariantCulture)
             );
         }
 
@@ -78,7 +84,10 @@ quit
             File.WriteAllText(
                 xdcPath,
                 vhdlTemplate.HasTimingConstraints
-                    ? _xdcTemplate.Replace("%CLKPERIOD%", (1.0m / _testConfig.Frequency * 1e9m).ToString(CultureInfo.InvariantCulture))
+                    ? _xdcTemplate.Replace(
+                        "%CLKPERIOD%",
+                        (1.0m / _testConfig.Frequency * 1e9m).ToString(CultureInfo.InvariantCulture),
+                        StringComparison.InvariantCulture)
                     : string.Empty
             );
 

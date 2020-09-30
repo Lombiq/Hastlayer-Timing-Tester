@@ -68,10 +68,10 @@ namespace HastlayerTimingTester.Parsers
                     timingSummaryLines[i + 1].StartsWith("| ---------------------", StringComparison.InvariantCulture))
                 {
                     var totalTimingSummaryLine = timingSummaryLines[i + 6];
-                    while (totalTimingSummaryLine.Contains("  "))
-                        totalTimingSummaryLine = totalTimingSummaryLine.Replace("  ", " ");
+                    while (totalTimingSummaryLine.Contains("  ", StringComparison.InvariantCulture))
+                        totalTimingSummaryLine = totalTimingSummaryLine.Replace("  ", " ", StringComparison.InvariantCulture);
                     var timingSummaryLineParts =
-                        totalTimingSummaryLine.Replace("  ", " ").Split(" ".ToCharArray()).ToList();
+                        totalTimingSummaryLine.Replace("  ", " ", StringComparison.InvariantCulture).Split(" ".ToCharArray()).ToList();
                     try
                     {
                         if (timingSummaryLineParts[1] != "NA")

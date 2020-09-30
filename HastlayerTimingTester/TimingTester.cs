@@ -56,7 +56,8 @@ namespace HastlayerTimingTester
             if (parameters.ExecSta) ExecSta();
             if (parameters.AllRemoteSta)
             {
-                Console.WriteLine($"{Environment.NewLine}Waiting for user to run tests and overwrite the result in {CurrentTestBaseDirectory}.{Environment.NewLine}");
+                Console.WriteLine(
+                    $"{Environment.NewLine}Waiting for user to run tests and overwrite the result in {CurrentTestBaseDirectory}.{Environment.NewLine}");
                 Console.ReadKey();
             }
 
@@ -90,16 +91,14 @@ namespace HastlayerTimingTester
 
                         if (!Directory.Exists(folder)) return;
 
-                        using (var process = new Process())
-                        {
-                            process.StartInfo.WorkingDirectory = folder;
-                            process.StartInfo.FileName = Path.Combine(process.StartInfo.WorkingDirectory, "Run.bat");
-                            process.StartInfo.UseShellExecute = _testConfig.NumberOfStaProcesses > 1;
-                            process.StartInfo.CreateNoWindow = false;
-                            process.StartInfo.RedirectStandardOutput = false;
-                            process.Start();
-                            process.WaitForExit();
-                        }
+                        using var process = new Process();
+                        process.StartInfo.WorkingDirectory = folder;
+                        process.StartInfo.FileName = Path.Combine(process.StartInfo.WorkingDirectory, "Run.bat");
+                        process.StartInfo.UseShellExecute = _testConfig.NumberOfStaProcesses > 1;
+                        process.StartInfo.CreateNoWindow = false;
+                        process.StartInfo.RedirectStandardOutput = false;
+                        process.Start();
+                        process.WaitForExit();
                     },
                     i,
                     CancellationToken.None,
@@ -264,9 +263,9 @@ namespace HastlayerTimingTester
                                 $"{Environment.NewLine}echo STARTING #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at %date% %time% >> Progress.log{Environment.NewLine}");
 
                             var vhdl = AdditionalVhdlIncludes.Content + vhdlTemplate.VhdlTemplate
-                                .Replace("%INTYPE%", inputDataType)
-                                .Replace("%OUTTYPE%", outputDataType)
-                                .Replace("%EXPRESSION%", op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize));
+                                .Replace("%INTYPE%", inputDataType, StringComparison.InvariantCulture)
+                                .Replace("%OUTTYPE%", outputDataType, StringComparison.InvariantCulture)
+                                .Replace("%EXPRESSION%", op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize), StringComparison.InvariantCulture);
                             _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
 
 
