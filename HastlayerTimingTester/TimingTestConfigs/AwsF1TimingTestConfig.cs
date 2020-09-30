@@ -21,7 +21,7 @@ namespace HastlayerTimingTester.TimingTestConfigs
         {
             Name = "AWSF1";
             Part = "xcvu9p-flgb2104-2-i";
-            Frequency = 250e6m;
+            FrequencyHz = 250e6m;
             // A process will usually use up to about 4,5 GB of RAM (with one-two processes bursting to 5 GB) so more
             // won't fit on a 32 GB RAM VM.
             NumberOfStaProcesses = 6;

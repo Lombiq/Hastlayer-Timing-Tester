@@ -144,11 +144,11 @@ for subdir in subdirs:
             var sdcContent = _sdcTemplate
                 .Replace(
                     "%CLKPERIOD%",
-                    (1.0m / _testConfig.Frequency * 1e9m).ToString(CultureInfo.InvariantCulture),
+                    (1.0m / _testConfig.FrequencyHz * 1e9m).ToString(CultureInfo.InvariantCulture),
                     StringComparison.InvariantCulture)
                 .Replace(
                     "%CLKHALFPERIOD%",
-                    (0.5m / _testConfig.Frequency * 1e9m).ToString(CultureInfo.InvariantCulture),
+                    (0.5m / _testConfig.FrequencyHz * 1e9m).ToString(CultureInfo.InvariantCulture),
                     StringComparison.InvariantCulture);
             File.WriteAllText(sdcPath, vhdlTemplate.HasTimingConstraints ? sdcContent : string.Empty);
 
@@ -163,7 +163,7 @@ for subdir in subdirs:
         /// <summary>Analyze stage, ran for each test.</summary>
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
-            var parser = new IntelParser(_testConfig.Frequency);
+            var parser = new IntelParser(_testConfig.FrequencyHz);
             var setupReportOutputPath = CombineWithCurrentRootPath(outputDirectoryName, "SetupReport.txt");
             var timingSummaryOutputPath = CombineWithCurrentRootPath(outputDirectoryName, "TimingSummary.txt");
 

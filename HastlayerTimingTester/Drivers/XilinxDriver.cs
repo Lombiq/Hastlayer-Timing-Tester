@@ -86,7 +86,7 @@ quit
                 vhdlTemplate.HasTimingConstraints
                     ? _xdcTemplate.Replace(
                         "%CLKPERIOD%",
-                        (1.0m / _testConfig.Frequency * 1e9m).ToString(CultureInfo.InvariantCulture),
+                        (1.0m / _testConfig.FrequencyHz * 1e9m).ToString(CultureInfo.InvariantCulture),
                         StringComparison.InvariantCulture)
                     : string.Empty
             );
@@ -104,7 +104,7 @@ quit
         /// <summary>Analyze stage, ran for each test.</summary>
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
-            var parser = new XilinxParser(_testConfig.Frequency);
+            var parser = new XilinxParser(_testConfig.FrequencyHz);
             var synthTimingReportOutputPath =
                 CombineWithCurrentRootPath(outputDirectoryName, "SynthTimingReport.txt");
             var synthTimingSummaryOutputPath =

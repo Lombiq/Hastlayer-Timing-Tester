@@ -6,7 +6,7 @@
         {
             Name = "AlveoU200";
             Part = "xcu200-fsgd2104-2-e";
-            Frequency = 300e6m;
+            FrequencyHz = 300e6m;
         }
     }
 }

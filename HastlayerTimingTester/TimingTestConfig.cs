@@ -29,7 +29,7 @@ namespace HastlayerTimingTester
         public string Part { get; protected set; }
         public string VivadoPath { get; protected set; }
         public bool DebugMode { get; protected set; }
-        public decimal Frequency { get; protected set; }
+        public decimal FrequencyHz { get; protected set; }
         public bool VivadoBatchMode { get; protected set; }
         public bool ImplementDesign { get; protected set; }
         public int NumberOfThreadsPerProcess { get; protected set; }

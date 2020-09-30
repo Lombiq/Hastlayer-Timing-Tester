@@ -12,7 +12,7 @@ namespace HastlayerTimingTester.TimingTestConfigs
         {
             Name = "Catapult";
             Driver = new IntelDriver(this, @"C:\altera\15.1\quartus\bin64");
-            Frequency = 150e6m;
+            FrequencyHz = 150e6m;
         }
     }
 }

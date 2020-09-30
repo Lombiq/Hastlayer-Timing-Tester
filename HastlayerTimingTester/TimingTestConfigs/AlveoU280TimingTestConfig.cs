@@ -6,7 +6,7 @@
         {
             Name = "AlveoU280";
             Part = "xcu280-fsvh2892-2L-e";
-            Frequency = 300e6m;
+            FrequencyHz = 300e6m;
         }
     }
 }
