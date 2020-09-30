@@ -1,16 +1,20 @@
-﻿namespace HastlayerTimingTester.Vhdl.Expressions
+using System;
+using System.Collections.Generic;
+
+namespace HastlayerTimingTester.Vhdl.Expressions
 {
     /// <summary>
-    /// Generates a VHDL expression for a unary operator (e.g. not a)
+    /// Generates a VHDL expression for a unary operator (e.g. not a).
     /// </summary>
-    class UnaryOperatorVhdlExpression : VhdlExpressionBase
+    internal class UnaryOperatorVhdlExpression : VhdlExpressionBase
     {
-        private string _vhdlOperator;
-        private ValidationMode _validationMode;
+        private readonly string _vhdlOperator;
+        private readonly ValidationMode _validationMode;
 
         public enum ValidationMode
         {
-            SignedOnly, AnyDataType
+            SignedOnly,
+            AnyDataType,
         }
 
 
@@ -27,19 +31,17 @@
         /// </summary>
         /// <param name="inputs">The single operand for the operator.</param>
         /// <param name="inputs">The number of bits per input.</param>
-        public override string GetVhdlCode(string[] inputs, int inputSize) => string.Format("{0} {1}", _vhdlOperator, inputs[0]);
+        public override string GetVhdlCode(IReadOnlyList<string> inputs, int inputSize) => _vhdlOperator + " " + inputs[0];
 
         /// <summary>
         /// See <see cref="VhdlExpressionBase.IsValid"/>. Here we don't want to make any restriction on valid test
         /// cases, as this class might generate test cases for a wide range of operators. Note that because of this a
-        /// lot of cases will fail with something like "0 definitions of operator "+" match here"
+        /// lot of cases will fail with something like "0 definitions of operator "+" match here".
         /// </summary>
         public override bool IsValid(
             int inputSize,
             VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
-            VhdlTemplateBase vhdlTemplate)
-        {
-            return true && ((_validationMode == ValidationMode.SignedOnly) ? inputDataTypeFunction(0, true).StartsWith("signed") : true);
-        }
+            VhdlTemplateBase vhdlTemplate) =>
+            _validationMode != ValidationMode.SignedOnly || inputDataTypeFunction(0, true).StartsWith("signed", StringComparison.InvariantCulture);
     }
 }

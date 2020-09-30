@@ -1,19 +1,43 @@
+using HastlayerTimingTester.Drivers;
 using HastlayerTimingTester.Vhdl;
 using HastlayerTimingTester.Vhdl.Expressions;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Numerics;
 
 namespace HastlayerTimingTester
 {
+    // False alarm.
+#pragma warning disable SA1629 // Documentation text should end with a period
     /// <summary>
     /// Provides configuration for Hastlayer Timing Tester.
-    /// You need to edit the source and recompile the application to change configuration.
-    /// See the comments in the source of this class for detailed description of the options.
-    /// It is advised to check <see cref="Operators"> first.
     /// </summary>
-    internal class TimingTestConfig : TimingTestConfigBase
+    /// <remarks>
+    /// <para>
+    /// You need to edit the source and recompile the application to change configuration. See the comments in the
+    /// source of this class for detailed description of the options. It is advised to check <see
+    /// cref="Operators">
+    /// first.
+    /// </para>
+    /// </remarks>
+#pragma warning restore SA1629 // Documentation text should end with a period
+    internal class TimingTestConfig
     {
+        public string Name { get; set; }
+        public List<VhdlOp> Operators { get; private set; }
+        public List<int> InputSizes { get; private set; }
+        public string Part { get; set; }
+        public string VivadoPath { get; set; }
+        public bool DebugMode { get; set; }
+        public decimal Frequency { get; set; }
+        public bool VivadoBatchMode { get; set; }
+        public bool ImplementDesign { get; set; }
+        public int NumberOfThreadsPerProcess { get; set; }
+        public int NumberOfStaProcesses { get; set; }
+        public FpgaVendorDriver Driver { get; set; }
+
+
         public TimingTestConfig()
         {
             // There are lists of functions below that can generate input data types to test.
@@ -22,21 +46,15 @@ namespace HastlayerTimingTester
             // For example, for an input size of 32, we should get "unsigned(31 downto 0)" to be pasted into the VHDL
             // template. However, if a friendly name is requested instead, "unsigned32" is returned, which can be
             // safely used in directory names.
-            var suNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate> {
-                (size, getFriendlyName) =>
-                    (getFriendlyName) ?
-                        string.Format("unsigned{0}", size) :
-                        string.Format("unsigned({0} downto 0)", size-1),
-                (size, getFriendlyName) =>
-                    (getFriendlyName) ?
-                        string.Format("signed{0}", size) :
-                        string.Format("signed({0} downto 0)", size-1)
+            var suNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate>
+            {
+                (size, getFriendlyName) => getFriendlyName ? $"unsigned{size}" : $"unsigned({size - 1} downto 0)",
+                (size, getFriendlyName) => getFriendlyName ? $"signed{size}" : $"signed({size - 1} downto 0)",
             };
-            var stdLogicVectorDataType = new List<VhdlOp.DataTypeFromSizeDelegate> {
-                (size, getFriendlyName) =>
-                    (getFriendlyName) ?
-                        string.Format("std_logic_vector{0}", size) :
-                        string.Format("std_logic_vector({0} downto 0)", size-1)
+
+            var stdLogicVectorDataType = new List<VhdlOp.DataTypeFromSizeDelegate>
+            {
+                (size, getFriendlyName) => getFriendlyName ? $"std_logic_vector{size}" : $"std_logic_vector({size - 1} downto 0)",
             };
 
             // There are lists of VHDL templates below. Any of them can be used as a parameter to VhdlOp constructor.
@@ -76,56 +94,116 @@ namespace HastlayerTimingTester
                 new VhdlOp(new BinaryOperatorVhdlExpression("rem"),   "rem",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 new VhdlOp(new UnaryOperatorVhdlExpression("not"),    "not",  stdLogicVectorDataType, VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
                 // Unary plus is a noop, not needed.
-                //new VhdlOp(new UnaryOperatorVhdlExpression("+", UnaryOperatorVhdlExpression.ValidationMode.AnyDataType),
-                //                                                      "unary_plus",  suNumericDataTypes, VhdlOp.SameOutputDataType,       defaultVhdlTemplates),
-                new VhdlOp(new UnaryOperatorVhdlExpression("-", UnaryOperatorVhdlExpression.ValidationMode.SignedOnly),
-                                                                      "unary_minus",  suNumericDataTypes, VhdlOp.SameOutputDataType,       defaultVhdlTemplates),
-                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("/")),
-                                                                      "div",  suNumericDataTypes,     VhdlOp.SameOutputDataType,        defaultVhdlTemplates),
-                new VhdlOp(new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("*")),
-                                                                      "mul",  suNumericDataTypes,     VhdlOp.SameOutputDataType,         defaultVhdlTemplates)
+                ////new VhdlOp(
+                ////    new UnaryOperatorVhdlExpression("+", UnaryOperatorVhdlExpression.ValidationMode.AnyDataType),
+                ////    "unary_plus",
+                ////    suNumericDataTypes,
+                ////    VhdlOp.SameOutputDataType,
+                ////    defaultVhdlTemplates),
+                new VhdlOp(
+                    new UnaryOperatorVhdlExpression("-", UnaryOperatorVhdlExpression.ValidationMode.SignedOnly),
+                    "unary_minus",
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates),
+                new VhdlOp(
+                    new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("/")),
+                    "div",
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates),
+                new VhdlOp(
+                    new WrapSmartResizeVhdlExpression(new BinaryOperatorVhdlExpression("*")),
+                    "mul",
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates),
             };
 
-            // We test shifting by the amount of bits listed below. 
+            // We test shifting by the amount of bits listed below.
             // Multiplying by a constant 2^N is also a shift operation, so we test that here, too. As we expect the
             // FPGA compiler to implement this by wiring, multiplying by 2^N is expected to be faster than multiplying
             // by another constant or another variable (where it would use DSP blocks).
-            for (int i = 0; i < 64; i++) // <-- bit shift amounts to test
+            for (int i = 0; i < 64; i++)
             {
                 // These are the original shift test cases, however the DotnetShiftVhdlExpression implements the
                 // expression that Hastlayer really uses:
-                // Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
-                //     "shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                // Operators.Add(new VhdlOp(new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
-                //     "shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                ////Operators.Add(new VhdlOp(
+                ////    new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Left, i),
+                ////    "shift_left_by_" + i.ToString(CultureInfo.InvariantCulture),
+                ////    suNumericDataTypes,
+                ////    VhdlOp.SameOutputDataType,
+                ////    defaultVhdlTemplates));
+                ////Operators.Add(new VhdlOp(
+                ////    new ShiftVhdlExpression(ShiftVhdlExpression.Direction.Right, i),
+                ////    "shift_right_by_" + i.ToString(CultureInfo.InvariantCulture),
+                ////    suNumericDataTypes,
+                ////    VhdlOp.SameOutputDataType,
+                ////    defaultVhdlTemplates));
 
-                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 64, true, false, i),
-                    "dotnet_shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 64, true, false, i),
-                    "dotnet_shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 32, true, false, i),
-                    "dotnet_shift_left_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 32, true, false, i),
-                    "dotnet_shift_right_by_" + i.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(
+                    new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 64, true, false, i),
+                    "dotnet_shift_left_by_" + i.ToString(CultureInfo.InvariantCulture),
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(
+                    new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 64, true, false, i),
+                    "dotnet_shift_right_by_" + i.ToString(CultureInfo.InvariantCulture),
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(
+                    new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 32, true, false, i),
+                    "dotnet_shift_left_by_" + i.ToString(CultureInfo.InvariantCulture),
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(
+                    new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 32, true, false, i),
+                    "dotnet_shift_right_by_" + i.ToString(CultureInfo.InvariantCulture),
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates));
 
                 // These are test cases for /(2^n) or *(2^n) which is practically just a shift:
                 var powTwoOfI = BigInteger.Pow(2, i);
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
-                     MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
-                     MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
-                     "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
-                     MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
-                     MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
-                     "mul_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
-                    MutiplyDivideByConstantVhdlExpression.Mode.Divide,
-                    MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
-                     "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-                Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(powTwoOfI,
-                    MutiplyDivideByConstantVhdlExpression.Mode.Divide,
-                    MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
-                     "div_by_" + powTwoOfI.ToString(), suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(
+                    new MutiplyDivideByConstantVhdlExpression(
+                        powTwoOfI,
+                        MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
+                        MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
+                    "mul_by_" + powTwoOfI.ToString(CultureInfo.InvariantCulture),
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(
+                    new MutiplyDivideByConstantVhdlExpression(
+                        powTwoOfI,
+                        MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
+                        MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
+                    "mul_by_" + powTwoOfI.ToString(CultureInfo.InvariantCulture),
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(
+                    new MutiplyDivideByConstantVhdlExpression(
+                        powTwoOfI,
+                        MutiplyDivideByConstantVhdlExpression.Mode.Divide,
+                        MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
+                    "div_by_" + powTwoOfI.ToString(CultureInfo.InvariantCulture),
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates));
+                Operators.Add(new VhdlOp(
+                    new MutiplyDivideByConstantVhdlExpression(
+                        powTwoOfI,
+                        MutiplyDivideByConstantVhdlExpression.Mode.Divide,
+                        MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
+                    "div_by_" + powTwoOfI.ToString(CultureInfo.InvariantCulture),
+                    suNumericDataTypes,
+                    VhdlOp.SameOutputDataType,
+                    defaultVhdlTemplates));
             }
 
             // These are DotnetShiftExpression with a<<b where both are variables:
@@ -133,23 +211,37 @@ namespace HastlayerTimingTester
             {
                 Operators.Add(new VhdlOp(
                         new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, outputSize, false, false),
-                        "dotnet_shift_left", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates
-                    ));
+                        "dotnet_shift_left",
+                        suNumericDataTypes,
+                        VhdlOp.SameOutputDataType,
+                        defaultVhdlTemplates));
                 Operators.Add(new VhdlOp(
                         new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, outputSize, false, false),
-                        "dotnet_shift_right", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates
-                    ));
+                        "dotnet_shift_right",
+                        suNumericDataTypes,
+                        VhdlOp.SameOutputDataType,
+                        defaultVhdlTemplates));
             }
 
             // Just to test MultiplyDivideByConstantVhdlExpression behavior on constant 0 or negative numbers:
-            Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(-2,
-                 MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
-                 MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
-                 "mul_by_-2", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
-            Operators.Add(new VhdlOp(new MutiplyDivideByConstantVhdlExpression(0,
-                 MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
-                 MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
-                 "mul_by_0", suNumericDataTypes, VhdlOp.SameOutputDataType, defaultVhdlTemplates));
+            Operators.Add(new VhdlOp(
+                new MutiplyDivideByConstantVhdlExpression(
+                    -2,
+                    MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
+                    MutiplyDivideByConstantVhdlExpression.ValidationMode.SignedOnly),
+                "mul_by_-2",
+                suNumericDataTypes,
+                VhdlOp.SameOutputDataType,
+                defaultVhdlTemplates));
+            Operators.Add(new VhdlOp(
+                new MutiplyDivideByConstantVhdlExpression(
+                    0,
+                    MutiplyDivideByConstantVhdlExpression.Mode.Multiply,
+                    MutiplyDivideByConstantVhdlExpression.ValidationMode.UnsignedOnly),
+                "mul_by_0",
+                suNumericDataTypes,
+                VhdlOp.SameOutputDataType,
+                defaultVhdlTemplates));
 
 
             // InputSizes is the list of input sizes for the data type that we want to test
@@ -157,18 +249,18 @@ namespace HastlayerTimingTester
 
             // The FPGA part name. Only used for Xilinx devices. You can find these in the Xilinx Board Store here:
             // https://github.com/Xilinx/XilinxBoardStore (if you can't find something there then check out the branch
-            // for the given Vitis version, like this one for 2020.1.1: 
+            // for the given Vitis version, like this one for 2020.1.1:
             // https://github.com/Xilinx/XilinxBoardStore/tree/2020.1.1/boards/Xilinx. E.g. the part name for the Alveo
             // U280 board is in the
-            // https://github.com/Xilinx/XilinxBoardStore/blob/master/boards/Xilinx/au280/production/1.1/board.xml 
-            // file, just search for "part_name". Be sure to use the production versions, not the engineering sample 
+            // https://github.com/Xilinx/XilinxBoardStore/blob/master/boards/Xilinx/au280/production/1.1/board.xml
+            // file, just search for "part_name". Be sure to use the production versions, not the engineering sample
             // ("es").
-            // Use the existing configurations under the TimingTestConfigs folder instead of directly changing this 
+            // Use the existing configurations under the TimingTestConfigs folder instead of directly changing this
             // here, and create new configs for new boards.
-            //Part = "xc7a100tcsg324-1";
+            ////Part = "xc7a100tcsg324-1";
 
             // System clock frequency in Hz
-            //Frequency = 100e6m;
+            ////Frequency = 100e6m;
 
             // Name of the configuration, will be used in the name of the output directory
             Name = "default";
@@ -177,9 +269,9 @@ namespace HastlayerTimingTester
             // If it is false, the exceptions are logged and the program continues with the next test.
             DebugMode = false;
 
-            // This selects for which FPGA vendor do we want to run the timing test. 
+            // This selects for which FPGA vendor do we want to run the timing test.
             // XilinxDriver supports Vivado, IntelDriver supports Quartus and TimeQuest.
-            //Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
+            ////Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
 
             // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester. It does not
             // open the GUI for every single test. However, it cannot generate schematic drawings (Schematic.pdf).
@@ -200,7 +292,7 @@ namespace HastlayerTimingTester
             // Determines the number of FPGA vendor tool processes to use during static timing analysis. Since even
             // when supposedly using all the cores the FPGA tools can't usually utilize the whole CPU you can increase
             // the degree of parallelism further. Also see NumberOfThreadsPerProcess.
-            NumberOfSTAProcesses = 6;
+            NumberOfStaProcesses = 6;
         }
     }
 }

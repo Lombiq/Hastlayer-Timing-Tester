@@ -2,10 +2,12 @@ using HastlayerTimingTester.Parsers;
 using HastlayerTimingTester.Vhdl;
 using System;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace HastlayerTimingTester
@@ -13,13 +15,13 @@ namespace HastlayerTimingTester
     /// <summary>Implements the core functionality of the Hastlayer Timing Tester application.</summary>
     internal class TimingTester
     {
-        private readonly TimingTestConfigBase _testConfig;
+        private readonly TimingTestConfig _testConfig;
 
-        /// <summary>The output directory of all tests to be done when running the Timing Tester.</summary>
+        /// <summary>Gets the output directory of all tests to be done when running the Timing Tester.</summary>
         public string CurrentTestBaseDirectory => _testConfig.Name;
 
 
-        public TimingTester(TimingTestConfigBase testConfig) => _testConfig = testConfig;
+        public TimingTester(TimingTestConfig testConfig) => _testConfig = testConfig;
 
 
         /// <summary>
@@ -37,25 +39,30 @@ namespace HastlayerTimingTester
 
             if (parameters.Prepare)
             {
-                if (!Directory.Exists(CurrentTestBaseDirectory)) Directory.CreateDirectory(CurrentTestBaseDirectory);
+                if (!Directory.Exists(CurrentTestBaseDirectory))
+                {
+                    Directory.CreateDirectory(CurrentTestBaseDirectory);
+                }
                 else if (Directory.GetFileSystemEntries(CurrentTestBaseDirectory).Length > 0)
                 {
                     Directory.Delete(CurrentTestBaseDirectory, true);
                     Directory.CreateDirectory(CurrentTestBaseDirectory);
                 }
             }
+
             Logger.Init(CombineWithBaseDirectoryPath("Log.txt"), parameters.Prepare);
 
             if (parameters.Prepare) PrepareAnalyze(TaskChoice.Prepare);
             if (parameters.ExecSta) ExecSta();
             if (parameters.AllRemoteSta)
             {
-                Console.WriteLine($"\r\nWaiting for user to run tests and overwrite the result in {CurrentTestBaseDirectory}.\r\n");
+                Console.WriteLine($"{Environment.NewLine}Waiting for user to run tests and overwrite the result in {CurrentTestBaseDirectory}.{Environment.NewLine}");
                 Console.ReadKey();
             }
+
             if (parameters.Analyze) PrepareAnalyze(TaskChoice.Analyze);
 
-            Logger.Dispose();
+            Logger.Close();
         }
 
 
@@ -66,30 +73,38 @@ namespace HastlayerTimingTester
         {
             Logger.LogStageHeader("execute-sta");
 
-            var tasks = new Task[_testConfig.NumberOfSTAProcesses];
+            var tasks = new Task[_testConfig.NumberOfStaProcesses];
 
-            for (int i = 0; i < _testConfig.NumberOfSTAProcesses; i++)
+            for (int i = 0; i < _testConfig.NumberOfStaProcesses; i++)
             {
-                tasks[i] = Task.Factory.StartNew(indexObject =>
-                {
-                    var folder = Path.Combine(
-                        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
-                        CurrentTestBaseDirectory,
-                        GetProcessFolderName((int)indexObject));
-
-                    if (!Directory.Exists(folder)) return;
-
-                    using (var process = new Process())
+                tasks[i] = Task.Factory.StartNew(
+                    indexObject =>
                     {
-                        process.StartInfo.WorkingDirectory = folder;
-                        process.StartInfo.FileName = Path.Combine(process.StartInfo.WorkingDirectory, "Run.bat");
-                        process.StartInfo.UseShellExecute = _testConfig.NumberOfSTAProcesses > 1;
-                        process.StartInfo.CreateNoWindow = false;
-                        process.StartInfo.RedirectStandardOutput = false;
-                        process.Start();
-                        process.WaitForExit();
-                    }
-                }, i);
+                        var folder = Path.Combine(
+                            // We need the actual executing assembly.
+#pragma warning disable S3902 // "Assembly.GetExecutingAssembly" should not be called
+                            Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location),
+#pragma warning restore S3902 // "Assembly.GetExecutingAssembly" should not be called
+                            CurrentTestBaseDirectory,
+                            GetProcessFolderName((int)indexObject));
+
+                        if (!Directory.Exists(folder)) return;
+
+                        using (var process = new Process())
+                        {
+                            process.StartInfo.WorkingDirectory = folder;
+                            process.StartInfo.FileName = Path.Combine(process.StartInfo.WorkingDirectory, "Run.bat");
+                            process.StartInfo.UseShellExecute = _testConfig.NumberOfStaProcesses > 1;
+                            process.StartInfo.CreateNoWindow = false;
+                            process.StartInfo.RedirectStandardOutput = false;
+                            process.Start();
+                            process.WaitForExit();
+                        }
+                    },
+                    i,
+                    CancellationToken.None,
+                    TaskCreationOptions.None,
+                    TaskScheduler.Default);
             }
 
             Task.WaitAll(tasks);
@@ -115,7 +130,7 @@ namespace HastlayerTimingTester
                 batchWriter?.Dispose();
                 batchWriter = new StreamWriter(File.Open(Path.Combine(processFolderPath, "Run.bat"), FileMode.Create))
                 {
-                    AutoFlush = true
+                    AutoFlush = true,
                 };
                 // Increasing the command buffer size. 32766 is the maximum (see:
                 // https://stackoverflow.com/questions/4692673/how-to-change-screen-buffer-size-in-windows-command-prompt-from-batch-script)
@@ -127,9 +142,9 @@ namespace HastlayerTimingTester
             {
                 resultsWriter = new StreamWriter(File.Open(CombineWithBaseDirectoryPath("Results.tsv"), FileMode.Create))
                 {
-                    AutoFlush = true
+                    AutoFlush = true,
                 };
-                resultsWriter.Write("Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWDFR\r\n");
+                resultsWriter.Write($"Op\tInType\tOutType\tTemplate\tDesignStat\tDPD\tTWDFR{Environment.NewLine}");
             }
 
             var testCount = 0;
@@ -141,7 +156,7 @@ namespace HastlayerTimingTester
                 }
             });
 
-            var actualNumberOfSTAProcesses = testCount < _testConfig.NumberOfSTAProcesses ? testCount : _testConfig.NumberOfSTAProcesses;
+            var actualNumberOfSTAProcesses = testCount < _testConfig.NumberOfStaProcesses ? testCount : _testConfig.NumberOfStaProcesses;
 
             var scriptBuilder = new StringBuilder();
 
@@ -152,6 +167,7 @@ namespace HastlayerTimingTester
                 scriptBuilder.AppendLine("start cmd /c Run.bat");
                 scriptBuilder.AppendLine("cd ..");
             }
+
             File.WriteAllText(CombineWithBaseDirectoryPath("Run.bat"), scriptBuilder.ToString());
 
             // Creating script to be able to easily tail all STA processes' progress logs.
@@ -160,7 +176,7 @@ namespace HastlayerTimingTester
             scriptBuilder.AppendLine(@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
             scriptBuilder.AppendLine(@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
             scriptBuilder.AppendLine("Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force");
-            // For details on Gridify see: 
+            // For details on Gridify see:
             // http://ridicurious.com/2017/11/14/set-gridlayout-arrange-apps-and-scripts-in-an-automatic-grid-to-fit-your-screen/
             scriptBuilder.AppendLine("Install-Module Gridify -scope CurrentUser -Confirm:$False -Force");
 
@@ -194,6 +210,8 @@ namespace HastlayerTimingTester
                 var testsPerCurrentProcess = testsPerProcess;
                 var previousProcessIndex = -1;
 
+                // False alarm.
+#pragma warning disable S1067 // Expressions should not be too complex
                 ExecuteForOperators((op, inputSize, inputDataTypeFunction, vhdlTemplate) =>
                 {
                     try
@@ -206,15 +224,11 @@ namespace HastlayerTimingTester
                             inputDataTypeFunction,
                             false);
 
-                        var testFriendlyName = string.Format("{0}_{1}_to_{2}_{3}",
-                            op.FriendlyName,
-                            inputDataTypeFunction(inputSize, true),
-                            op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
-                            vhdlTemplate.Name);
+                        var testFriendlyName =
+                            $"{op.FriendlyName}_{inputDataTypeFunction(inputSize, true)}_to_{op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true)}_{vhdlTemplate.Name}";
 
+                        Logger.Log($"{Environment.NewLine}Current test item: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize, inputDataType, outputDataType);
 
-                        Logger.Log("\r\nCurrent test item: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize,
-                            inputDataType, outputDataType);
                         if (!op.VhdlExpression.IsValid(inputSize, inputDataTypeFunction, vhdlTemplate))
                         {
                             Logger.Log("This test item was skipped due to not considered valid.");
@@ -252,15 +266,14 @@ namespace HastlayerTimingTester
                             var vhdl = AdditionalVhdlIncludes.Content + vhdlTemplate.VhdlTemplate
                                 .Replace("%INTYPE%", inputDataType)
                                 .Replace("%OUTTYPE%", outputDataType)
-                                .Replace("%EXPRESSION%",
-                                    op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize));
+                                .Replace("%EXPRESSION%", op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize));
                             _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
 
 
                             batchWriter.WriteLine(
                                 $"{Environment.NewLine}echo FINISHED #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at %date% %time% >> Progress.log{Environment.NewLine}");
                         }
-                        else // if taskChoice == TaskChoice.Analyze
+                        else if (taskChoice == TaskChoice.Analyze)
                         {
                             decimal? dataPathDelay = null, timingWindowDiffFromRequirement = null;
                             var useImplementationResults = false;
@@ -269,14 +282,14 @@ namespace HastlayerTimingTester
                                 !_testConfig.Driver.CanStaAfterSynthesize &&
                                 _testConfig.Driver.CanStaAfterImplementation)
                             {
-                                throw new Exception(
+                                throw new NotSupportedException(
                                     "Can't STA after synthesize step for this FPGA vendor, " +
                                     "although ImplementDesign is false in the config.");
                             }
 
                             if (_testConfig.ImplementDesign && !_testConfig.Driver.CanStaAfterImplementation)
                             {
-                                throw new Exception(
+                                throw new NotSupportedException(
                                     "Can't STA after implementation step for this FPGA vendor, " +
                                     "although ImplementDesign is true in the config.");
                             }
@@ -284,7 +297,7 @@ namespace HastlayerTimingTester
                             if (_testConfig.Driver.CanStaAfterSynthesize)
                             {
                                 var synthesisParser = _testConfig.Driver.Analyze(testFriendlyName, StaPhase.Synthesis);
-                                Logger.Log("\r\nSynthesis:\r\n----------");
+                                Logger.Log($"{Environment.NewLine}Synthesis:{Environment.NewLine}----------");
                                 synthesisParser.PrintParsedTimingReport("S");
                                 synthesisParser.PrintParsedTimingSummary();
                                 dataPathDelay = synthesisParser.DataPathDelay;
@@ -299,7 +312,7 @@ namespace HastlayerTimingTester
 
                                 if (implementationParser != null)
                                 {
-                                    Logger.Log("\r\nImplementation:\r\n---------------");
+                                    Logger.Log($"{Environment.NewLine}Implementation:{Environment.NewLine}---------------");
                                     implementationParser.PrintParsedTimingReport("I");
                                     implementationParser.PrintParsedTimingSummary();
                                     useImplementationResults =
@@ -329,12 +342,13 @@ namespace HastlayerTimingTester
                                     "neither synthesis, nor implementation.");
                             }
 
-                            resultsWriter.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
+                            resultsWriter.WriteLine(
+                                "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
                                 op.FriendlyName,
                                 inputDataTypeFunction(inputSize, true),
                                 op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
                                 vhdlTemplate.Name,
-                                (useImplementationResults) ? "impl" : "synth",
+                                useImplementationResults ? "impl" : "synth",
                                 dataPathDelay,
                                 timingWindowDiffFromRequirement
                             );
@@ -354,6 +368,7 @@ namespace HastlayerTimingTester
                         else Logger.Log("Exception happened during {0}: {1}", taskChoiceString, exception.Message);
                     }
                 });
+#pragma warning restore S1067 // Expressions should not be too complex
             }
             finally
             {
@@ -362,6 +377,7 @@ namespace HastlayerTimingTester
                     batchWriter.WriteLine("echo ===== Finished =====");
                     batchWriter.Dispose();
                 }
+
                 if (resultsWriter != null) resultsWriter.Dispose();
             }
 
@@ -372,7 +388,7 @@ namespace HastlayerTimingTester
             Path.Combine(new[] { CurrentTestBaseDirectory }.Union(subPaths).ToArray());
 
         private string GetProcessFolderName(int processIndex) =>
-            _testConfig.NumberOfSTAProcesses < 2 ? string.Empty : processIndex.ToString();
+            _testConfig.NumberOfStaProcesses < 2 ? string.Empty : processIndex.ToString(CultureInfo.InvariantCulture);
 
         private void ExecuteForOperators(Action<VhdlOp, int, VhdlOp.DataTypeFromSizeDelegate, VhdlTemplateBase> processor)
         {
@@ -386,6 +402,10 @@ namespace HastlayerTimingTester
         }
 
 
-        private enum TaskChoice { Prepare, Analyze }
+        private enum TaskChoice
+        {
+            Prepare,
+            Analyze,
+        }
     }
 }

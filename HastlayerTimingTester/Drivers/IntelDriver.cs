@@ -1,4 +1,4 @@
-﻿using HastlayerTimingTester.Parsers;
+using HastlayerTimingTester.Parsers;
 using HastlayerTimingTester.Vhdl;
 using System;
 using System.Globalization;
@@ -7,31 +7,11 @@ using System.IO;
 namespace HastlayerTimingTester.Drivers
 {
     /// <summary>
-    /// A driver for the Intel/Altera FPGA tools. 
+    /// A driver for the Intel/Altera FPGA tools.
     /// For example, it contains templates for files to be generated for these tools.
     /// </summary>
-    public class IntelDriver : FpgaVendorDriver
+    internal class IntelDriver : FpgaVendorDriver
     {
-        private readonly string _quartusPath;
-
-        /// <summary>
-        /// Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
-        /// </summary>
-        public override bool CanStaAfterSynthesize => false;
-
-        /// <summary>
-        /// Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
-        /// </summary>
-        public override bool CanStaAfterImplementation => true;
-
-
-        /// <param name="quartusPath">This is the bin directory of Quartus Prime.</param>
-        public IntelDriver(TimingTestConfigBase testConfig, string quartusPath) : base(testConfig)
-        {
-            _quartusPath = quartusPath;
-        }
-
-
         /// <summary>
         /// Template to be filled with data, to be later opened and ran by Quartus.
         /// Synthesizes and implements the project.
@@ -108,9 +88,10 @@ set_clock_uncertainty -fall_from [get_clocks {clk}] -rise_to [get_clocks {clk}] 
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -setup 0.070  
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060  
 ";
+
         /// <summary>
         /// Cleanup script that can remove unnecessary files generated during compilation/STA from each test
-        /// subdirectory. Only files needed for Timing Tester remain. 
+        /// subdirectory. Only files needed for Timing Tester remain.
         /// It is useful to run it before transferring the test results from a remote machine, because Quartus
         /// generates a few gigabytes of data we don't need.
         /// </summary>
@@ -131,6 +112,20 @@ for subdir in subdirs:
 
         private const string _cleanupScriptName = "Cleanup.py";
 
+        private readonly string _quartusPath;
+
+        // Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
+        public override bool CanStaAfterSynthesize => false;
+
+        // Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
+        public override bool CanStaAfterImplementation => true;
+
+
+        /// <param name="quartusPath">This is the bin directory of Quartus Prime.</param>
+        public IntelDriver(TimingTestConfig testConfig, string quartusPath)
+            : base(testConfig) => _quartusPath = quartusPath;
+
+
         /// <summary>Initialization of Prepare stage, generates scripts common for all tests.</summary>
         public override void InitPrepare(StreamWriter batchWriter)
         {
@@ -149,7 +144,7 @@ for subdir in subdirs:
             var sdcContent = _sdcTemplate
                 .Replace("%CLKPERIOD%", ((1.0m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture))
                 .Replace("%CLKHALFPERIOD%", ((0.5m / _testConfig.Frequency) * 1e9m).ToString(CultureInfo.InvariantCulture));
-            File.WriteAllText(sdcPath, (vhdlTemplate.HasTimingConstraints) ? sdcContent : "");
+            File.WriteAllText(sdcPath, vhdlTemplate.HasTimingConstraints ? sdcContent : string.Empty);
 
             _batchWriter.WriteLine("cd {0}", outputDirectoryName);
             _batchWriter.BeginRetryWrapper("TimingSummary.txt");
@@ -168,8 +163,8 @@ for subdir in subdirs:
 
             if (phase != StaPhase.Implementation)
             {
-                throw new Exception("IntelDriver can't run STA right after synthesis, " +
-                    "although ImplementDesign is true in the config.");
+                throw new NotSupportedException(
+                    "IntelDriver can't run STA right after synthesis, although ImplementDesign is true in the config.");
             }
 
             var implementationSuccessful = File.Exists(setupReportOutputPath) && File.Exists(timingSummaryOutputPath);
@@ -183,7 +178,7 @@ for subdir in subdirs:
             var result = new QuartusResult
             {
                 SetupReport = File.ReadAllText(setupReportOutputPath),
-                TimingSummary = File.ReadAllText(timingSummaryOutputPath)
+                TimingSummary = File.ReadAllText(timingSummaryOutputPath),
             };
             parser.Parse(result);
 

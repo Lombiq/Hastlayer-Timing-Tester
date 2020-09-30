@@ -1,10 +1,10 @@
 namespace HastlayerTimingTester.Vhdl
 {
     /// <summary>
-    /// A VHDL template using the expression to test in an combinatorial logic design. This means that 
-    /// there is no clock signal or flip-flops in the design, and the output is never fed back to the input.
+    /// A VHDL template using the expression to test in a combinatorial logic design. This means that there is no
+    /// clock signal or flip-flops in the design, and the output is never fed back to the input.
     /// </summary>
-    class VhdlTemplateComb : VhdlTemplateBase
+    internal class VhdlTemplateComb : VhdlTemplateBase
     {
         public VhdlTemplateComb()
         {
@@ -24,6 +24,6 @@ end imp;";
             HasTimingConstraints = false;
         }
 
-        override public string Name => "comb";
+        public override string Name => "comb";
     }
 }

@@ -3,7 +3,7 @@ namespace HastlayerTimingTester.Vhdl
     /// <summary>
     /// A VHDL template using the expression to test in a sequential, synchronous logic design.
     /// </summary>
-    class VhdlTemplateSync : VhdlTemplateBase
+    internal class VhdlTemplateSync : VhdlTemplateBase
     {
         public VhdlTemplateSync()
         {
@@ -36,6 +36,6 @@ end imp;";
             ExpressionInputs = new[] { "a1_reg", "a2_reg" };
         }
 
-        override public string Name => "sync";
+        public override string Name => "sync";
     }
 }

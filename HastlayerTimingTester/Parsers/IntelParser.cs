@@ -1,26 +1,27 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text.RegularExpressions;
 
 namespace HastlayerTimingTester.Parsers
 {
     /// <summary>For passing the data output by Quartus into IntelParser.</summary>
-    public struct QuartusResult
+    public class QuartusResult
     {
-        public string SetupReport;
-        public string TimingSummary;
+        public string SetupReport { get; set; }
+        public string TimingSummary { get; set; }
     }
 
     /// <summary>
-    /// Parser for Intel/Altera Quartus Prime Standard Edition 15.1 static timing analysis output. 
+    /// Parser for Intel/Altera Quartus Prime Standard Edition 15.1 static timing analysis output.
     /// See the following Confluence page for more information:
-    /// https://lombiq.atlassian.net/wiki/spaces/HAST/pages/186744859/Timing+on+Catapult
+    /// https://lombiq.atlassian.net/wiki/spaces/HAST/pages/186744859/Timing+on+Catapult.
     /// </summary>
-    class IntelParser : TimingOutputParser
+    internal class IntelParser : TimingOutputParser
     {
-        public IntelParser(decimal clockFrequency) : base(clockFrequency) { }
+        public IntelParser(decimal clockFrequency)
+            : base(clockFrequency) { }
 
         /// <summary>
-        /// Parses the STA output of Quartus. 
+        /// Parses the STA output of Quartus.
         /// </summary>
         public void Parse(QuartusResult result)
         {

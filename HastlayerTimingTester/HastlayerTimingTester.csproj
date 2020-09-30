@@ -72,7 +72,6 @@
     <Compile Include="Vhdl\Expressions\ShiftVhdlExpression.cs" />
     <Compile Include="Parsers\TimingOutputParser.cs" />
     <Compile Include="TimingTestConfig.cs" />
-    <Compile Include="TimingTestConfigBase.cs" />
     <Compile Include="TimingTester.cs" />
     <Compile Include="Vhdl\Expressions\UnaryVhdlExpression.cs" />
     <Compile Include="Vhdl\Expressions\VhdlExpressionBase.cs" />

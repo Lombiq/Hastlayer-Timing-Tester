@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -6,22 +6,23 @@ using System.Text.RegularExpressions;
 namespace HastlayerTimingTester.Parsers
 {
     /// <summary>For passing the data output by Vivado into TimingOutputParser.</summary>
-    public struct VivadoResult
+    public class VivadoResult
     {
-        public string TimingReport;
-        public string TimingSummary;
+        public string TimingReport { get; set; }
+        public string TimingSummary { get; set; }
     }
 
     /// <summary>
-    /// Parser for Vivado static timing analysis output. 
+    /// Parser for Vivado static timing analysis output.
     /// </summary>
-    class XilinxParser : TimingOutputParser
+    internal class XilinxParser : TimingOutputParser
     {
-        public XilinxParser(decimal clockFrequency) : base(clockFrequency) { }
+        public XilinxParser(decimal clockFrequency)
+            : base(clockFrequency) { }
 
 
         /// <summary>
-        /// Parses the STA output of Vivado. 
+        /// Parses the STA output of Vivado.
         /// </summary>
         public void Parse(VivadoResult result)
         {
@@ -60,13 +61,11 @@ namespace HastlayerTimingTester.Parsers
             }
 
             // Timing Summary
-            var timingSummaryLines = Regex.Split(result.TimingSummary, "\r\n").ToList();
+            var timingSummaryLines = Regex.Split(result.TimingSummary, "{Environment.NewLine}").ToList();
             for (var i = 0; i < timingSummaryLines.Count; i++)
             {
-                if (
-                    timingSummaryLines[i].StartsWith("| Design Timing Summary") &&
-                    timingSummaryLines[i + 1].StartsWith("| ---------------------")
-                )
+                if (timingSummaryLines[i].StartsWith("| Design Timing Summary", StringComparison.InvariantCulture) &&
+                    timingSummaryLines[i + 1].StartsWith("| ---------------------", StringComparison.InvariantCulture))
                 {
                     var totalTimingSummaryLine = timingSummaryLines[i + 6];
                     while (totalTimingSummaryLine.Contains("  "))
@@ -86,8 +85,10 @@ namespace HastlayerTimingTester.Parsers
                             TimingSummaryAvailable = true;
                         }
                     }
-                    catch (FormatException) { } // pass, at least TimingSummaryAvailable will stay false
-                    break;
+                    catch (FormatException)
+                    {
+                        // Pass, at least TimingSummaryAvailable will stay false.
+                    }
                 }
             }
         }

@@ -1,15 +1,14 @@
-﻿using System;
+using System;
 using System.Globalization;
 using System.IO;
 
 namespace HastlayerTimingTester
 {
-
     /// <summary>
     /// Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the
     /// console. It also handles writing to the results file (Results.tsv in CurrentTestOutputBaseDirectory).
     /// </summary>
-    static class Logger
+    internal static class Logger
     {
         private static StreamWriter _logStreamWriter;
         private static bool _initialized;
@@ -21,9 +20,9 @@ namespace HastlayerTimingTester
         /// </summary>
         public static void Init(string logFilePath, bool createFile = true)
         {
-            _logStreamWriter = new StreamWriter(File.Open(logFilePath, (createFile) ? FileMode.Create : FileMode.Append))
+            _logStreamWriter = new StreamWriter(File.Open(logFilePath, createFile ? FileMode.Create : FileMode.Append))
             {
-                AutoFlush = true
+                AutoFlush = true,
             };
             _initialized = true;
         }
@@ -52,8 +51,8 @@ namespace HastlayerTimingTester
         /// </summary>
         public static void LogStageHeader(string stage)
         {
-            Log("\r\n=== HastlayerTimingTester {0} stage ===", stage);
-            Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            Log($"{Environment.NewLine}=== HastlayerTimingTester {0} stage ===", stage);
+            Log("Started at {0}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
         }
 
         /// <summary>
@@ -62,10 +61,13 @@ namespace HastlayerTimingTester
         /// </summary>
         public static void LogStageFooter(string stage)
         {
-            Log("\r\n=== HastlayerTimingTester {0} stage finished at {1} ===", stage, DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            Log(
+                $"{Environment.NewLine}=== HastlayerTimingTester {0} stage finished at {1} ===",
+                stage,
+                DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss", CultureInfo.InvariantCulture));
         }
 
-        public static void Dispose()
+        public static void Close()
         {
             _logStreamWriter?.Dispose();
             _initialized = false;
@@ -80,11 +82,12 @@ namespace HastlayerTimingTester
         {
             for (var i = 0; i < objs.Length; i++)
             {
-                if (objs[i].GetType() == typeof(decimal))
+                if (objs[i] is decimal decimalParameter)
                 {
-                    objs[i] = ((decimal)objs[i]).ToString("0.###", CultureInfo.InvariantCulture);
+                    objs[i] = decimalParameter.ToString("0.###", CultureInfo.InvariantCulture);
                 }
             }
+
             if (_initialized)
             {
                 if (inline)
