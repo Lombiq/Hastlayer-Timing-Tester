@@ -25,7 +25,7 @@ namespace HastlayerTimingTester.Vhdl.Expressions
 
         private readonly Mode _mode;
         private readonly ValidationMode _validationMode;
-        private BigInteger _constant;
+        private readonly BigInteger _constant;
 
 
         /// <param name="constant">The constant to multiply/divide with.</param>
@@ -63,12 +63,9 @@ namespace HastlayerTimingTester.Vhdl.Expressions
         {
             var signedMode = inputDataTypeFunction(0, true).StartsWith("signed", StringComparison.InvariantCulture);
             var unsignedMode = inputDataTypeFunction(0, true).StartsWith("unsigned", StringComparison.InvariantCulture);
-            // We're smart enough for this.
-#pragma warning disable S1067 // Expressions should not be too complex
             return (Math.Log((double)_constant, 2) + 1 + (signedMode ? 1 : 0) <= inputSize || _constant < 0) &&
                     (_validationMode != ValidationMode.UnsignedOnly || unsignedMode) &&
                     (_validationMode != ValidationMode.SignedOnly || signedMode);
-#pragma warning restore S1067 // Expressions should not be too complex
         }
     }
 }

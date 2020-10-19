@@ -209,8 +209,6 @@ namespace HastlayerTimingTester
                 var testsPerCurrentProcess = testsPerProcess;
                 var previousProcessIndex = -1;
 
-                // False alarm.
-#pragma warning disable S1067 // Expressions should not be too complex
                 ExecuteForOperators((op, inputSize, inputDataTypeFunction, vhdlTemplate) =>
                 {
                     try
@@ -367,7 +365,6 @@ namespace HastlayerTimingTester
                         else Logger.Log("Exception happened during {0}: {1}", taskChoiceString, exception.Message);
                     }
                 });
-#pragma warning restore S1067 // Expressions should not be too complex
             }
             finally
             {

@@ -83,12 +83,9 @@ namespace HastlayerTimingTester.Vhdl.Expressions
             int inputSize,
             VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
             VhdlTemplateBase vhdlTemplate) =>
-                // We're smart enough for this.
-#pragma warning disable S1067 // Expressions should not be too complex
                 (_outputSize == NoOutputSizeCheck || inputSize == _outputSize) &&
                 (!_constantAmount || inputSize > _amount) &&
                 (!_enableOnlyUnsigned || inputDataTypeFunction(0, true).StartsWith("unsigned", StringComparison.InvariantCulture));
-#pragma warning restore S1067 // Expressions should not be too complex
 
 
         /// <summary>
