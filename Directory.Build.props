@@ -1,3 +1,6 @@
 <Project>
   <Import Project="tools/Lombiq.Analyzers/Build.props"/>
+  <PropertyGroup>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
 </Project>

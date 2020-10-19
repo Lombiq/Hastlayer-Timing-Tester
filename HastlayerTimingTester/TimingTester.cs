@@ -2,6 +2,7 @@ using HastlayerTimingTester.Parsers;
 using HastlayerTimingTester.Vhdl;
 using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -52,7 +53,7 @@ namespace HastlayerTimingTester
 
             Logger.Init(CombineWithBaseDirectoryPath("Log.txt"), parameters.Prepare);
 
-            if (parameters.Prepare) PrepareAnalyze(TaskChoice.Prepare);
+            if (parameters.Prepare) PrepareAndAnalyze(TaskChoice.Prepare);
             if (parameters.ExecSta) ExecSta();
             if (parameters.AllRemoteSta)
             {
@@ -61,7 +62,7 @@ namespace HastlayerTimingTester
                 Console.ReadKey();
             }
 
-            if (parameters.Analyze) PrepareAnalyze(TaskChoice.Analyze);
+            if (parameters.Analyze) PrepareAndAnalyze(TaskChoice.Analyze);
 
             Logger.Close();
         }
@@ -110,11 +111,20 @@ namespace HastlayerTimingTester
             Logger.LogStageFooter("execute-sta");
         }
 
+
         /// <summary>
         /// Implements the --prepare and the --analyze stages of processing.
         /// </summary>
         /// <param name="taskChoice">This parameter allows us to choose which stage to do.</param>
-        private void PrepareAnalyze(TaskChoice taskChoice)
+        [SuppressMessage(
+            "Critical Code Smell",
+            "S3776:Cognitive Complexity of methods should not be too high",
+            Justification = "Refactoring deferred to a later time.")]
+        [SuppressMessage(
+            "Critical Code Smell",
+            "S134:Control flow statements \"if\", \"switch\", \"for\", \"foreach\", \"while\", \"do\"  and \"try\" should not be nested too deeply",
+            Justification = "Refactoring deferred to a later time.")]
+        private void PrepareAndAnalyze(TaskChoice taskChoice)
         {
             var taskChoiceString = (taskChoice == TaskChoice.Prepare) ? "prepare" : "analyze";
             Logger.LogStageHeader(taskChoiceString);
@@ -209,8 +219,6 @@ namespace HastlayerTimingTester
                 var testsPerCurrentProcess = testsPerProcess;
                 var previousProcessIndex = -1;
 
-                // False alarm.
-#pragma warning disable S1067 // Expressions should not be too complex
                 ExecuteForOperators((op, inputSize, inputDataTypeFunction, vhdlTemplate) =>
                 {
                     try
@@ -367,7 +375,6 @@ namespace HastlayerTimingTester
                         else Logger.Log("Exception happened during {0}: {1}", taskChoiceString, exception.Message);
                     }
                 });
-#pragma warning restore S1067 // Expressions should not be too complex
             }
             finally
             {
@@ -391,13 +398,14 @@ namespace HastlayerTimingTester
 
         private void ExecuteForOperators(Action<VhdlOp, int, VhdlOp.DataTypeFromSizeDelegate, VhdlTemplateBase> processor)
         {
-            foreach (var op in _testConfig.Operators)
-                foreach (var inputSize in _testConfig.InputSizes)
-                    foreach (var inputDataTypeFunction in op.DataTypes)
-                        foreach (var vhdlTemplate in op.VhdlTemplates)
-                        {
-                            processor(op, inputSize, inputDataTypeFunction, vhdlTemplate);
-                        }
+            foreach (var (op, inputSize) in _testConfig.Operators.SelectMany(op => _testConfig.InputSizes.Select(inputSize => (op, inputSize))))
+            {
+                var inner = op.DataTypes.SelectMany(inputDataTypeFunction => op.VhdlTemplates.Select(vhdlTemplate => (inputDataTypeFunction, vhdlTemplate)));
+                foreach (var (inputDataTypeFunction, vhdlTemplate) in inner)
+                {
+                    processor(op, inputSize, inputDataTypeFunction, vhdlTemplate);
+                }
+            }
         }
 
 

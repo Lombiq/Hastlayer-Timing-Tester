@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -24,6 +25,14 @@ namespace HastlayerTimingTester.Parsers
         /// <summary>
         /// Parses the STA output of Vivado.
         /// </summary>
+        [SuppressMessage(
+            "Critical Code Smell",
+            "S3776:Cognitive Complexity of methods should not be too high",
+            Justification = "Refactoring deferred to a later time.")]
+        [SuppressMessage(
+            "Critical Code Smell",
+            "S134:Control flow statements \"if\", \"switch\", \"for\", \"foreach\", \"while\", \"do\"  and \"try\" should not be nested too deeply",
+            Justification = "Refactoring deferred to a later time.")]
         public void Parse(VivadoResult result)
         {
             // Data Path Delay
