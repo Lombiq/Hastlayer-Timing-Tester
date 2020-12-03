@@ -1,4 +1,4 @@
-﻿using HastlayerTimingTester.Drivers;
+using HastlayerTimingTester.Drivers;
 
 namespace HastlayerTimingTester.TimingTestConfigs
 {

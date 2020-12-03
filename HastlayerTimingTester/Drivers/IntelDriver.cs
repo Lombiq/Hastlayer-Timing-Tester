@@ -7,14 +7,14 @@ using System.IO;
 namespace HastlayerTimingTester.Drivers
 {
     /// <summary>
-    /// A driver for the Intel/Altera FPGA tools.
-    /// For example, it contains templates for files to be generated for these tools.
+    /// A driver for the Intel/Altera FPGA tools. For example, it contains templates for files to be generated for these
+    /// tools.
     /// </summary>
     internal class IntelDriver : FpgaVendorDriver
     {
         /// <summary>
-        /// Template to be filled with data, to be later opened and ran by Quartus.
-        /// Synthesizes and implements the project.
+        /// Template to be filled with data, to be later opened and ran by Quartus. Synthesizes and implements the
+        /// project.
         /// </summary>
         private const string _quartusTclTemplate = @"
 # Quartus Prime: Generate Tcl File for Project
@@ -79,21 +79,20 @@ set_time_format -unit ns -decimal_places 3
 create_clock -name {clk} -period %CLKPERIOD% -waveform { 0.0 %CLKHALFPERIOD% } [get_ports {clk}]
 
 # Set Clock Uncertainty
-set_clock_uncertainty -rise_from [get_clocks {clk}] -rise_to [get_clocks {clk}] -setup 0.070  
-set_clock_uncertainty -rise_from [get_clocks {clk}] -rise_to [get_clocks {clk}] -hold 0.060  
-set_clock_uncertainty -rise_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -setup 0.070  
-set_clock_uncertainty -rise_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060  
-set_clock_uncertainty -fall_from [get_clocks {clk}] -rise_to [get_clocks {clk}] -setup 0.070  
-set_clock_uncertainty -fall_from [get_clocks {clk}] -rise_to [get_clocks {clk}] -hold 0.060  
-set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -setup 0.070  
-set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060  
+set_clock_uncertainty -rise_from [get_clocks {clk}] -rise_to [get_clocks {clk}] -setup 0.070
+set_clock_uncertainty -rise_from [get_clocks {clk}] -rise_to [get_clocks {clk}] -hold 0.060
+set_clock_uncertainty -rise_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -setup 0.070
+set_clock_uncertainty -rise_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060
+set_clock_uncertainty -fall_from [get_clocks {clk}] -rise_to [get_clocks {clk}] -setup 0.070
+set_clock_uncertainty -fall_from [get_clocks {clk}] -rise_to [get_clocks {clk}] -hold 0.060
+set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -setup 0.070
+set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060
 ";
 
         /// <summary>
         /// Cleanup script that can remove unnecessary files generated during compilation/STA from each test
-        /// subdirectory. Only files needed for Timing Tester remain.
-        /// It is useful to run it before transferring the test results from a remote machine, because Quartus
-        /// generates a few gigabytes of data we don't need.
+        /// subdirectory. Only files needed for Timing Tester remain. It is useful to run it before transferring the
+        /// test results from a remote machine, because Quartus generates a few gigabytes of data we don't need.
         /// </summary>
         private const string _cleanupScriptTemplate = @"
 import os, shutil
@@ -120,13 +119,13 @@ for subdir in subdirs:
         // Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
         public override bool CanStaAfterImplementation => true;
 
-
         /// <param name="quartusPath">This is the bin directory of Quartus Prime.</param>
         public IntelDriver(TimingTestConfig testConfig, string quartusPath)
             : base(testConfig) => _quartusPath = quartusPath;
 
-
-        /// <summary>Initialization of Prepare stage, generates scripts common for all tests.</summary>
+        /// <summary>
+        /// Initialization of Prepare stage, generates scripts common for all tests.
+        /// </summary>
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
@@ -135,7 +134,9 @@ for subdir in subdirs:
             File.WriteAllText(CombineWithCurrentRootPath(_cleanupScriptName), _cleanupScriptTemplate);
         }
 
-        /// <summary>Prepare stage, ran for each test. Generates the batch file Run.bat.</summary>
+        /// <summary>
+        /// Prepare stage, ran for each test. Generates the batch file Run.bat.
+        /// </summary>
         public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
         {
             var uutPath = CombineWithCurrentRootPath(outputDirectoryName, "UUT.vhd");
@@ -160,7 +161,9 @@ for subdir in subdirs:
             _batchWriter.WriteLine("cd ..");
         }
 
-        /// <summary>Analyze stage, ran for each test.</summary>
+        /// <summary>
+        /// Analyze stage, ran for each test.
+        /// </summary>
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
             var parser = new IntelParser(_testConfig.FrequencyHz);

@@ -9,7 +9,9 @@ namespace HastlayerTimingTester.Vhdl
     {
         public string VhdlTemplate { get; protected set; }
 
-        /// <summary>Gets or sets a value indicating whether the given template needs a constraints file.</summary>
+        /// <summary>
+        /// Gets or sets a value indicating whether the given template needs a constraints file.
+        /// </summary>
         public bool HasTimingConstraints { get; protected set; }
 
         /// <summary>

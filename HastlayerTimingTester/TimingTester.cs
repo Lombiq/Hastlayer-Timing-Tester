@@ -13,17 +13,19 @@ using System.Threading.Tasks;
 
 namespace HastlayerTimingTester
 {
-    /// <summary>Implements the core functionality of the Hastlayer Timing Tester application.</summary>
+    /// <summary>
+    /// Implements the core functionality of the Hastlayer Timing Tester application.
+    /// </summary>
     internal class TimingTester
     {
         private readonly TimingTestConfig _testConfig;
 
-        /// <summary>Gets the output directory of all tests to be done when running the Timing Tester.</summary>
+        /// <summary>
+        /// Gets the output directory of all tests to be done when running the Timing Tester.
+        /// </summary>
         public string CurrentTestBaseDirectory => _testConfig.Name;
 
-
         public TimingTester(TimingTestConfig testConfig) => _testConfig = testConfig;
-
 
         /// <summary>
         /// Gets things ready before the test, then runs the test.
@@ -67,7 +69,6 @@ namespace HastlayerTimingTester
             Logger.Close();
         }
 
-
         /// <summary>
         /// Runs the Run.bat script(s) in CurrentTest to apply STA.
         /// </summary>
@@ -110,7 +111,6 @@ namespace HastlayerTimingTester
             Task.WaitAll(tasks);
             Logger.LogStageFooter("execute-sta");
         }
-
 
         /// <summary>
         /// Implements the --prepare and the --analyze stages of processing.
@@ -207,7 +207,6 @@ namespace HastlayerTimingTester
 
             File.WriteAllText(CombineWithBaseDirectoryPath("Tail.ps1"), scriptBuilder.ToString());
 
-
             try
             {
                 // The last process will have all the remainder tests.
@@ -275,7 +274,6 @@ namespace HastlayerTimingTester
                                 .Replace("%OUTTYPE%", outputDataType, StringComparison.InvariantCulture)
                                 .Replace("%EXPRESSION%", op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize), StringComparison.InvariantCulture);
                             _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
-
 
                             batchWriter.WriteLine(
                                 $"{Environment.NewLine}echo FINISHED #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at %date% %time% >> Progress.log{Environment.NewLine}");
@@ -361,8 +359,8 @@ namespace HastlayerTimingTester
                             );
                         }
 
-                        // These incrementation are here and in the catch, not in a finally because we don't want to
-                        // run them if an early return happens (when the operation would be invalid).
+                        // These incrementation are here and in the catch, not in a finally because we don't want to run
+                        // them if an early return happens (when the operation would be invalid).
                         testIndex++;
                         testIndexInCurrentProcess++;
                     }
@@ -407,7 +405,6 @@ namespace HastlayerTimingTester
                 }
             }
         }
-
 
         private enum TaskChoice
         {

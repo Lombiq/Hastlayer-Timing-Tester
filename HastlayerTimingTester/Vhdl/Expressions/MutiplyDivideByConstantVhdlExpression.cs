@@ -6,8 +6,8 @@ using System.Numerics;
 namespace HastlayerTimingTester.Vhdl.Expressions
 {
     /// <summary>
-    /// Generates a VHDL expression for multiplying an input signal with a constant number. It uses SmartResize.
-    /// It only works for unsigned test cases.
+    /// Generates a VHDL expression for multiplying an input signal with a constant number. It uses SmartResize. It only
+    /// works for unsigned test cases.
     /// </summary>
     public class MutiplyDivideByConstantVhdlExpression : VhdlExpressionBase
     {
@@ -27,7 +27,6 @@ namespace HastlayerTimingTester.Vhdl.Expressions
         private readonly ValidationMode _validationMode;
         private readonly BigInteger _constant;
 
-
         /// <param name="constant">The constant to multiply/divide with.</param>
         /// <param name="mode">It selects whether we want to multiply or divide.</param>
         public MutiplyDivideByConstantVhdlExpression(BigInteger constant, Mode mode, ValidationMode validationMode)
@@ -36,7 +35,6 @@ namespace HastlayerTimingTester.Vhdl.Expressions
             _mode = mode;
             _validationMode = validationMode;
         }
-
 
         /// <param name="inputs">The input to the shift.</param>
         /// <param name="inputSize">The input size in bits.</param>
@@ -53,8 +51,8 @@ namespace HastlayerTimingTester.Vhdl.Expressions
                 );
 
         /// <summary>
-        /// This VHDL expression only makes sense if the constant fits into less bits than the input size, as
-        /// if it did not, the result would be 0 anyway.
+        /// This VHDL expression only makes sense if the constant fits into less bits than the input size, as if it did
+        /// not, the result would be 0 anyway.
         /// </summary>
         public override bool IsValid(
             int inputSize,

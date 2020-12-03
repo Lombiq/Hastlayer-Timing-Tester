@@ -9,9 +9,9 @@ namespace HastlayerTimingTester.Parsers
     }
 
     /// <summary>
-    /// Parses the timing report and timing summary output of Vivado. It makes some calculations based on
-    /// these. It can also print the most important values. Look at the documentation
-    /// (Docs/Introduction.md and Docs/Usage.md) for the meaning of the properties of this class.
+    /// Parses the timing report and timing summary output of Vivado. It makes some calculations based on these. It can
+    /// also print the most important values. Look at the documentation (Docs/Introduction.md and Docs/Usage.md) for the
+    /// meaning of the properties of this class.
     /// </summary>
     public abstract class TimingOutputParser
     {
@@ -25,8 +25,10 @@ namespace HastlayerTimingTester.Parsers
         public decimal TotalHoldSlack { get; protected set; }
         public decimal WorstPulseWidthSlack { get; protected set; }
         public decimal TotalPulseWidthSlack { get; protected set; }
+
         public bool DesignMetTimingRequirements
             => TimingSummaryAvailable && TotalSetupSlack == 0 && TotalHoldSlack == 0 && TotalPulseWidthSlack == 0;
+
         public decimal RequirementPlusDelays { get; protected set; }
         public decimal Requirement { get; protected set; }
         public decimal SourceClockDelay { get; protected set; }
@@ -36,18 +38,21 @@ namespace HastlayerTimingTester.Parsers
         public decimal TimingWindowDiffFromRequirement => TimingWindowAvailable - Requirement;
         public decimal MaxClockFrequency => 1.0m / ((DataPathDelay - TimingWindowDiffFromRequirement) * 1.0e-9m);
 
-
         protected TimingOutputParser(decimal clockFrequency) => ClockFrequency = clockFrequency;
 
+        public decimal NanosecondToClockPeriod(decimal ns) => ns * 1.0e-9m / (1.0m / ClockFrequency);
 
-        public decimal NanosecondToClockPeriod(decimal ns) => (ns * 1.0e-9m) / (1.0m / ClockFrequency);
-
-        /// <summary>Converts Hz to Mhz.</summary>
+        /// <summary>
+        /// Converts Hz to Mhz.
+        /// </summary>
         public decimal InMHz(decimal fHz) => fHz / 1e6m;
 
-        /// <summary>Prints the parsed timing report.</summary>
-        /// <param name="marker">It is shown in the printed output, to differentiate between
-        /// synthesis ("S") and implementation ("I").</param>
+        /// <summary>
+        /// Prints the parsed timing report.
+        /// </summary>
+        /// <param name="marker">
+        /// It is shown in the printed output, to differentiate between synthesis ("S") and implementation ("I").
+        /// </param>
         public void PrintParsedTimingReport(string marker = "")
         {
             Logger.Log("Timing Report:");
@@ -83,7 +88,9 @@ namespace HastlayerTimingTester.Parsers
             }
         }
 
-        /// <summary>Prints the parsed timing summary.</summary>
+        /// <summary>
+        /// Prints the parsed timing summary.
+        /// </summary>
         public void PrintParsedTimingSummary()
         {
             if (TimingSummaryAvailable)

@@ -5,8 +5,8 @@ namespace HastlayerTimingTester.TimingTestConfigs
     /// </summary>
     /// <remarks>
     /// <para>
-    /// There's not much info on the actual hardware. The part name is apparent from here:
-    /// <see href="https://github.com/aws/aws-fpga/search?q=part_name&amp;unscoped_q=part_name"/>. The main clock is
+    /// There's not much info on the actual hardware. The part name is apparent from here: <see
+    /// href="https://github.com/aws/aws-fpga/search?q=part_name&amp;unscoped_q=part_name"/>. The main clock is
     /// mentioned here: <see href="https://forums.aws.amazon.com/thread.jspa?threadID=257471"/>.
     /// </para>
     /// <para>

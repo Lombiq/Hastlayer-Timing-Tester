@@ -3,7 +3,9 @@ using System.Text.RegularExpressions;
 
 namespace HastlayerTimingTester.Parsers
 {
-    /// <summary>For passing the data output by Quartus into IntelParser.</summary>
+    /// <summary>
+    /// For passing the data output by Quartus into IntelParser.
+    /// </summary>
     public class QuartusResult
     {
         public string SetupReport { get; set; }
@@ -11,8 +13,8 @@ namespace HastlayerTimingTester.Parsers
     }
 
     /// <summary>
-    /// Parser for Intel/Altera Quartus Prime Standard Edition 15.1 static timing analysis output.
-    /// See the following Confluence page for more information:
+    /// Parser for Intel/Altera Quartus Prime Standard Edition 15.1 static timing analysis output. See the following
+    /// Confluence page for more information:
     /// https://lombiq.atlassian.net/wiki/spaces/HAST/pages/186744859/Timing+on+Catapult.
     /// </summary>
     internal class IntelParser : TimingOutputParser

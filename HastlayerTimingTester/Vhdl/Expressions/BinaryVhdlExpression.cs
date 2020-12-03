@@ -9,10 +9,8 @@ namespace HastlayerTimingTester.Vhdl.Expressions
     {
         private readonly string _vhdlOperator;
 
-
         /// <param name="vhdlOperator">The operator symbol/string (e.g. "+", "-", "*", etc.)</param>
         public BinaryOperatorVhdlExpression(string vhdlOperator) => _vhdlOperator = vhdlOperator;
-
 
         /// <summary>
         /// Returns VHDL code for the binary operator.

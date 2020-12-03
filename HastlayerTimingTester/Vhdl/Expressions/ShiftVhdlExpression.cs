@@ -16,7 +16,6 @@ namespace HastlayerTimingTester.Vhdl.Expressions
         private readonly int _amount;
         private readonly Direction _direction;
 
-
         /// <param name="direction">The direction of the shift (left or right).</param>
         /// <param name="amount">The number of bits to shift.</param>
         public ShiftVhdlExpression(Direction direction, int amount)
@@ -24,7 +23,6 @@ namespace HastlayerTimingTester.Vhdl.Expressions
             _direction = direction;
             _amount = amount;
         }
-
 
         /// <summary>
         /// It returns the VHDL code.

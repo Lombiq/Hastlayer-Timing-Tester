@@ -33,15 +33,13 @@ namespace HastlayerTimingTester
         public int NumberOfStaProcesses { get; protected set; }
         public FpgaVendorDriver Driver { get; protected set; }
 
-
         public TimingTestConfig()
         {
-            // There are lists of functions below that can generate input data types to test.
-            // Any of these can be used as a parameter to the constructor of VhdlOp.
-            // (It is advised to start with the Operators variable when looking at this file.)
-            // For example, for an input size of 32, we should get "unsigned(31 downto 0)" to be pasted into the VHDL
-            // template. However, if a friendly name is requested instead, "unsigned32" is returned, which can be
-            // safely used in directory names.
+            // There are lists of functions below that can generate input data types to test. Any of these can be used
+            // as a parameter to the constructor of VhdlOp. (It is advised to start with the Operators variable when
+            // looking at this file.) For example, for an input size of 32, we should get "unsigned(31 downto 0)" to be
+            // pasted into the VHDL template. However, if a friendly name is requested instead, "unsigned32" is
+            // returned, which can be safely used in directory names.
             var suNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate>
             {
                 (size, getFriendlyName) => getFriendlyName ? $"unsigned{size}" : $"unsigned({size - 1} downto 0)",
@@ -116,10 +114,10 @@ namespace HastlayerTimingTester
                     defaultVhdlTemplates),
             };
 
-            // We test shifting by the amount of bits listed below.
-            // Multiplying by a constant 2^N is also a shift operation, so we test that here, too. As we expect the
-            // FPGA compiler to implement this by wiring, multiplying by 2^N is expected to be faster than multiplying
-            // by another constant or another variable (where it would use DSP blocks).
+            // We test shifting by the amount of bits listed below. Multiplying by a constant 2^N is also a shift
+            // operation, so we test that here, too. As we expect the FPGA compiler to implement this by wiring,
+            // multiplying by 2^N is expected to be faster than multiplying by another constant or another variable
+            // (where it would use DSP blocks).
             for (int i = 0; i < 64; i++)
             {
                 // These are the original shift test cases, however the DotnetShiftVhdlExpression implements the
@@ -239,7 +237,6 @@ namespace HastlayerTimingTester
                 VhdlOp.SameOutputDataType,
                 defaultVhdlTemplates));
 
-
             // InputSizes is the list of input sizes for the data type that we want to test
             InputSizes = new List<int> { 1, 8, 16, 32, 64 };
 
@@ -248,9 +245,8 @@ namespace HastlayerTimingTester
             // for the given Vitis version, like this one for 2020.1.1:
             // https://github.com/Xilinx/XilinxBoardStore/tree/2020.1.1/boards/Xilinx. E.g. the part name for the Alveo
             // U280 board is in the
-            // https://github.com/Xilinx/XilinxBoardStore/blob/master/boards/Xilinx/au280/production/1.1/board.xml
-            // file, just search for "part_name". Be sure to use the production versions, not the engineering sample
-            // ("es").
+            // https://github.com/Xilinx/XilinxBoardStore/blob/master/boards/Xilinx/au280/production/1.1/board.xml file,
+            // just search for "part_name". Be sure to use the production versions, not the engineering sample ("es").
             // Use the existing configurations under the TimingTestConfigs folder instead of directly changing this
             // here, and create new configs for new boards.
             ////Part = "xc7a100tcsg324-1";
@@ -261,16 +257,16 @@ namespace HastlayerTimingTester
             // Name of the configuration, will be used in the name of the output directory
             Name = "default";
 
-            // If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests.
-            // If it is false, the exceptions are logged and the program continues with the next test.
+            // If DebugMode is true, the Hastlayer Timing Tester will stop at any exceptions during tests. If it is
+            // false, the exceptions are logged and the program continues with the next test.
             DebugMode = false;
 
-            // This selects for which FPGA vendor do we want to run the timing test.
-            // XilinxDriver supports Vivado, IntelDriver supports Quartus and TimeQuest.
+            // This selects for which FPGA vendor do we want to run the timing test. XilinxDriver supports Vivado,
+            // IntelDriver supports Quartus and TimeQuest.
             ////Driver = new XilinxDriver(this, @"C:\Xilinx\Vivado\2016.4\bin\vivado.bat");
 
-            // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester. It does not
-            // open the GUI for every single test. However, it cannot generate schematic drawings (Schematic.pdf).
+            // If VivadoBatchMode is true, Vivado shares the console window of Hastlayer Timing Tester. It does not open
+            // the GUI for every single test. However, it cannot generate schematic drawings (Schematic.pdf).
             // Note: if you are using Vivado in GUI mode with VivadoBatchMode = false and with ImplementDesign = true,
             // only generate designs that are possible to implement, or a message box will pop up with Tcl errors, and
             // the tests will hang.
@@ -285,9 +281,9 @@ namespace HastlayerTimingTester
             // the number of logical processors (cores) in the system. Also see NumberOfSTAProcesses.
             NumberOfThreadsPerProcess = Environment.ProcessorCount;
 
-            // Determines the number of FPGA vendor tool processes to use during static timing analysis. Since even
-            // when supposedly using all the cores the FPGA tools can't usually utilize the whole CPU you can increase
-            // the degree of parallelism further. Also see NumberOfThreadsPerProcess.
+            // Determines the number of FPGA vendor tool processes to use during static timing analysis. Since even when
+            // supposedly using all the cores the FPGA tools can't usually utilize the whole CPU you can increase the
+            // degree of parallelism further. Also see NumberOfThreadsPerProcess.
             NumberOfStaProcesses = 6;
         }
     }

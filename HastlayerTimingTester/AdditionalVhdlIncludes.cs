@@ -1,4 +1,4 @@
-﻿namespace HastlayerTimingTester
+namespace HastlayerTimingTester
 {
     internal static class AdditionalVhdlIncludes
     {
@@ -14,7 +14,7 @@ package TypeConversion is
     function SmartResize(input: unsigned; size: natural) return unsigned;
     function SmartResize(input: signed; size: natural) return signed;
 end TypeConversion;
-        
+
 package body TypeConversion is
 
     function SmartResize(input: unsigned; size: natural) return unsigned is

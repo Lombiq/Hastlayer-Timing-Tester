@@ -3,7 +3,9 @@ using HastlayerTimingTester.TimingTestConfigs;
 
 namespace HastlayerTimingTester
 {
-    /// <summary>Parameters for the command-line argument parser (CommandLine).</summary>
+    /// <summary>
+    /// Parameters for the command-line argument parser (CommandLine).
+    /// </summary>
     internal class ProgramParameters
     {
         [Option('p', "prepare", Required = false, Default = false, HelpText = "Generate VHDL files and batch file for next step.")]
@@ -40,24 +42,24 @@ namespace HastlayerTimingTester
 
     public static class Program
     {
+        // CS0162 is disabled because it would be a violation with useInlineConfiguration = false. IDE0079 is disabled
+        // so it doesn't cause a violation if useInlineConfiguration = true.
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CS0162 // Unreachable code detected
         public static void Main(string[] args)
         {
-            const bool useInlineConfiguration = false;
+            const bool useInlineConfiguration = true;
 
             // The const is a configuration.
-#pragma warning disable S2589 // Boolean expressions should not be gratuitous
-#pragma warning disable S2583 // Conditionally executed code should be reachable
             // This is a hack but couldn't find an easy way to display the help if no parameters are present:
             if (!useInlineConfiguration && args.Length == 0) args = new[] { "--help" };
-#pragma warning restore S2583 // Conditionally executed code should be reachable
-#pragma warning restore S2589 // Boolean expressions should not be gratuitous
 
             Parser.Default.ParseArguments<ProgramParameters>(args).WithParsed(parameters =>
             {
                 if (useInlineConfiguration)
                 {
-                    // Uncomment the one you want to use if you don't want to supply parameters as command line arguments.
+                    // Uncomment the one you want to use if you don't want to supply parameters as command line
+                    // arguments.
                     ////parameters.Prepare = true;
                     ////parameters.ExecSta = true;
                     ////parameters.Analyze = true;
@@ -67,5 +69,6 @@ namespace HastlayerTimingTester
             });
         }
 #pragma warning restore CS0162 // Unreachable code detected
+#pragma warning restore IDE0079 // Remove unnecessary suppression
     }
 }

@@ -7,14 +7,14 @@ using System.IO;
 namespace HastlayerTimingTester.Drivers
 {
     /// <summary>
-    /// Driver for the Xilinx FPGA tools (Vivado).
-    /// For example, it contains templates for files to be generated for these tools.
+    /// Driver for the Xilinx FPGA tools (Vivado). For example, it contains templates for files to be generated for
+    /// these tools.
     /// </summary>
     internal class XilinxDriver : FpgaVendorDriver
     {
         /// <summary>
-        /// To be filled with data, and then later opened and ran by Vivado.
-        /// It synthesizes and optionally implements the project, generates reports and a schematic diagram.
+        /// To be filled with data, and then later opened and ran by Vivado. It synthesizes and optionally implements
+        /// the project, generates reports and a schematic diagram.
         /// </summary>
         private const string _tclTemplate = @"
 set_param general.maxThreads %NUMTHREADS%
@@ -48,13 +48,13 @@ quit
         // Xilinx tools support STA both after synthesis and implementation.
         public override bool CanStaAfterImplementation => true;
 
-
         /// <param name="vivadoPath">The path for the Vivado executable.</param>
         public XilinxDriver(TimingTestConfig testConfig, string vivadoPath)
             : base(testConfig) => _vivadoPath = vivadoPath;
 
-
-        /// <summary>Initialization of Prepare stage, generates scripts common for all tests.</summary>
+        /// <summary>
+        /// Initialization of Prepare stage, generates scripts common for all tests.
+        /// </summary>
         public override void InitPrepare(StreamWriter batchWriter)
         {
             base.InitPrepare(batchWriter);
@@ -75,7 +75,9 @@ quit
             );
         }
 
-        /// <summary>Prepare stage, ran for each test. Generates the batch file Run.bat.</summary>
+        /// <summary>
+        /// Prepare stage, ran for each test. Generates the batch file Run.bat.
+        /// </summary>
         public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
         {
             var uutPath = CombineWithCurrentRootPath(outputDirectoryName, "UUT.vhd");
@@ -101,7 +103,9 @@ quit
             _batchWriter.WriteLine("cd ..");
         }
 
-        /// <summary>Analyze stage, ran for each test.</summary>
+        /// <summary>
+        /// Analyze stage, ran for each test.
+        /// </summary>
         public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
         {
             var parser = new XilinxParser(_testConfig.FrequencyHz);

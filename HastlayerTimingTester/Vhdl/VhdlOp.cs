@@ -5,8 +5,8 @@ using System.Diagnostics.CodeAnalysis;
 namespace HastlayerTimingTester.Vhdl
 {
     /// <summary>
-    /// Provides data to fill a VHDL template with (see <see cref="VhdlExpression" /> and
-    /// <see cref="OutputDataTypeFunction" />).
+    /// Provides data to fill a VHDL template with (see <see cref="VhdlExpression"/> and <see
+    /// cref="OutputDataTypeFunction"/>).
     /// </summary>
     public class VhdlOp
     {
@@ -32,22 +32,25 @@ namespace HastlayerTimingTester.Vhdl
         /// </summary>
         public List<DataTypeFromSizeDelegate> DataTypes { get; }
 
-        /// <summary>Gets the VHDL templates that will be used for analysis.</summary>
+        /// <summary>
+        /// Gets the VHDL templates that will be used for analysis.
+        /// </summary>
         public List<VhdlTemplateBase> VhdlTemplates { get; }
 
-        /// <summary>Used for <see cref="DataTypes" />.</summary>
+        /// <summary>
+        /// Used for <see cref="DataTypes"/>.
+        /// </summary>
         public delegate string DataTypeFromSizeDelegate(int size, bool getFriendlyName);
 
         /// <summary>
-        /// Used for generating the output data type based on template strings embedded in the function.
-        /// See <see cref="OutputDataTypeFunction"/>.
+        /// Used for generating the output data type based on template strings embedded in the function. See <see
+        /// cref="OutputDataTypeFunction"/>.
         /// </summary>
         public delegate string OutputDataTypeDelegate(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName
         );
-
 
         public VhdlOp(
             VhdlExpressionBase vhdlExpression,
@@ -63,13 +66,13 @@ namespace HastlayerTimingTester.Vhdl
             VhdlTemplates = vhdlTemplates;
         }
 
-
-        /// <summary>Used if the output data type is the same as the input data type.</summary>
+        /// <summary>
+        /// Used if the output data type is the same as the input data type.
+        /// </summary>
         public static string SameOutputDataType(
             int inputSize,
             DataTypeFromSizeDelegate inputDataTypeFunction,
             bool getFriendlyName) => inputDataTypeFunction(inputSize, getFriendlyName);
-
 
         /// <summary>
         /// Used for operators that strictly have boolean as their output data type (like all comparison operators).
@@ -81,8 +84,8 @@ namespace HastlayerTimingTester.Vhdl
             bool getFriendlyName) => "boolean";
 
         /// <summary>
-        /// Used for operators whose output is the same type as their input, but with
-        /// double data size (e.g. multiplication).
+        /// Used for operators whose output is the same type as their input, but with double data size (e.g.
+        /// multiplication).
         /// </summary>
         public static string DoubleSizedOutput(
             int inputSize,

@@ -5,14 +5,13 @@ using System.IO;
 namespace HastlayerTimingTester
 {
     /// <summary>
-    /// Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the
-    /// console. It also handles writing to the results file (Results.tsv in CurrentTestOutputBaseDirectory).
+    /// Logger writes a formatted string to both a log file (Log.txt in CurrentTestOutputBaseDirectory) and the console.
+    /// It also handles writing to the results file (Results.tsv in CurrentTestOutputBaseDirectory).
     /// </summary>
     internal static class Logger
     {
         private static StreamWriter _logStreamWriter;
         private static bool _initialized;
-
 
         /// <summary>
         /// Initializes the Logger, to open the file given in LogFilePath. (Logger already works before initialization,
@@ -64,7 +63,6 @@ namespace HastlayerTimingTester
             _logStreamWriter?.Dispose();
             _initialized = false;
         }
-
 
         /// <summary>
         /// Implements the functionality described for <see cref="Log"/> and <see cref="LogInline"/>.
