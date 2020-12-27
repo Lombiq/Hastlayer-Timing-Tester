@@ -1,4 +1,4 @@
-namespace HastlayerTimingTester.TimingTestConfigs
+namespace HastlayerTimingTester.TimingTestConfigs.Alveo
 {
     internal class AlveoU50TimingTestConfig : AlveoTimingTestConfigBase
     {
