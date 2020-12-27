@@ -241,14 +241,15 @@ namespace HastlayerTimingTester
             InputSizes = new List<int> { 1, 8, 16, 32, 64 };
 
             // The FPGA part name. Only used for Xilinx devices. You can find these in the Xilinx Board Store here:
-            // https://github.com/Xilinx/XilinxBoardStore (if you can't find something there then check out the branch
-            // for the given Vitis version, like this one for 2020.1.1:
+            // https://github.com/Xilinx/XilinxBoardStore. If you can't find something there then search in the Vivado
+            // catalog file (https://github.com/Xilinx/XilinxBoardStore/tree/master/catalog) or check out the branch for
+            // the given Vitis version, like this one for 2020.1.1:
             // https://github.com/Xilinx/XilinxBoardStore/tree/2020.1.1/boards/Xilinx. E.g. the part name for the Alveo
             // U280 board is in the
-            // https://github.com/Xilinx/XilinxBoardStore/blob/master/boards/Xilinx/au280/production/1.1/board.xml file,
-            // just search for "part_name". Be sure to use the production versions, not the engineering sample ("es").
-            // Use the existing configurations under the TimingTestConfigs folder instead of directly changing this
-            // here, and create new configs for new boards.
+            // https://github.com/Xilinx/XilinxBoardStore/blob/master/boards/Xilinx/au280/production/1.1/board.xml
+            // file, just search for "part_name". Be sure to use the production versions, not the engineering sample
+            // ("es"). Use the existing configurations under the TimingTestConfigs folder instead of directly changing
+            // this here, and create new configs for new boards.
             ////Part = "xc7a100tcsg324-1";
 
             // System clock frequency in Hz
