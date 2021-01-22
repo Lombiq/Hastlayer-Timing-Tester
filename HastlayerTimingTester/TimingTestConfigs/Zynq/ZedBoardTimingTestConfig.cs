@@ -6,7 +6,7 @@ namespace HastlayerTimingTester.TimingTestConfigs.Zynq
         {
             Name = "ZedBoard";
             Part = "xc7z020clg484-1";
-            FrequencyHz = 300e6m;
+            FrequencyHz = 100e6m;
         }
     }
 }
