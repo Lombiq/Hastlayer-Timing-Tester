@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace HastlayerTimingTester.Vhdl.Expressions;
@@ -29,7 +30,7 @@ public class ShiftVhdlExpression : VhdlExpressionBase
     /// </summary>
     /// <param name="inputs">The input to the shift.</param>
     public override string GetVhdlCode(IReadOnlyList<string> inputs, int inputSize) =>
-        $"shift_{(_direction == Direction.Left ? "left" : "right")}({inputs[0]},{_amount})";
+        $"shift_{(_direction == Direction.Left ? "left" : "right")}({inputs[0]},{_amount.ToTechnicalString()})";
 
     /// <summary>
     /// See <see cref="VhdlExpressionBase.IsValid"/>. Testing a shifting with an equal or greater amount of bits than

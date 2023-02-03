@@ -24,6 +24,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{
 		.github\workflows\validate-pull-request.yml = .github\workflows\validate-pull-request.yml
 	EndProjectSection
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lombiq.HelpfulLibraries.Common", "src\Libraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.Common\Lombiq.HelpfulLibraries.Common.csproj", "{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{408751DC-709A-4BCE-A62A-361F0493A102}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{408751DC-709A-4BCE-A62A-361F0493A102}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{408751DC-709A-4BCE-A62A-361F0493A102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -41,6 +47,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{408751DC-709A-4BCE-A62A-361F0493A102} = {648D3BB6-201F-401B-9EF9-D7BBBC6D3ECA}
 		{D21E2684-3C2F-4990-933D-2D563D3D5A7A} = {C87BE461-83AE-42DD-9C92-8ABD9A81F225}
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4} = {648D3BB6-201F-401B-9EF9-D7BBBC6D3ECA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2FB60EA7-252B-4F30-AA5F-644F4FEF4A30}

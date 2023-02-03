@@ -99,12 +99,12 @@ public abstract class TimingOutputParser
                 Environment.NewLine + "\t",
                 "Timing Summary:",
                 $"Design {(DesignMetTimingRequirements ? "PASSED" : "FAILED")} meeting timing requirements",
-                $"Worst Setup Slack = {WorstSetupSlack} ns",
-                $"Total Setup Slack = {TotalSetupSlack} ns",
-                $"Worst Hold Slack = {WorstHoldSlack} ns",
-                $"Total Hold Slack = {TotalHoldSlack} ns",
-                $"Worst Pulse Width Slack = {WorstPulseWidthSlack} ns",
-                $"Total Pulse Width Slack = {TotalPulseWidthSlack} ns",
+                $"Worst Setup Slack = {WorstSetupSlack.ToTechnicalString()} ns",
+                $"Total Setup Slack = {TotalSetupSlack.ToTechnicalString()} ns",
+                $"Worst Hold Slack = {WorstHoldSlack.ToTechnicalString()} ns",
+                $"Total Hold Slack = {TotalHoldSlack.ToTechnicalString()} ns",
+                $"Worst Pulse Width Slack = {WorstPulseWidthSlack.ToTechnicalString()} ns",
+                $"Total Pulse Width Slack = {TotalPulseWidthSlack.ToTechnicalString()} ns",
                 $"(Any \"worst slack\" is okay if positive,{Environment.NewLine}\t\tany \"total slack\" is okay if zero.)"));
 
             if (TotalSetupSlack > 0) Logger.Log("WARNING: setup time violation!");

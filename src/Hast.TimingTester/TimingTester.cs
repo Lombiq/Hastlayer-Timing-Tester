@@ -267,7 +267,8 @@ internal class TimingTester
                         Logger.Log("\tDir name: {0}", testFriendlyName);
 
                         batchWriter.WriteLine(
-                            $"{Environment.NewLine}echo STARTING #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at %date% %time% >> Progress.log{Environment.NewLine}");
+                            $"{Environment.NewLine}echo STARTING #{testIndexInCurrentProcess.ToTechnicalString()} / " +
+                            $"{testsPerCurrentProcess.ToTechnicalString()} at %date% %time% >> Progress.log{Environment.NewLine}");
 
                         var vhdl = AdditionalVhdlIncludes.Content + vhdlTemplate.VhdlTemplate
                             .Replace("%INTYPE%", inputDataType, StringComparison.InvariantCulture)
@@ -276,7 +277,8 @@ internal class TimingTester
                         _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
 
                         batchWriter.WriteLine(
-                            $"{Environment.NewLine}echo FINISHED #{testIndexInCurrentProcess} / {testsPerCurrentProcess} at %date% %time% >> Progress.log{Environment.NewLine}");
+                            $"{Environment.NewLine}echo FINISHED #{testIndexInCurrentProcess.ToTechnicalString()} / " +
+                            $"{testsPerCurrentProcess.ToTechnicalString()} at %date% %time% >> Progress.log{Environment.NewLine}");
                     }
                     else if (taskChoice == TaskChoice.Analyze)
                     {

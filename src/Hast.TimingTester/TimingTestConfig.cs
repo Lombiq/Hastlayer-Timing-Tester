@@ -41,13 +41,19 @@ internal class TimingTestConfig
         // safely used in directory names.
         var suNumericDataTypes = new List<VhdlOp.DataTypeFromSizeDelegate>
         {
-            (size, getFriendlyName) => getFriendlyName ? $"unsigned{size}" : $"unsigned({size - 1} downto 0)",
-            (size, getFriendlyName) => getFriendlyName ? $"signed{size}" : $"signed({size - 1} downto 0)",
+            (size, getFriendlyName) => getFriendlyName
+                ? $"unsigned{size.ToTechnicalString()}"
+                : $"unsigned({(size - 1).ToTechnicalString()} downto 0)",
+            (size, getFriendlyName) => getFriendlyName
+                ? $"signed{size.ToTechnicalString()}"
+                : $"signed({(size - 1).ToTechnicalString()} downto 0)",
         };
 
         var stdLogicVectorDataType = new List<VhdlOp.DataTypeFromSizeDelegate>
         {
-            (size, getFriendlyName) => getFriendlyName ? $"std_logic_vector{size}" : $"std_logic_vector({size - 1} downto 0)",
+            (size, getFriendlyName) => getFriendlyName
+                ? $"std_logic_vector{size.ToTechnicalString()}"
+                : $"std_logic_vector({(size - 1).ToTechnicalString()} downto 0)",
         };
 
         // There are lists of VHDL templates below. Any of them can be used as a parameter to VhdlOp constructor. (It is
