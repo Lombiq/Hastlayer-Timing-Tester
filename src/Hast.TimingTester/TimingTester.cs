@@ -182,7 +182,7 @@ internal class TimingTester
         // Creating script to be able to easily tail all STA processes' progress logs.
         scriptBuilder.Clear();
 
-        scriptBuilder.AppendLine(@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
+        scriptBuilder.AppendLine(CultureInfo.InvariantCulture, $@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
         scriptBuilder.AppendLine(@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
         scriptBuilder.AppendLine("Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force");
         // For details on Gridify see:
@@ -192,8 +192,8 @@ internal class TimingTester
         for (int i = 0; i < actualNumberOfSTAProcesses; i++)
         {
             scriptBuilder.AppendLine("Invoke-Expression 'cmd /c start powershell -NoExit -Command {");
-            scriptBuilder.AppendLine($"    $host.UI.RawUI.WindowTitle = \"Tailing the #{i} progress log\";");
-            scriptBuilder.AppendLine($"    Get-Content {i}{Path.DirectorySeparatorChar}Progress.log -Wait;");
+            scriptBuilder.AppendLine(CultureInfo.InvariantCulture, $"    $host.UI.RawUI.WindowTitle = \"Tailing the #{i} progress log\";");
+            scriptBuilder.AppendLine(CultureInfo.InvariantCulture, $"    Get-Content {i.ToTechnicalString()}{Path.DirectorySeparatorChar}Progress.log -Wait;");
             scriptBuilder.AppendLine("}';");
             scriptBuilder.AppendLine();
         }
@@ -202,7 +202,7 @@ internal class TimingTester
         scriptBuilder.AppendLine("{");
         scriptBuilder.AppendLine("    $processes = (Get-Process | Where-Object { $_.MainWindowTitle -like \"Tailing the * progress log\" })");
         scriptBuilder.AppendLine("}");
-        scriptBuilder.AppendLine($"Until ($processes.Length -eq {actualNumberOfSTAProcesses})");
+        scriptBuilder.AppendLine(CultureInfo.InvariantCulture, $"Until ($processes.Length -eq {actualNumberOfSTAProcesses})");
         scriptBuilder.AppendLine("Set-GridLayout -Process $processes");
 
         File.WriteAllText(CombineWithBaseDirectoryPath("Tail.ps1"), scriptBuilder.ToString());
