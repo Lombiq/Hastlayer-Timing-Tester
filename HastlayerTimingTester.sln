@@ -15,13 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		Readme.md = Readme.md
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docs", "Docs", "{7B0CE9FC-3F65-46C0-A4E0-784872EDED3F}"
-	ProjectSection(SolutionItems) = preProject
-		Docs\Introduction.md = Docs\Introduction.md
-		Docs\Misc.md = Docs\Misc.md
-		Docs\Usage.md = Docs\Usage.md
-	EndProjectSection
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{C87BE461-83AE-42DD-9C92-8ABD9A81F225}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{D21E2684-3C2F-4990-933D-2D563D3D5A7A}"
@@ -46,6 +39,7 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{408751DC-709A-4BCE-A62A-361F0493A102} = {648D3BB6-201F-401B-9EF9-D7BBBC6D3ECA}
 		{D21E2684-3C2F-4990-933D-2D563D3D5A7A} = {C87BE461-83AE-42DD-9C92-8ABD9A81F225}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution

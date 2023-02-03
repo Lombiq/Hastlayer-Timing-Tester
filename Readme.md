@@ -6,9 +6,9 @@ Hastlayer Timing Tester is for automatically determining how certain VHDL operat
 
 ## Documentation
 
-- [Introduction](Docs/Introduction.md)
-- [Usage](Docs/Usage.md)
-- [Miscellaneous information](Docs/Misc.md)
+- [Introduction](src/HastlayerTimingTester/Docs/Introduction.md)
+- [Usage](src/HastlayerTimingTester/Docs/Usage.md)
+- [Miscellaneous information](src/HastlayerTimingTester/Docs/Misc.md)
 
 ## Contributing and support
 
