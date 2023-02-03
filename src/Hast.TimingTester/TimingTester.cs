@@ -182,8 +182,12 @@ internal class TimingTester
         // Creating script to be able to easily tail all STA processes' progress logs.
         scriptBuilder.Clear();
 
-        scriptBuilder.AppendLine(CultureInfo.InvariantCulture, $@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
-        scriptBuilder.AppendLine(@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
+        scriptBuilder.AppendLine(
+            CultureInfo.InvariantCulture,
+            $@"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Wow6432Node\Microsoft\.NetFramework\v4.0.30319' " +
+            $"-Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
+        scriptBuilder.AppendLine(
+            @"Set-ItemProperty -Path 'HKLM:\SOFTWARE\Microsoft\.NetFramework\v4.0.30319' -Name 'SchUseStrongCrypto' -Value '1' -Type DWord");
         scriptBuilder.AppendLine("Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force");
         // For details on Gridify see:
         // http://ridicurious.com/2017/11/14/set-gridlayout-arrange-apps-and-scripts-in-an-automatic-grid-to-fit-your-screen/
@@ -192,8 +196,12 @@ internal class TimingTester
         for (int i = 0; i < actualNumberOfSTAProcesses; i++)
         {
             scriptBuilder.AppendLine("Invoke-Expression 'cmd /c start powershell -NoExit -Command {");
-            scriptBuilder.AppendLine(CultureInfo.InvariantCulture, $"    $host.UI.RawUI.WindowTitle = \"Tailing the #{i} progress log\";");
-            scriptBuilder.AppendLine(CultureInfo.InvariantCulture, $"    Get-Content {i.ToTechnicalString()}{Path.DirectorySeparatorChar}Progress.log -Wait;");
+            scriptBuilder.AppendLine(
+                CultureInfo.InvariantCulture,
+                $"    $host.UI.RawUI.WindowTitle = \"Tailing the #{i} progress log\";");
+            scriptBuilder.AppendLine(
+                CultureInfo.InvariantCulture,
+                $"    Get-Content {i.ToTechnicalString()}{Path.DirectorySeparatorChar}Progress.log -Wait;");
             scriptBuilder.AppendLine("}';");
             scriptBuilder.AppendLine();
         }
@@ -234,7 +242,12 @@ internal class TimingTester
                         $"{op.FriendlyName}_{inputDataTypeFunction(inputSize, getFriendlyName: true)}_to_" +
                         $"{op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, getFriendlyName: true)}_{vhdlTemplate.Name}";
 
-                    Logger.Log(Environment.NewLine + "Current test item: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize, inputDataType, outputDataType);
+                    Logger.Log(
+                        Environment.NewLine + "Current test item: {0}, {1}, {2} to {3}",
+                        op.FriendlyName,
+                        inputSize,
+                        inputDataType,
+                        outputDataType);
 
                     if (!op.VhdlExpression.IsValid(inputSize, inputDataTypeFunction, vhdlTemplate))
                     {
@@ -274,7 +287,10 @@ internal class TimingTester
                         var vhdl = AdditionalVhdlIncludes.Content + vhdlTemplate.VhdlTemplate
                             .Replace("%INTYPE%", inputDataType, StringComparison.InvariantCulture)
                             .Replace("%OUTTYPE%", outputDataType, StringComparison.InvariantCulture)
-                            .Replace("%EXPRESSION%", op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize), StringComparison.InvariantCulture);
+                            .Replace(
+                                "%EXPRESSION%",
+                                op.VhdlExpression.GetVhdlCode(vhdlTemplate.ExpressionInputs, inputSize),
+                                StringComparison.InvariantCulture);
                         _testConfig.Driver.Prepare(testFriendlyName, vhdl, vhdlTemplate);
 
                         batchWriter.WriteLine(
@@ -401,7 +417,9 @@ internal class TimingTester
     {
         foreach (var (op, inputSize) in _testConfig.Operators.SelectMany(op => _testConfig.InputSizes.Select(inputSize => (op, inputSize))))
         {
-            var inner = op.DataTypes.SelectMany(inputDataTypeFunction => op.VhdlTemplates.Select(vhdlTemplate => (inputDataTypeFunction, vhdlTemplate)));
+            var inner = op.DataTypes
+                .SelectMany(inputDataTypeFunction => op.VhdlTemplates.Select(vhdlTemplate => (inputDataTypeFunction, vhdlTemplate)));
+
             foreach (var (inputDataTypeFunction, vhdlTemplate) in inner)
             {
                 processor(op, inputSize, inputDataTypeFunction, vhdlTemplate);
