@@ -172,7 +172,7 @@ internal class TimingTester
         // Creating script to be able to easily execute all STA scripts in parallel by hand too.
         for (int i = 0; i < actualNumberOfSTAProcesses; i++)
         {
-            scriptBuilder.AppendLine("cd " + i);
+            scriptBuilder.AppendLine("cd " + i.ToTechnicalString());
             scriptBuilder.AppendLine("start cmd /c Run.bat");
             scriptBuilder.AppendLine("cd ..");
         }

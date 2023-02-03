@@ -64,8 +64,10 @@ public class DotnetShiftVhdlExpression : VhdlExpressionBase
         int size = _outputSize == NoOutputSizeCheck ? inputSize : _outputSize;
         var direction = _direction == Direction.Left ? "left" : "right";
         return !_constantAmount
-            ? $"shift_{direction}({inputs[0]},  to_integer(unsigned(SmartResize({inputs[1]}, {ShiftBits(size)}) and \"{ShiftBitsMask(size)}\"))  )"
-            : $"shift_{direction}({inputs[0]},  to_integer(unsigned(SmartResize(to_signed({_amount}, {size}), {ShiftBits(size)}) and \"{ShiftBitsMask(size)}\"))  )";
+            ? $"shift_{direction}({inputs[0]},  to_integer(unsigned(SmartResize({inputs[1]}, " +
+                $"{ShiftBits(size).ToTechnicalString()}) and \"{ShiftBitsMask(size)}\"))  )"
+            : $"shift_{direction}({inputs[0]},  to_integer(unsigned(SmartResize(to_signed({_amount.ToTechnicalString()}," +
+                $" {size.ToTechnicalString()}), {ShiftBits(size).ToTechnicalString()}) and \"{ShiftBitsMask(size)}\"))  )";
     }
 
     /// <summary>
