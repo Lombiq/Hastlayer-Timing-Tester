@@ -82,7 +82,7 @@ public class DotnetShiftVhdlExpression : VhdlExpressionBase
         VhdlTemplateBase vhdlTemplate) =>
             (_outputSize == NoOutputSizeCheck || inputSize == _outputSize) &&
             (!_constantAmount || inputSize > _amount) &&
-            (!_enableOnlyUnsigned || inputDataTypeFunction(0, true).StartsWith("unsigned", StringComparison.InvariantCulture));
+            (!_enableOnlyUnsigned || inputDataTypeFunction(0, getFriendlyName: true).StartsWith("unsigned", StringComparison.InvariantCulture));
 
     /// <summary>
     /// Used in <see cref="ShiftBitsMask"/>.

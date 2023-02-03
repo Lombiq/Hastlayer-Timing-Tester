@@ -29,13 +29,13 @@ internal static class Logger
     /// <summary>
     /// Writes a formatted string to both a log file (if already initialized) and the console, ending with a line break.
     /// </summary>
-    public static void Log(string format, params object[] objs) => LogInternal(format, false, objs);
+    public static void Log(string format, params object[] objs) => LogInternal(format, inline: false, objs);
 
     /// <summary>
     /// Writes a formatted string to both a log file (if already initialized) and the console. It does not end with a
     /// line break.
     /// </summary>
-    public static void LogInline(string format, params object[] objs) => LogInternal(format, true, objs);
+    public static void LogInline(string format, params object[] objs) => LogInternal(format, inline: true, objs);
 
     /// <summary>
     /// Writes a header to the log and screen for a given processing stage of Hastlayer Timing Tester, which can be

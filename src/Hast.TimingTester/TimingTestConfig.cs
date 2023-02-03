@@ -141,25 +141,25 @@ internal class TimingTestConfig
             ////    defaultVhdlTemplates));
 
             Operators.Add(new VhdlOp(
-                new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 64, true, false, i),
+                new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 64, constantAmount: true, enableOnlyUnsigned: false, i),
                 "dotnet_shift_left_by_" + i.ToString(CultureInfo.InvariantCulture),
                 suNumericDataTypes,
                 VhdlOp.SameOutputDataType,
                 defaultVhdlTemplates));
             Operators.Add(new VhdlOp(
-                new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 64, true, false, i),
+                new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 64, constantAmount: true, enableOnlyUnsigned: false, i),
                 "dotnet_shift_right_by_" + i.ToString(CultureInfo.InvariantCulture),
                 suNumericDataTypes,
                 VhdlOp.SameOutputDataType,
                 defaultVhdlTemplates));
             Operators.Add(new VhdlOp(
-                new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 32, true, false, i),
+                new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, 32, constantAmount: true, enableOnlyUnsigned: false, i),
                 "dotnet_shift_left_by_" + i.ToString(CultureInfo.InvariantCulture),
                 suNumericDataTypes,
                 VhdlOp.SameOutputDataType,
                 defaultVhdlTemplates));
             Operators.Add(new VhdlOp(
-                new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 32, true, false, i),
+                new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, 32, constantAmount: true, enableOnlyUnsigned: false, i),
                 "dotnet_shift_right_by_" + i.ToString(CultureInfo.InvariantCulture),
                 suNumericDataTypes,
                 VhdlOp.SameOutputDataType,
@@ -209,13 +209,15 @@ internal class TimingTestConfig
         foreach (int outputSize in new List<int> { 32, 64 })
         {
             Operators.Add(new VhdlOp(
-                    new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Left, outputSize, false, false),
+                    new DotnetShiftVhdlExpression(
+                        DotnetShiftVhdlExpression.Direction.Left, outputSize, constantAmount: false, enableOnlyUnsigned: false),
                     "dotnet_shift_left",
                     suNumericDataTypes,
                     VhdlOp.SameOutputDataType,
                     defaultVhdlTemplates));
             Operators.Add(new VhdlOp(
-                    new DotnetShiftVhdlExpression(DotnetShiftVhdlExpression.Direction.Right, outputSize, false, false),
+                    new DotnetShiftVhdlExpression(
+                        DotnetShiftVhdlExpression.Direction.Right, outputSize, constantAmount: false, enableOnlyUnsigned: false),
                     "dotnet_shift_right",
                     suNumericDataTypes,
                     VhdlOp.SameOutputDataType,

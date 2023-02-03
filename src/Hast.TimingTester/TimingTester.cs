@@ -48,7 +48,7 @@ internal class TimingTester
             }
             else if (Directory.GetFileSystemEntries(CurrentTestBaseDirectory).Length > 0)
             {
-                Directory.Delete(CurrentTestBaseDirectory, true);
+                Directory.Delete(CurrentTestBaseDirectory, recursive: true);
                 Directory.CreateDirectory(CurrentTestBaseDirectory);
             }
         }
@@ -224,14 +224,15 @@ internal class TimingTester
                 {
                     var processIndex = (int)Math.Floor((double)testIndex / testsPerProcess);
                     if (processIndex >= actualNumberOfSTAProcesses) processIndex = lastProcessIndex;
-                    var inputDataType = inputDataTypeFunction(inputSize, false);
+                    var inputDataType = inputDataTypeFunction(inputSize, getFriendlyName: false);
                     var outputDataType = op.OutputDataTypeFunction(
                         inputSize,
                         inputDataTypeFunction,
-                        false);
+                        getFriendlyName: false);
 
                     var testFriendlyName =
-                        $"{op.FriendlyName}_{inputDataTypeFunction(inputSize, true)}_to_{op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true)}_{vhdlTemplate.Name}";
+                        $"{op.FriendlyName}_{inputDataTypeFunction(inputSize, getFriendlyName: true)}_to_" +
+                        $"{op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, getFriendlyName: true)}_{vhdlTemplate.Name}";
 
                     Logger.Log(Environment.NewLine + "Current test item: {0}, {1}, {2} to {3}", op.FriendlyName, inputSize, inputDataType, outputDataType);
 
@@ -352,8 +353,8 @@ internal class TimingTester
                         resultsWriter.WriteLine(
                             "{0}\t{1}\t{2}\t{3}\t{4}\t{5}\t{6}",
                             op.FriendlyName,
-                            inputDataTypeFunction(inputSize, true),
-                            op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, true),
+                            inputDataTypeFunction(inputSize, getFriendlyName: true),
+                            op.OutputDataTypeFunction(inputSize, inputDataTypeFunction, getFriendlyName: true),
                             vhdlTemplate.Name,
                             useImplementationResults ? "impl" : "synth",
                             dataPathDelay,

@@ -59,8 +59,8 @@ public class MutiplyDivideByConstantVhdlExpression : VhdlExpressionBase
         VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
         VhdlTemplateBase vhdlTemplate)
     {
-        var signedMode = inputDataTypeFunction(0, true).StartsWith("signed", StringComparison.InvariantCulture);
-        var unsignedMode = inputDataTypeFunction(0, true).StartsWith("unsigned", StringComparison.InvariantCulture);
+        var signedMode = inputDataTypeFunction(0, getFriendlyName: true).StartsWith("signed", StringComparison.InvariantCulture);
+        var unsignedMode = inputDataTypeFunction(0, getFriendlyName: true).StartsWith("unsigned", StringComparison.InvariantCulture);
         return (Math.Log((double)_constant, 2) + 1 + (signedMode ? 1 : 0) <= inputSize || _constant < 0) &&
                 (_validationMode != ValidationMode.UnsignedOnly || unsignedMode) &&
                 (_validationMode != ValidationMode.SignedOnly || signedMode);

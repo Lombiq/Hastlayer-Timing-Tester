@@ -40,5 +40,6 @@ internal class UnaryOperatorVhdlExpression : VhdlExpressionBase
         int inputSize,
         VhdlOp.DataTypeFromSizeDelegate inputDataTypeFunction,
         VhdlTemplateBase vhdlTemplate) =>
-        _validationMode != ValidationMode.SignedOnly || inputDataTypeFunction(0, true).StartsWith("signed", StringComparison.InvariantCulture);
+        _validationMode != ValidationMode.SignedOnly ||
+            inputDataTypeFunction(0, getFriendlyName: true).StartsWith("signed", StringComparison.InvariantCulture);
 }
