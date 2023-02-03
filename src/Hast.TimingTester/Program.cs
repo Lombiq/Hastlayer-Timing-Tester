@@ -60,7 +60,7 @@ public static class Program
             {
                 // Uncomment the one you want to use if you don't want to supply parameters as command line
                 // arguments.
-                ////parameters.Prepare = true;
+                parameters.Prepare = true;
                 ////parameters.ExecSta = true;
                 ////parameters.Analyze = true;
             }
