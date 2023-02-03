@@ -1,13 +1,10 @@
 # Usage
 
-
-
 ## What you will need
 
-Hastlayer Timing Tester requires **Visual Studio Community Edition 2019 or greater** to run. (You will need to recompile the project from source if you edit the configuration.) For software requirements for specific platforms check out the comments on the respective `TimingTestConfig` instances.
+Hastlayer Timing Tester requires **Visual Studio Community Edition 2022 or greater** to run. (You will need to recompile the project from source if you edit the configuration.) For software requirements for specific platforms check out the comments on the respective `TimingTestConfig` instances.
 
 > While cloning the repository or unpacking the project, make sure that there are no special characters in the path (as Vivado cannot handle them, e.g. it can fail with: `TclStackFree: incorrect freePtr. Call out of sequence?`).
-
 
 ## How to configure
 
@@ -16,7 +13,6 @@ To configure Hastlayer Timing Tester, you will have to edit the source file `Tim
 > What is the reason for doing it in the source instead of a JSON or XML file? Well, we can have lambda functions as part of the configuration.
 
 > You can generate different configurations by adding new classes that have `TimingTestConfigBase` as their parent. However, the class to be used is specified in `Main()` in `Program.cs`.
-
 
 ## How to run
 
@@ -39,7 +35,6 @@ Hastlayer Timing Tester has three different processing stages:
 The `--all` or `-x` switch runs all the steps above (1-3). 
 
 The `--all-remote-sta` or `-r` switch runs step 1, then waits for the user to run the script manually on the local or remote machine, then runs step 3.
-
 
 ## Operation
 
