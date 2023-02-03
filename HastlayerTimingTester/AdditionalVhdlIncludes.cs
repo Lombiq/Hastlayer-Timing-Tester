@@ -1,11 +1,11 @@
-namespace HastlayerTimingTester
+namespace HastlayerTimingTester;
+
+internal static class AdditionalVhdlIncludes
 {
-    internal static class AdditionalVhdlIncludes
-    {
-        /// <summary>
-        /// This is concatenated to the beginning of each UUT.vhd file.
-        /// </summary>
-        public const string Content = @"
+    /// <summary>
+    /// This is concatenated to the beginning of each UUT.vhd file.
+    /// </summary>
+    public const string Content = @"
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
@@ -44,5 +44,4 @@ library work;
 use work.TypeConversion.all;
 
 ";
-    }
 }

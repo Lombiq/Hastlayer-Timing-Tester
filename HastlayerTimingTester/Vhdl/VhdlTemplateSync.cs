@@ -1,13 +1,13 @@
-namespace HastlayerTimingTester.Vhdl
+namespace HastlayerTimingTester.Vhdl;
+
+/// <summary>
+/// A VHDL template using the expression to test in a sequential, synchronous logic design.
+/// </summary>
+internal class VhdlTemplateSync : VhdlTemplateBase
 {
-    /// <summary>
-    /// A VHDL template using the expression to test in a sequential, synchronous logic design.
-    /// </summary>
-    internal class VhdlTemplateSync : VhdlTemplateBase
+    public VhdlTemplateSync()
     {
-        public VhdlTemplateSync()
-        {
-            VhdlTemplate =
+        VhdlTemplate =
 @"entity tf_sample is
 port (
     clk     : in std_logic;
@@ -32,10 +32,9 @@ begin
     end process;
     aout <= aout_reg;
 end imp;";
-            HasTimingConstraints = true;
-            ExpressionInputs = new[] { "a1_reg", "a2_reg" };
-        }
-
-        public override string Name => "sync";
+        HasTimingConstraints = true;
+        ExpressionInputs = new[] { "a1_reg", "a2_reg" };
     }
+
+    public override string Name => "sync";
 }

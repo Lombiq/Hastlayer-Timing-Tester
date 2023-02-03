@@ -1,12 +1,11 @@
-namespace HastlayerTimingTester.TimingTestConfigs.Alveo
+namespace HastlayerTimingTester.TimingTestConfigs.Alveo;
+
+internal class AlveoU50TimingTestConfig : AlveoTimingTestConfigBase
 {
-    internal class AlveoU50TimingTestConfig : AlveoTimingTestConfigBase
+    public AlveoU50TimingTestConfig()
     {
-        public AlveoU50TimingTestConfig()
-        {
-            Name = "AlveoU50";
-            Part = "xcu50-fsvh2104-2-e";
-            FrequencyHz = 300e6m;
-        }
+        Name = "AlveoU50";
+        Part = "xcu50-fsvh2104-2-e";
+        FrequencyHz = 300e6m;
     }
 }

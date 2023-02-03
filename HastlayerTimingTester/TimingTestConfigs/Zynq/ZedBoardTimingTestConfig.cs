@@ -1,12 +1,11 @@
-namespace HastlayerTimingTester.TimingTestConfigs.Zynq
+namespace HastlayerTimingTester.TimingTestConfigs.Zynq;
+
+internal class ZedBoardTimingTestConfig : ZynqTimingTestConfigBase
 {
-    internal class ZedBoardTimingTestConfig : ZynqTimingTestConfigBase
+    public ZedBoardTimingTestConfig()
     {
-        public ZedBoardTimingTestConfig()
-        {
-            Name = "ZedBoard";
-            Part = "xc7z020clg484-1";
-            FrequencyHz = 100e6m;
-        }
+        Name = "ZedBoard";
+        Part = "xc7z020clg484-1";
+        FrequencyHz = 100e6m;
     }
 }

@@ -4,19 +4,18 @@ using System;
 using System.Globalization;
 using System.IO;
 
-namespace HastlayerTimingTester.Drivers
+namespace HastlayerTimingTester.Drivers;
+
+/// <summary>
+/// A driver for the Intel/Altera FPGA tools. For example, it contains templates for files to be generated for these
+/// tools.
+/// </summary>
+internal class IntelDriver : FpgaVendorDriver
 {
     /// <summary>
-    /// A driver for the Intel/Altera FPGA tools. For example, it contains templates for files to be generated for these
-    /// tools.
+    /// Template to be filled with data, to be later opened and ran by Quartus. Synthesizes and implements the project.
     /// </summary>
-    internal class IntelDriver : FpgaVendorDriver
-    {
-        /// <summary>
-        /// Template to be filled with data, to be later opened and ran by Quartus. Synthesizes and implements the
-        /// project.
-        /// </summary>
-        private const string _quartusTclTemplate = @"
+    private const string _quartusTclTemplate = @"
 # Quartus Prime: Generate Tcl File for Project
 # Load Quartus Prime Tcl Project package
 package require ::quartus::project
@@ -53,10 +52,10 @@ execute_flow -compile
 project_close
 ";
 
-        /// <summary>
-        /// Template to be filled with data, to be opened and ran by TimeQuest later.
-        /// </summary>
-        private const string _timeQuestTclTemplate = @"
+    /// <summary>
+    /// Template to be filled with data, to be opened and ran by TimeQuest later.
+    /// </summary>
+    private const string _timeQuestTclTemplate = @"
 project_open -force ""tf_sample.qpf"" -revision tf_sample
 create_timing_netlist -model slow
 read_sdc
@@ -68,10 +67,10 @@ create_timing_summary -hold -multi_corner -append -file TimingSummary.txt
 create_timing_summary -mpw -multi_corner -append -file TimingSummary.txt
 ";
 
-        /// <summary>
-        /// Template for the constraints file.
-        /// </summary>
-        private const string _sdcTemplate = @"
+    /// <summary>
+    /// Template for the constraints file.
+    /// </summary>
+    private const string _sdcTemplate = @"
 # Time Information
 set_time_format -unit ns -decimal_places 3
 
@@ -89,12 +88,12 @@ set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] 
 set_clock_uncertainty -fall_from [get_clocks {clk}] -fall_to [get_clocks {clk}] -hold 0.060
 ";
 
-        /// <summary>
-        /// Cleanup script that can remove unnecessary files generated during compilation/STA from each test
-        /// subdirectory. Only files needed for Timing Tester remain. It is useful to run it before transferring the
-        /// test results from a remote machine, because Quartus generates a few gigabytes of data we don't need.
-        /// </summary>
-        private const string _cleanupScriptTemplate = @"
+    /// <summary>
+    /// Cleanup script that can remove unnecessary files generated during compilation/STA from each test subdirectory.
+    /// Only files needed for Timing Tester remain. It is useful to run it before transferring the test results from a
+    /// remote machine, because Quartus generates a few gigabytes of data we don't need.
+    /// </summary>
+    private const string _cleanupScriptTemplate = @"
 import os, shutil
 subdirs=filter(lambda x:os.path.isdir(x), os.listdir("".""))
 for subdir in subdirs:
@@ -109,89 +108,88 @@ for subdir in subdirs:
             os.unlink(path)
 ";
 
-        private const string _cleanupScriptName = "Cleanup.py";
+    private const string _cleanupScriptName = "Cleanup.py";
 
-        private readonly string _quartusPath;
+    private readonly string _quartusPath;
 
-        // Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
-        public override bool CanStaAfterSynthesize => false;
+    // Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
+    public override bool CanStaAfterSynthesize => false;
 
-        // Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
-        public override bool CanStaAfterImplementation => true;
+    // Intel tools only support STA after implementation. If the design is not implemented, they cannot run STA.
+    public override bool CanStaAfterImplementation => true;
 
-        /// <param name="quartusPath">This is the bin directory of Quartus Prime.</param>
-        public IntelDriver(TimingTestConfig testConfig, string quartusPath)
-            : base(testConfig) => _quartusPath = quartusPath;
+    /// <param name="quartusPath">This is the bin directory of Quartus Prime.</param>
+    public IntelDriver(TimingTestConfig testConfig, string quartusPath)
+        : base(testConfig) => _quartusPath = quartusPath;
 
-        /// <summary>
-        /// Initialization of Prepare stage, generates scripts common for all tests.
-        /// </summary>
-        public override void InitPrepare(StreamWriter batchWriter)
+    /// <summary>
+    /// Initialization of Prepare stage, generates scripts common for all tests.
+    /// </summary>
+    public override void InitPrepare(StreamWriter batchWriter)
+    {
+        base.InitPrepare(batchWriter);
+        File.WriteAllText(CombineWithCurrentRootPath("Quartus.tcl"), _quartusTclTemplate);
+        File.WriteAllText(CombineWithCurrentRootPath("TimeQuest.tcl"), _timeQuestTclTemplate);
+        File.WriteAllText(CombineWithCurrentRootPath(_cleanupScriptName), _cleanupScriptTemplate);
+    }
+
+    /// <summary>
+    /// Prepare stage, ran for each test. Generates the batch file Run.bat.
+    /// </summary>
+    public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
+    {
+        var uutPath = CombineWithCurrentRootPath(outputDirectoryName, "UUT.vhd");
+        var sdcPath = CombineWithCurrentRootPath(outputDirectoryName, "Constraints.sdc");
+        File.WriteAllText(uutPath, vhdl);
+        var sdcContent = _sdcTemplate
+            .Replace(
+                "%CLKPERIOD%",
+                (1.0m / _testConfig.FrequencyHz * 1e9m).ToString(CultureInfo.InvariantCulture),
+                StringComparison.InvariantCulture)
+            .Replace(
+                "%CLKHALFPERIOD%",
+                (0.5m / _testConfig.FrequencyHz * 1e9m).ToString(CultureInfo.InvariantCulture),
+                StringComparison.InvariantCulture);
+        File.WriteAllText(sdcPath, vhdlTemplate.HasTimingConstraints ? sdcContent : string.Empty);
+
+        _batchWriter.WriteLine("cd {0}", outputDirectoryName);
+        _batchWriter.BeginRetryWrapper("TimingSummary.txt");
+        _batchWriter.WriteLine("{0}\\quartus_sh.exe -t ../Quartus.tcl", _quartusPath);
+        _batchWriter.WriteLine("{0}\\quartus_sta.exe -t ../TimeQuest.tcl", _quartusPath);
+        _batchWriter.EndRetryWrapper();
+        _batchWriter.WriteLine("cd ..");
+    }
+
+    /// <summary>
+    /// Analyze stage, ran for each test.
+    /// </summary>
+    public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
+    {
+        var parser = new IntelParser(_testConfig.FrequencyHz);
+        var setupReportOutputPath = CombineWithCurrentRootPath(outputDirectoryName, "SetupReport.txt");
+        var timingSummaryOutputPath = CombineWithCurrentRootPath(outputDirectoryName, "TimingSummary.txt");
+
+        if (phase != StaPhase.Implementation)
         {
-            base.InitPrepare(batchWriter);
-            File.WriteAllText(CombineWithCurrentRootPath("Quartus.tcl"), _quartusTclTemplate);
-            File.WriteAllText(CombineWithCurrentRootPath("TimeQuest.tcl"), _timeQuestTclTemplate);
-            File.WriteAllText(CombineWithCurrentRootPath(_cleanupScriptName), _cleanupScriptTemplate);
+            throw new NotSupportedException(
+                "IntelDriver can't run STA right after synthesis, although ImplementDesign is true in the config.");
         }
 
-        /// <summary>
-        /// Prepare stage, ran for each test. Generates the batch file Run.bat.
-        /// </summary>
-        public override void Prepare(string outputDirectoryName, string vhdl, VhdlTemplateBase vhdlTemplate)
-        {
-            var uutPath = CombineWithCurrentRootPath(outputDirectoryName, "UUT.vhd");
-            var sdcPath = CombineWithCurrentRootPath(outputDirectoryName, "Constraints.sdc");
-            File.WriteAllText(uutPath, vhdl);
-            var sdcContent = _sdcTemplate
-                .Replace(
-                    "%CLKPERIOD%",
-                    (1.0m / _testConfig.FrequencyHz * 1e9m).ToString(CultureInfo.InvariantCulture),
-                    StringComparison.InvariantCulture)
-                .Replace(
-                    "%CLKHALFPERIOD%",
-                    (0.5m / _testConfig.FrequencyHz * 1e9m).ToString(CultureInfo.InvariantCulture),
-                    StringComparison.InvariantCulture);
-            File.WriteAllText(sdcPath, vhdlTemplate.HasTimingConstraints ? sdcContent : string.Empty);
+        var implementationSuccessful = File.Exists(setupReportOutputPath) && File.Exists(timingSummaryOutputPath);
 
-            _batchWriter.WriteLine("cd {0}", outputDirectoryName);
-            _batchWriter.BeginRetryWrapper("TimingSummary.txt");
-            _batchWriter.WriteLine("{0}\\quartus_sh.exe -t ../Quartus.tcl", _quartusPath);
-            _batchWriter.WriteLine("{0}\\quartus_sta.exe -t ../TimeQuest.tcl", _quartusPath);
-            _batchWriter.EndRetryWrapper();
-            _batchWriter.WriteLine("cd ..");
+        if (!implementationSuccessful)
+        {
+            Logger.Log("STA failed!");
+            return null;
         }
 
-        /// <summary>
-        /// Analyze stage, ran for each test.
-        /// </summary>
-        public override TimingOutputParser Analyze(string outputDirectoryName, StaPhase phase)
+        var result = new QuartusResult
         {
-            var parser = new IntelParser(_testConfig.FrequencyHz);
-            var setupReportOutputPath = CombineWithCurrentRootPath(outputDirectoryName, "SetupReport.txt");
-            var timingSummaryOutputPath = CombineWithCurrentRootPath(outputDirectoryName, "TimingSummary.txt");
+            SetupReport = File.ReadAllText(setupReportOutputPath),
+            TimingSummary = File.ReadAllText(timingSummaryOutputPath),
+        };
+        parser.Parse(result);
 
-            if (phase != StaPhase.Implementation)
-            {
-                throw new NotSupportedException(
-                    "IntelDriver can't run STA right after synthesis, although ImplementDesign is true in the config.");
-            }
-
-            var implementationSuccessful = File.Exists(setupReportOutputPath) && File.Exists(timingSummaryOutputPath);
-
-            if (!implementationSuccessful)
-            {
-                Logger.Log("STA failed!");
-                return null;
-            }
-
-            var result = new QuartusResult
-            {
-                SetupReport = File.ReadAllText(setupReportOutputPath),
-                TimingSummary = File.ReadAllText(timingSummaryOutputPath),
-            };
-            parser.Parse(result);
-
-            return parser;
-        }
+        return parser;
     }
 }
