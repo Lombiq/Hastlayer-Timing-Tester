@@ -26,5 +26,6 @@ public class BinaryOperatorVhdlExpression : VhdlExpressionBase
     public override bool IsValid(
         int inputSize,
         VhdlOp.DataTypeFromSizeDelegate
-        inputDataTypeFunction, VhdlTemplateBase vhdlTemplate) => true;
+        inputDataTypeFunction,
+        VhdlTemplateBase vhdlTemplate) => true;
 }

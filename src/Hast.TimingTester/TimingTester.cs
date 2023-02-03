@@ -389,7 +389,8 @@ internal class TimingTester
                     testIndexInCurrentProcess++;
 
                     if (_testConfig.DebugMode) throw;
-                    else Logger.Log("Exception happened during {0}: {1}", taskChoiceString, exception.Message);
+
+                    Logger.Log("Exception happened during {0}: {1}", taskChoiceString, exception.Message);
                 }
             });
         }
@@ -401,7 +402,7 @@ internal class TimingTester
                 batchWriter.Dispose();
             }
 
-            if (resultsWriter != null) resultsWriter.Dispose();
+            resultsWriter?.Dispose();
         }
 
         Logger.LogStageFooter(taskChoiceString);

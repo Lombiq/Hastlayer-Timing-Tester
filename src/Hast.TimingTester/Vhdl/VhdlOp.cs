@@ -1,6 +1,5 @@
 using HastlayerTimingTester.Vhdl.Expressions;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace HastlayerTimingTester.Vhdl;
 
@@ -30,12 +29,12 @@ public class VhdlOp
     /// <summary>
     /// Gets a list of functions that should be used for the data types the operation should be tested for.
     /// </summary>
-    public List<DataTypeFromSizeDelegate> DataTypes { get; }
+    public IEnumerable<DataTypeFromSizeDelegate> DataTypes { get; }
 
     /// <summary>
     /// Gets the VHDL templates that will be used for analysis.
     /// </summary>
-    public List<VhdlTemplateBase> VhdlTemplates { get; }
+    public IEnumerable<VhdlTemplateBase> VhdlTemplates { get; }
 
     /// <summary>
     /// Used for <see cref="DataTypes"/>.
@@ -77,7 +76,6 @@ public class VhdlOp
     /// <summary>
     /// Used for operators that strictly have boolean as their output data type (like all comparison operators).
     /// </summary>
-    [SuppressMessage("Usage", "CA1801:Review unused parameters", Justification = "It's used as OutputDataTypeDelegate.")]
     public static string ComparisonWithBoolOutput(
         int inputSize,
         DataTypeFromSizeDelegate inputDataTypeFunction,
