@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{648D3BB6-201F-401B-9EF9-D7BBBC6D3ECA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hast.TimingTester", "src\Hast.TimingTester\Hast.TimingTester.csproj", "{408751DC-709A-4BCE-A62A-361F0493A102}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{1EA19568-041A-4B37-90B2-A9F24385E66A}"
+	ProjectSection(SolutionItems) = preProject
+		Directory.Build.props = Directory.Build.props
+		Licence.md = Licence.md
+		NuGet.config = NuGet.config
+		Readme.md = Readme.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".github", ".github", "{C87BE461-83AE-42DD-9C92-8ABD9A81F225}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "workflows", "workflows", "{D21E2684-3C2F-4990-933D-2D563D3D5A7A}"
+	ProjectSection(SolutionItems) = preProject
+		.github\workflows\build-and-test.yml = .github\workflows\build-and-test.yml
+		.github\workflows\create-jira-issues-for-community-activities.yml = .github\workflows\create-jira-issues-for-community-activities.yml
+		.github\workflows\validate-pull-request.yml = .github\workflows\validate-pull-request.yml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lombiq.HelpfulLibraries.Common", "src\Libraries\Lombiq.HelpfulLibraries\Lombiq.HelpfulLibraries.Common\Lombiq.HelpfulLibraries.Common.csproj", "{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{408751DC-709A-4BCE-A62A-361F0493A102}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{408751DC-709A-4BCE-A62A-361F0493A102}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{408751DC-709A-4BCE-A62A-361F0493A102}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{408751DC-709A-4BCE-A62A-361F0493A102}.Release|Any CPU.Build.0 = Release|Any CPU
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{408751DC-709A-4BCE-A62A-361F0493A102} = {648D3BB6-201F-401B-9EF9-D7BBBC6D3ECA}
+		{D21E2684-3C2F-4990-933D-2D563D3D5A7A} = {C87BE461-83AE-42DD-9C92-8ABD9A81F225}
+		{712B7D4C-BFD7-4E91-95D0-3D8245E347D4} = {648D3BB6-201F-401B-9EF9-D7BBBC6D3ECA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {2FB60EA7-252B-4F30-AA5F-644F4FEF4A30}
+	EndGlobalSection
+EndGlobal
